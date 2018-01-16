@@ -7,6 +7,22 @@
 	<version>0.1-SNAPSHOT</version>
 	<name>summer-parent</name>
 	<url>https://github.com/Verdoso/GreenSummer</url>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java-version>1.8</java-version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<license.organizationName>GreenEyed (Daniel Lopez)</license.organizationName>
+		<license.inceptionYear>2018</license.inceptionYear>
+		<!-- Default property where one can find the GitHub pages version of the repository (gh-pages branch) -->
+		<apidocs.project.location>summer-pages</apidocs.project.location>
+        <spring-cloud-context.version>1.2.2.RELEASE</spring-cloud-context.version>
+        <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
+        <lombok.version>1.16.20</lombok.version>
+	</properties>
+
 	<licenses>
 		<license>
 			<name>GNU Lesser General Public License 2.1</name>
@@ -15,16 +31,19 @@
 			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
+	
 	<issueManagement>
 		<system>GitHub Issues</system>
 		<url>https://github.com/Verdoso/GreenSummer/issues</url>
 	</issueManagement>
+	
 	<scm>
 		<url>https://github.com/Verdoso/GreenSummer</url>
 		<connection>scm:git:git://github.com/Verdoso/GreenSummer.git</connection>
 		<developerConnection>scm:git:https://github.com/Verdoso/GreenSummer.git</developerConnection>
 		<tag>green-summer-${project.version}</tag>
 	</scm>
+	
 	<organization>
 		<name>GreenEyed</name>
 		<url>http://www.greeneyed.org/</url>
@@ -34,6 +53,7 @@
 		<module>summmer-core</module>
 		<!-- <module>summer-demo</module> -->
 	</modules>
+	
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -45,6 +65,7 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
+	
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -55,6 +76,7 @@
 					<configuration>
 						<source>1.8</source>
 						<target>1.8</target>
+						 <compilerArgument>-Xlint:deprecation</compilerArgument>						
 					</configuration>
 				</plugin>
 				<plugin>
@@ -143,6 +165,7 @@
 						<locale>en</locale>
 						<show>public</show>
 						<nohelp>true</nohelp>
+						<quiet>true</quiet>
 						<notimestamp>true</notimestamp>
 						<header>${project.name}, ${project.version}</header>
 						<footer>${project.name}, ${project.version}</footer>
@@ -180,7 +203,14 @@
 				<plugin>
 					<groupId>org.projectlombok</groupId>
 					<artifactId>lombok-maven-plugin</artifactId>
-					<version>1.16.6.1</version>
+					<version>1.16.18.1</version>
+                    <dependencies>
+                      <dependency>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
+                      </dependency>
+                    </dependencies>
 					<executions>
 						<execution>
 							<id>delombok</id>
@@ -202,12 +232,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<properties>
-		<java-version>1.8</java-version>
-		<license.organizationName>GreenEyed (Daniel Lopez)</license.organizationName>
-		<license.inceptionYear>2018</license.inceptionYear>
-		<!-- Default property where one can find the GitHub pages version of the repository (gh-pages branch) -->
-		<apidocs.project.location>summer-pages</apidocs.project.location>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 </project>
