@@ -57,8 +57,7 @@ public final class InMemoryAppenderImpl extends AbstractAppender {
 
     private final int size;
 
-    protected InMemoryAppenderImpl(String name, Filter filter, Layout<? extends Serializable> layout, final boolean ignoreExceptions,
-        final int size) {
+    protected InMemoryAppenderImpl(String name, Filter filter, Layout<? extends Serializable> layout, final boolean ignoreExceptions, final int size) {
         super(name, filter, layout, ignoreExceptions);
         this.size = size;
     }

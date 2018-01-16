@@ -41,8 +41,7 @@ import lombok.Data;
  */
 @Data
 @Controller
-@RequestMapping({
-    "/health"})
+@RequestMapping({"/health"})
 public class HealthController {
 
     public static enum STATUS {

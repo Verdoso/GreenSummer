@@ -87,8 +87,7 @@ public class XsltConfiguration {
         xsltResolver.setOrder(1);
         xsltResolver.setSourceKey(XML_SOURCE_TAG);
         xsltResolver.setViewClass(SummerXSLTView.class);
-        xsltResolver.setViewNames(new String[] {
-            "*" + XSLT_SUFFIX});
+        xsltResolver.setViewNames(new String[] {"*" + XSLT_SUFFIX});
         xsltResolver.setPrefix("/WEB-INF/xslt/");
         return xsltResolver;
     }

@@ -45,8 +45,9 @@ public class SelfDiscoveryPropertySourceLocator implements PropertySourceLocator
             if (localhostName != null) {
                 String hostname = localhostName.toLowerCase();
                 log.info("Setting hostname to {}", hostname);
-                result = new MapPropertySource("SelfDiscoveredProperty",
-                    Collections.<String, Object>singletonMap("spring.cloud.consul.discovery.hostname", hostname));
+                result =
+                    new MapPropertySource("SelfDiscoveredProperty", Collections.<String, Object>singletonMap(
+                        "spring.cloud.consul.discovery.hostname", hostname));
             }
         } catch (UnknownHostException e) {
             log.error("Error obtaining localhost name", e);

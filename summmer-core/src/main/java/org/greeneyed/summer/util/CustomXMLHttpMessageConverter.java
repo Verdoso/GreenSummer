@@ -99,8 +99,8 @@ public class CustomXMLHttpMessageConverter extends Jaxb2RootElementHttpMessageCo
 
     private HttpMessageNotReadableException handleNPE(NullPointerException ex) {
         if (!isSupportDtd()) {
-            return new HttpMessageNotReadableException(
-                "NPE while unmarshalling. " + "This can happen on JDK 1.6 due to the presence of DTD " + "declarations, which are disabled.", ex);
+            return new HttpMessageNotReadableException("NPE while unmarshalling. " + "This can happen on JDK 1.6 due to the presence of DTD "
+                + "declarations, which are disabled.", ex);
         } else {
             throw ex;
         }

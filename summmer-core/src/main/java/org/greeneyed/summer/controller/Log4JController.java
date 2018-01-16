@@ -174,8 +174,9 @@ public class Log4JController {
         logResponse.setSpecs(result);
         synchronized (ctx) {
             final Configuration config = ctx.getConfiguration();
-            config.getLoggers().forEach((name, configuration) -> result.add(new LogSpecification(name, configuration.getLevel().name(),
-                configuration.getAppenderRefs().stream().map(AppenderRef::getRef).collect(Collectors.toList()))));
+            config.getLoggers().forEach(
+                (name, configuration) -> result.add(new LogSpecification(name, configuration.getLevel().name(), configuration.getAppenderRefs()
+                    .stream().map(AppenderRef::getRef).collect(Collectors.toList()))));
         }
         return logResponse;
 
@@ -205,9 +206,8 @@ public class Log4JController {
                 }
                 //
                 AppenderRef ref = AppenderRef.createAppenderRef("InMemoryAppenderImplAppenderRef", level, null);
-                AppenderRef[] refs = new AppenderRef[] {
-                    ref};
-                LoggerConfig loggerConfig = LoggerConfig.createLogger(Boolean.toString(append), level, name, "true", refs, null, config, null);
+                AppenderRef[] refs = new AppenderRef[] {ref};
+                LoggerConfig loggerConfig = LoggerConfig.createLogger(append, level, name, "true", refs, null, config, null);
                 loggerConfig.addAppender(inMemoryAppenderImpl, null, null);
                 config.addLogger(name, loggerConfig);
                 ctx.updateLoggers();
