@@ -148,7 +148,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
     private Transformer getTransformer(Map<String, Object> model, HttpServletRequest request) throws TransformerConfigurationException {
         Transformer transformer = null;
         boolean showXML = Boolean.TRUE.equals(model.get(XsltConfiguration.SHOW_XML_SOURCE_FLAG));
-        boolean refreshXSLT = Boolean.TRUE.equals(model.get(XsltConfiguration.REFRESH_XSLT_FLAG));
+        boolean refreshXSLT = devMode || Boolean.TRUE.equals(model.get(XsltConfiguration.REFRESH_XSLT_FLAG));
         if (!showXML && devMode) {
             String showXMLString = request.getParameter(XsltConfiguration.SHOW_XML_SOURCE_FLAG);
             if (showXMLString == null) {
@@ -156,7 +156,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
             }
             showXML = Boolean.parseBoolean(showXMLString);
         }
-        if (!refreshXSLT && devMode) {
+        if (!refreshXSLT) {
             String refreshXSLTString = request.getParameter(XsltConfiguration.REFRESH_XSLT_FLAG);
             if (refreshXSLTString == null) {
                 refreshXSLTString = (String) request.getAttribute(XsltConfiguration.REFRESH_XSLT_FLAG);
