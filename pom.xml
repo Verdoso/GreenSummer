@@ -14,6 +14,7 @@
 		<java-version>1.8</java-version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 		<license.organizationName>GreenEyed (Daniel Lopez)</license.organizationName>
 		<license.inceptionYear>2018</license.inceptionYear>
 		<!-- Default property where one can find the GitHub pages version of the repository (gh-pages branch) -->
@@ -50,7 +51,8 @@
 	</organization>
 	<modules>
 		<module>build-tools</module>
-		<module>summmer-core</module>
+		<module>summer-core</module>
+		<module>summer-kotlin</module>
 		<!-- <module>summer-demo</module> -->
 	</modules>
 
@@ -111,6 +113,15 @@
 						<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 						<autoReleaseAfterClose>true</autoReleaseAfterClose>
 					</configuration>
+					<executions>
+						<execution>
+							<id>default-deploy</id>
+							<phase>deploy</phase>
+							<goals>
+								<goal>deploy</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -236,19 +247,6 @@
 					<configuration>
 						<skip>true</skip>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.sonatype.plugins</groupId>
-					<artifactId>nexus-staging-maven-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>default-deploy</id>
-							<phase>deploy</phase>
-							<goals>
-								<goal>deploy</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
