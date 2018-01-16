@@ -7,7 +7,7 @@
 	<version>0.1-SNAPSHOT</version>
 	<name>summer-parent</name>
 	<url>https://github.com/Verdoso/GreenSummer</url>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -18,9 +18,9 @@
 		<license.inceptionYear>2018</license.inceptionYear>
 		<!-- Default property where one can find the GitHub pages version of the repository (gh-pages branch) -->
 		<apidocs.project.location>summer-pages</apidocs.project.location>
-        <spring-cloud-context.version>1.2.2.RELEASE</spring-cloud-context.version>
-        <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
-        <lombok.version>1.16.20</lombok.version>
+		<spring-cloud-context.version>1.2.2.RELEASE</spring-cloud-context.version>
+		<spring-boot.version>1.5.3.RELEASE</spring-boot.version>
+		<lombok.version>1.16.20</lombok.version>
 	</properties>
 
 	<licenses>
@@ -31,19 +31,19 @@
 			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
-	
+
 	<issueManagement>
 		<system>GitHub Issues</system>
 		<url>https://github.com/Verdoso/GreenSummer/issues</url>
 	</issueManagement>
-	
+
 	<scm>
 		<url>https://github.com/Verdoso/GreenSummer</url>
 		<connection>scm:git:git://github.com/Verdoso/GreenSummer.git</connection>
 		<developerConnection>scm:git:https://github.com/Verdoso/GreenSummer.git</developerConnection>
 		<tag>green-summer-${project.version}</tag>
 	</scm>
-	
+
 	<organization>
 		<name>GreenEyed</name>
 		<url>http://www.greeneyed.org/</url>
@@ -53,7 +53,7 @@
 		<module>summmer-core</module>
 		<!-- <module>summer-demo</module> -->
 	</modules>
-	
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -65,7 +65,7 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
-	
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -76,7 +76,7 @@
 					<configuration>
 						<source>1.8</source>
 						<target>1.8</target>
-						 <compilerArgument>-Xlint:deprecation</compilerArgument>						
+						<compilerArgument>-Xlint:deprecation</compilerArgument>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -204,13 +204,13 @@
 					<groupId>org.projectlombok</groupId>
 					<artifactId>lombok-maven-plugin</artifactId>
 					<version>1.16.18.1</version>
-                    <dependencies>
-                      <dependency>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>${lombok.version}</version>
-                      </dependency>
-                    </dependencies>
+					<dependencies>
+						<dependency>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</dependency>
+					</dependencies>
 					<executions>
 						<execution>
 							<id>delombok</id>
@@ -226,6 +226,27 @@
 								</formatPreferences>
 								<verbose>true</verbose>
 							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${maven-deploy-plugin.version}</version>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>nexus-staging-maven-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>default-deploy</id>
+							<phase>deploy</phase>
+							<goals>
+								<goal>deploy</goal>
+							</goals>
 						</execution>
 					</executions>
 				</plugin>

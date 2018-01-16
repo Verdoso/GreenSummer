@@ -18,8 +18,7 @@
         <kotlin.version>1.2.10</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <kotlin-logging.version>1.4.9</kotlin-logging.version>
-        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-        <nexus-staging-maven-plugin.version>1.5.1</nexus-staging-maven-plugin.version>
+        <jolt.version>0.1.0</jolt.version>
     </properties>
 
     <dependencyManagement>
@@ -90,6 +89,19 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.bazaarvoice.jolt</groupId>
+            <artifactId>jolt-core</artifactId>
+            <version>${jolt.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.bazaarvoice.jolt</groupId>
+            <artifactId>json-utils</artifactId>
+            <version>${jolt.version}</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
@@ -120,24 +132,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven-deploy-plugin.version}</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>${nexus-staging-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
