@@ -130,6 +130,8 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Transformer transformer = getTransformer(model, request);
         if (transformer != null) {
+            configureTransformer(model, response, transformer);
+            configureResponse(model, response, transformer);
             Source source = null;
             try {
                 source = locateSource(model);
