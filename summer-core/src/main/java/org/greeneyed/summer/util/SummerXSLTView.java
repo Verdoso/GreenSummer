@@ -108,6 +108,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
                 clazz = ClassUtils.getUserClass(source);
                 marshaller = marshallerPool.borrowObject(clazz);
                 setCharset(marshaller);
+                log.debug("Converting source object: {}", source);
                 return super.convertSource(new JAXBSource(marshaller, source));
             } catch (MarshalException ex) {
                 throw new HttpMessageNotWritableException("Could not marshal [" + source + "]: " + ex.getMessage(), ex);
