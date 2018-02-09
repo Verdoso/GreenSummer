@@ -228,14 +228,14 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
                 try {
                     streamSource.getReader().close();
                 } catch (IOException ex) {
-                    // ignore
+                    log.error("Error closing stream source", ex);
                 }
             }
             if (streamSource.getInputStream() != null) {
                 try {
                     streamSource.getInputStream().close();
                 } catch (IOException ex) {
-                    // ignore
+                    log.error("Error closing input stream", ex);
                 }
             }
         }
