@@ -73,6 +73,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
     private MediaType mediaType;
     private MessageSource messageSource;
     private boolean devMode = false;
+    private Templates cachedTemplates;
 
     @Override
     public void setMessageSource(MessageSource messageSource) {
@@ -97,6 +98,21 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
         }
     }
 
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    private static class PooledMarshallerJAXBSource extends JAXBSource {
+        final Marshaller marshaller;
+        final Object source;
+        final Class<?> sourceClazz;
+
+        public PooledMarshallerJAXBSource(Marshaller marshaller, Object source, Class<?> sourceClazz) throws JAXBException {
+            super(marshaller, source);
+            this.marshaller = marshaller;
+            this.source = source;
+            this.sourceClazz = sourceClazz;
+        }
+    }
+
     @Override
     @Measured("generateXML")
     protected Source convertSource(Object source) throws Exception {
@@ -107,19 +123,14 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
             try {
                 clazz = ClassUtils.getUserClass(source);
                 marshaller = marshallerPool.borrowObject(clazz);
-                setCharset(marshaller);
-                log.debug("Converting source object: {}", source);
-                return super.convertSource(new JAXBSource(marshaller, source));
+                updateMarshallerCharset(marshaller);
+                return super.convertSource(new PooledMarshallerJAXBSource(marshaller, source, clazz));
             } catch (MarshalException ex) {
                 throw new HttpMessageNotWritableException("Could not marshal [" + source + "]: " + ex.getMessage(), ex);
             } catch (JAXBException ex) {
                 throw new HttpMessageConversionException("Could not instantiate JAXBContext: " + ex.getMessage(), ex);
             } catch (Exception ex) {
                 throw new HttpMessageConversionException("Could not borrow marshaller from the pool: " + ex.getMessage(), ex);
-            } finally {
-                if (clazz != null && marshaller != null) {
-                    marshallerPool.returnObject(clazz, marshaller);
-                }
             }
         } else {
             return super.convertSource(source);
@@ -141,10 +152,10 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
                 }
                 transformer.transform(source, createResult(response));
             } finally {
-                closeSourceIfNecessary(source);
+                customCloseSourceIfNecessary(source);
             }
         } else {
-            super.renderMergedOutputModel(model, request, response);
+            superRenderMergedOutputModel(model, request, response);
         }
     }
 
@@ -168,8 +179,8 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
         }
         if (showXML) {
             transformer = getTransformerFactory().newTransformer();
-        } else if (refreshXSLT) {
-            transformer = createTransformer(loadTemplates());
+        } else {
+            transformer = createTransformer(loadTemplates(!refreshXSLT));
         }
         return transformer;
     }
@@ -179,18 +190,23 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
      * the {@link Templates} instance for the stylesheet at the configured
      * location.
      */
-    private Templates loadTemplates() throws ApplicationContextException {
-        Source stylesheetSource = getStylesheetSource();
-        try {
-            Templates templates = getTransformerFactory().newTemplates(stylesheetSource);
-            if (logger.isDebugEnabled()) {
-                logger.debug("Loading templates '" + templates + "'");
+    private Templates loadTemplates(boolean useCached) throws ApplicationContextException {
+        if (cachedTemplates != null && useCached) {
+            return cachedTemplates;
+        } else {
+            Source stylesheetSource = getStylesheetSource();
+            try {
+                Templates templates = getTransformerFactory().newTemplates(stylesheetSource);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Loading templates '" + templates + "'");
+                }
+                cachedTemplates = templates;
+                return templates;
+            } catch (TransformerConfigurationException ex) {
+                throw new ApplicationContextException("Can't load stylesheet from '" + getUrl() + "'", ex);
+            } finally {
+                customCloseSourceIfNecessary(stylesheetSource);
             }
-            return templates;
-        } catch (TransformerConfigurationException ex) {
-            throw new ApplicationContextException("Can't load stylesheet from '" + getUrl() + "'", ex);
-        } finally {
-            closeSourceIfNecessary(stylesheetSource);
         }
     }
 
@@ -204,7 +220,8 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
      * @param source
      *        the XSLT Source to close (may be {@code null})
      */
-    private void closeSourceIfNecessary(Source source) {
+    private void customCloseSourceIfNecessary(Source source) {
+        closeCustomSource(source);
         if (source instanceof StreamSource) {
             StreamSource streamSource = (StreamSource) source;
             if (streamSource.getReader() != null) {
@@ -224,7 +241,38 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
         }
     }
 
-    private void setCharset(Marshaller marshaller) throws PropertyException {
+    protected void superRenderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
+        throws Exception {
+
+        Templates templates = loadTemplates(true);
+
+        Transformer transformer = createTransformer(templates);
+        configureTransformer(model, response, transformer);
+        configureResponse(model, response, transformer);
+        Source source = null;
+        try {
+            source = locateSource(model);
+            if (source == null) {
+                throw new IllegalArgumentException("Unable to locate Source object in model: " + model);
+            }
+            transformer.transform(source, createResult(response));
+        } finally {
+            customCloseSourceIfNecessary(source);
+        }
+    }
+
+    private void closeCustomSource(Source source) {
+        if (source instanceof PooledMarshallerJAXBSource) {
+            PooledMarshallerJAXBSource pooledMarshallerJAXBSource = (PooledMarshallerJAXBSource) source;
+            Class<?> sourceClazz = pooledMarshallerJAXBSource.getSourceClazz();
+            Marshaller marshaller = pooledMarshallerJAXBSource.getMarshaller();
+            if (sourceClazz != null && marshaller != null) {
+                marshallerPool.returnObject(sourceClazz, marshaller);
+            }
+        }
+    }
+
+    private void updateMarshallerCharset(Marshaller marshaller) throws PropertyException {
         if (mediaType != null && mediaType.getCharset() != null) {
             marshaller.setProperty(Marshaller.JAXB_ENCODING, mediaType.getCharset().name());
         }
