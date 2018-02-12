@@ -26,6 +26,7 @@ package org.greeneyed.summer.config.enablers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.greeneyed.summer.config.JoltViewConfiguration;
 import org.greeneyed.summer.config.Log4jMDCFilterConfiguration;
 import org.greeneyed.summer.config.MessageSourceConfiguration;
 import org.greeneyed.summer.config.SummerWebConfig;
@@ -33,6 +34,7 @@ import org.greeneyed.summer.config.XsltConfiguration;
 import org.greeneyed.summer.controller.HealthController;
 import org.greeneyed.summer.controller.Log4JController;
 import org.greeneyed.summer.util.ActuatorCustomizer;
+import org.greeneyed.summer.util.ApplicationContextProvider;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
@@ -43,28 +45,32 @@ public class EnableSummerImportSelector implements ImportSelector {
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
         AnnotationAttributes attributes =
             AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableSummer.class.getName(), false));
-        List<String> endPointsToEnable = new ArrayList<>();
+        List<String> configurationClassesToEnable = new ArrayList<>();
         if (attributes.getBoolean("message_source")) {
-            endPointsToEnable.add(MessageSourceConfiguration.class.getName());
+            configurationClassesToEnable.add(MessageSourceConfiguration.class.getName());
         }
         if (attributes.getBoolean("log4j")) {
-            endPointsToEnable.add(Log4JController.class.getName());
+            configurationClassesToEnable.add(Log4JController.class.getName());
         }
         if (attributes.getBoolean("log4j_filter")) {
-            endPointsToEnable.add(Log4jMDCFilterConfiguration.class.getName());
+            configurationClassesToEnable.add(Log4jMDCFilterConfiguration.class.getName());
         }
         if (attributes.getBoolean("health")) {
-            endPointsToEnable.add(HealthController.class.getName());
+            configurationClassesToEnable.add(HealthController.class.getName());
         }
         if (attributes.getBoolean("actuator_customizer")) {
-            endPointsToEnable.add(ActuatorCustomizer.class.getName());
+            configurationClassesToEnable.add(ActuatorCustomizer.class.getName());
         }
         if (attributes.getBoolean("xslt_view")) {
-            endPointsToEnable.add(XsltConfiguration.class.getName());
+            configurationClassesToEnable.add(XsltConfiguration.class.getName());
+        }
+        if (attributes.getBoolean("jolt_view")) {
+            configurationClassesToEnable.add(ApplicationContextProvider.class.getName());
+            configurationClassesToEnable.add(JoltViewConfiguration.class.getName());
         }
         if (attributes.getBoolean("xml_view_pooling")) {
-            endPointsToEnable.add(SummerWebConfig.class.getName());
+            configurationClassesToEnable.add(SummerWebConfig.class.getName());
         }
-        return endPointsToEnable.toArray(new String[endPointsToEnable.size()]);
+        return configurationClassesToEnable.toArray(new String[configurationClassesToEnable.size()]);
     }
 }
