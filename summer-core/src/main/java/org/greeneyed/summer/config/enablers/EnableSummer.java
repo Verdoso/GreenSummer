@@ -49,4 +49,6 @@ public @interface EnableSummer {
 
     boolean xml_view_pooling() default false;
 
+    boolean jolt_view() default false;
+
 }
