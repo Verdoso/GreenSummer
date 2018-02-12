@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30" shutdownHook="disable">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%-5p|%d{ISO8601}{GMT}|%X{Log4UUIDFilter.UUID}|%c{1}|%m%ex%n" />
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Root level="WARN">
+      <AppenderRef ref="Console" />
+    </Root>
+    <Logger name="org.springframework" level="WARN" />
+    <Logger name="org.greeneyed.demo" level="INFO" />
+
+    <!-- <Logger name="org.greeneyed.summer" level="DEBUG" /> -->
+    <!-- Config Server Issues -->
+    <!-- <Logger name="org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration" level="DEBUG" /> -->
+    <!-- <Logger name="org.springframework.cloud.config.client.ConfigServicePropertySourceLocator" level="DEBUG" /> -->
+    <!-- <Logger name="org.springframework.core.env.CompositePropertySource" level="DEBUG" /> -->
+    <!-- <Logger name="org.springframework.core.env.MapPropertySource" level="DEBUG" /> -->
+    <!-- <Logger name="org.springframework.web.client.RestTemplate" level="DEBUG" /> -->
+  </Loggers>
+</Configuration>
