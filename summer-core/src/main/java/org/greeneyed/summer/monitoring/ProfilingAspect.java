@@ -92,9 +92,6 @@ public abstract class ProfilingAspect {
         // Pointcut methods need no body
     }
 
-    /**
-     * XML Processing methods.
-     */
     @Pointcut("execution(* org.eclipse.jetty.servlet.ServletHandler.doHandle(..))")
     public void servletHandlerHandle() {
         // Pointcut methods need no body
