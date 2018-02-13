@@ -23,7 +23,7 @@ package org.greeneyed.summer.config;
  */
 
 
-import org.greeneyed.summer.filter.Log4jMDCFilter;
+import org.greeneyed.summer.filter.Slf4jMDCFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
  * The Class Log4jMDCFilterConfiguration.
  */
 @Configuration
-public class Log4jMDCFilterConfiguration {
+public class Slf4jMDCFilterConfiguration {
 
     /**
      * Log4jMDCFilter servlet registration bean.
@@ -42,7 +42,7 @@ public class Log4jMDCFilterConfiguration {
     @Bean
     public FilterRegistrationBean servletRegistrationBean() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        final Log4jMDCFilter log4jMDCFilterFilter = new Log4jMDCFilter();
+        final Slf4jMDCFilter log4jMDCFilterFilter = new Slf4jMDCFilter();
         registrationBean.setFilter(log4jMDCFilterFilter);
         registrationBean.setOrder(2);
         return registrationBean;
