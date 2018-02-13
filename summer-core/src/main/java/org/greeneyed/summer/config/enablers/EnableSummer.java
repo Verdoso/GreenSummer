@@ -39,7 +39,7 @@ public @interface EnableSummer {
 
     boolean log4j() default true;
 
-    boolean log4j_filter() default true;
+    boolean slf4j_filter() default true;
 
     boolean health() default true;
 
@@ -50,5 +50,7 @@ public @interface EnableSummer {
     boolean xml_view_pooling() default false;
 
     boolean jolt_view() default false;
+
+    boolean caffeine_cache() default false;
 
 }
