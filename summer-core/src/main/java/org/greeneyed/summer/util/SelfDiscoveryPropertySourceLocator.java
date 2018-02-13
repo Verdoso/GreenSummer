@@ -27,6 +27,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Collections;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.bootstrap.config.PropertySourceLocator;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
@@ -35,6 +36,7 @@ import org.springframework.core.env.PropertySource;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@ConditionalOnProperty(value = "summer.self_discovery.enabled")
 public class SelfDiscoveryPropertySourceLocator implements PropertySourceLocator {
 
     @Override
