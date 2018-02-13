@@ -6,7 +6,7 @@ In the mean time, this is a brief summary of the utilities that one can find in 
 
  - **Log4JController**: A controller to list/modify the Log4j log levels configuration at runtime.
  - **HealthController**: A simple controller with an actionable toggle that can be used from balancers or health checks to control whether the application should be used or not.
- - **Log4jMDCFilter**:  A servlet filter that adds a unique ID to all the log messages that belong to each request. This way you can track all the log messages for a given request, even if the intermix with messages from other requests.
+ - **Slf4jMDCFilter**:  A servlet filter that adds a unique ID to all the log messages that belong to each request. This way you can track all the log messages for a given request, even if the intermix with messages from other requests.
  - **ProfilingAspect**: An aspect that can be easily used to profile method calls. With the appropriate AOP configuration, it can be used to profile also private methods and/or methods belonging to classes outside Spring.
  - **CustomXMLHttpMessageConverter**: A message converter that overrides Jaxb2RootElementHttpMessageConverter and uses a pool of Marshallers to convert your objetcs to XML, instead of the "a new marshaller per request" approach that the regular Jaxb2RootElementHttpMessageConverter uses. The performance difference in applications with heavy traffic is quite noticeable.
  - **LoggingClientHttpRequestInterceptor**: An interceptor to log the traffic back & forth when using a RestTemplate. INFO shows basic info, DEBUG includes headers and TRACE includes request and response bodies. Useful for debugging RestTemplate calls at runtime with the help of Log4JController.
