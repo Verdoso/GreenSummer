@@ -38,10 +38,16 @@ import lombok.Data;
 
 /**
  * The Class HealthController.
+ * 
+ * Path can be configured through the properties. For example:
+ * summer:
+ *  health:
+ *   path: /secret/health
+ * 
  */
 @Data
 @Controller
-@RequestMapping({"/health"})
+@RequestMapping({"${summer.health.path:/health}"})
 public class HealthController {
 
     public static enum STATUS {
