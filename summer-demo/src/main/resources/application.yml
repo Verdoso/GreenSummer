@@ -1,0 +1,19 @@
+server:
+  port: 9090
+management:
+  context-path: /manage
+  security:
+    enabled: false
+endpoints:
+  enabled: true
+  env:
+    enabled: true
+  health:
+    enabled: true
+    sensitive: false
+  mappings:
+    enabled: true
+summer:
+    health:
+        status: KO
+        use_http_status: false
