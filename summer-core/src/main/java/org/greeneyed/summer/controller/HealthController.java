@@ -26,13 +26,14 @@ package org.greeneyed.summer.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.Data;
@@ -40,62 +41,85 @@ import lombok.Data;
 /**
  * The Class HealthController.
  * 
- * Path can be configured through the properties. For example:
- * summer:
- * health:
- * path: /secret/health
+ * Path can be configured through the properties ((default is /health). For example:
  * 
+ * <pre>
+ * summer:
+ *   health:
+ *     path: /secret/health
+ * </pre>
+ * 
+ * Starting status can also be configured, in case you want the application to start as disabled(KO) (default is ok)
+ * 
+ * <pre>
+ * summer:
+ *   health:
+ *     status: KO
+ * </pre>
+ * 
+ * You can also tell the controller to return a HTTP - 503 code instead of a 200 to when it is KO (default is false)
+ * 
+ * <pre>
+ * summer:
+ *   health:
+ *     use_http_status: true
+ * </pre>
  */
 @Data
 @Controller
-@RequestMapping({"${summer.health.path:/health}"})
+@RequestMapping({
+    "${summer.health.path:/health}"})
 @ConfigurationProperties(prefix = "summer.health")
 public class HealthController {
 
     public static enum STATUS {
         OK,
-        DISABLED
+        KO
     }
 
     private STATUS status = STATUS.OK;
+    private boolean useHttpStatus = false;
 
-    /**
-     * @return The status
-     */
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, String>> checkHealth() {
-        return currentStatus();
+    public ResponseEntity<Map<String, String>> status(HttpServletRequest request) {
+        return currentStatus(request);
     }
 
-    /**
-     * Enable.
-     *
-     * @return the response entity
-     */
-    @RequestMapping(value = "/enable", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/enable", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, String>> enable() {
+    public ResponseEntity<Map<String, String>> enable(HttpServletRequest request) {
         status = STATUS.OK;
-        return currentStatus();
+        return currentStatus(request);
+    }
+
+    @RequestMapping(value = "/disable", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> disable(HttpServletRequest request) {
+        status = STATUS.KO;
+        return currentStatus(request);
+    }
+
+    private ResponseEntity<Map<String, String>> currentStatus(HttpServletRequest request) {
+        Map<String, String> resultMap = new HashMap<>();
+        STATUS currentStatus = status;
+        resultMap.put("status", currentStatus.name());
+        Map<String, String> customStatus = getCustomStatus(request);
+        if (customStatus != null) {
+            resultMap.putAll(customStatus);
+        }
+        final HttpStatus httpStatus = (currentStatus == STATUS.KO && useHttpStatus) ? HttpStatus.OK : HttpStatus.SERVICE_UNAVAILABLE;
+        return new ResponseEntity<>(resultMap, httpStatus);
     }
 
     /**
-     * Disable.
-     *
-     * @return the response entity
+     * Method to override if you want to add custom status messages to the default OK/KO
+     * 
+     * @param request
+     * @return
      */
-    @RequestMapping(value = "/disable", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<Map<String, String>> disable() {
-        status = STATUS.DISABLED;
-        return currentStatus();
-    }
-
-    private ResponseEntity<Map<String, String>> currentStatus() {
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("status", status.name());
-        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    protected Map<String, String> getCustomStatus(HttpServletRequest request) {
+        return null;
     }
 
 }
