@@ -26,6 +26,7 @@ package org.greeneyed.summer.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,13 +42,14 @@ import lombok.Data;
  * 
  * Path can be configured through the properties. For example:
  * summer:
- *  health:
- *   path: /secret/health
+ * health:
+ * path: /secret/health
  * 
  */
 @Data
 @Controller
 @RequestMapping({"${summer.health.path:/health}"})
+@ConfigurationProperties(prefix = "summer.health")
 public class HealthController {
 
     public static enum STATUS {
