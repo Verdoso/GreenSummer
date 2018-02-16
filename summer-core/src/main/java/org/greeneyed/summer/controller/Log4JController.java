@@ -56,10 +56,15 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class Log4JController.
+ * 
+ * Path can be configured through the properties. For example:
+ * summer:
+ *  log4j:
+ *   path: /secret/log4j
  */
 @Data
 @Controller
-@RequestMapping(value = "/log4j")
+@RequestMapping({"${summer.log4j.path:/log4j}"})
 @Slf4j
 public class Log4JController {
 

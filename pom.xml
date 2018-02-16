@@ -214,14 +214,7 @@
 				<plugin>
 					<groupId>org.projectlombok</groupId>
 					<artifactId>lombok-maven-plugin</artifactId>
-					<version>1.16.18.1</version>
-					<dependencies>
-						<dependency>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>${lombok.version}</version>
-						</dependency>
-					</dependencies>
+					<version>1.16.20.0</version>
 					<executions>
 						<execution>
 							<id>delombok</id>
@@ -235,7 +228,7 @@
 								<formatPreferences>
 									<javaLangAsFQN>skip</javaLangAsFQN>
 								</formatPreferences>
-								<verbose>true</verbose>
+								<verbose>false</verbose>
 							</configuration>
 						</execution>
 					</executions>

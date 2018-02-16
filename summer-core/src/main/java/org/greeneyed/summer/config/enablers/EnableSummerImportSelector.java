@@ -24,10 +24,12 @@ package org.greeneyed.summer.config.enablers;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.greeneyed.summer.config.JoltViewConfiguration;
-import org.greeneyed.summer.config.Log4jMDCFilterConfiguration;
+import org.greeneyed.summer.config.Slf4jMDCFilterConfiguration;
 import org.greeneyed.summer.config.MessageSourceConfiguration;
 import org.greeneyed.summer.config.SummerWebConfig;
 import org.greeneyed.summer.config.XsltConfiguration;
@@ -39,37 +41,61 @@ import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class EnableSummerImportSelector implements ImportSelector {
+
+    private static enum ENABLE_OPTION {
+        MESSAGE_SOURCE("message_source", MessageSourceConfiguration.class),
+        LOG4J_CONTROLLER("log4j", new Class[] {Log4JController.class}, new String[] {"org.apache.logging.log4j.core.LoggerContext"}),
+        SLF4J_FILTER("slf4j_filter", new Class[] {Slf4jMDCFilterConfiguration.class}, new String[] {"org.slf4j.MDC"}),
+        HEALTH_CONTROLLER("health", HealthController.class),
+        ACTUATOR_CUSTOMIZER("actuator_customizer", ActuatorCustomizer.class),
+        XSLT_VIEW("xslt_view", XsltConfiguration.class),
+        JOLT_VIEW("jolt_view", new Class[] {
+            ApplicationContextProvider.class, JoltViewConfiguration.class}, new String[] {"com.bazaarvoice.jolt.Chainr"}),
+        XML_VIEW_POOLING("xml_view_pooling", SummerWebConfig.class),
+        CAFFEINE_CACHE("caffeine_cache", new Class[] {SummerWebConfig.class}, new String[] {
+            "org.springframework.cache.caffeine.CaffeineCache", "com.github.benmanes.caffeine.cache.Caffeine"});
+
+        private ENABLE_OPTION(final String flag, final Class<?>[] configurationClasses, final String[] requirementClasses) {
+            this.flag = flag;
+            this.configurationClasses = configurationClasses;
+            this.requirementClasses = requirementClasses;
+        }
+
+        private ENABLE_OPTION(final String flag, final Class<?> configurationClass) {
+            this(flag, new Class[] {configurationClass}, null);
+        }
+
+        private final String flag;
+        private final Class<?>[] configurationClasses;
+        private final String[] requirementClasses;
+    }
+
 
     @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
         AnnotationAttributes attributes =
             AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableSummer.class.getName(), false));
         List<String> configurationClassesToEnable = new ArrayList<>();
-        if (attributes.getBoolean("message_source")) {
-            configurationClassesToEnable.add(MessageSourceConfiguration.class.getName());
-        }
-        if (attributes.getBoolean("log4j")) {
-            configurationClassesToEnable.add(Log4JController.class.getName());
-        }
-        if (attributes.getBoolean("log4j_filter")) {
-            configurationClassesToEnable.add(Log4jMDCFilterConfiguration.class.getName());
-        }
-        if (attributes.getBoolean("health")) {
-            configurationClassesToEnable.add(HealthController.class.getName());
-        }
-        if (attributes.getBoolean("actuator_customizer")) {
-            configurationClassesToEnable.add(ActuatorCustomizer.class.getName());
-        }
-        if (attributes.getBoolean("xslt_view")) {
-            configurationClassesToEnable.add(XsltConfiguration.class.getName());
-        }
-        if (attributes.getBoolean("jolt_view")) {
-            configurationClassesToEnable.add(ApplicationContextProvider.class.getName());
-            configurationClassesToEnable.add(JoltViewConfiguration.class.getName());
-        }
-        if (attributes.getBoolean("xml_view_pooling")) {
-            configurationClassesToEnable.add(SummerWebConfig.class.getName());
+        for (ENABLE_OPTION option : ENABLE_OPTION.values()) {
+            if (attributes.getBoolean(option.flag)) {
+                try {
+                    if (option.requirementClasses != null) {
+                        for (String requiredClass : option.requirementClasses) {
+                            Class.forName(requiredClass);
+                        }
+                    }
+                    for (Class<?> configuredClass : option.configurationClasses) {
+                        configurationClassesToEnable.add(configuredClass.getName());
+                    }
+                } catch (Exception e) {
+                    log.error("Error enabling module: {}. It requires classes {} in the classpath. {}:{}", option.flag,
+                        Arrays.stream(option.requirementClasses).collect(Collectors.joining(", ")), e.getClass().getSimpleName(), e.getMessage());
+                }
+            }
         }
         return configurationClassesToEnable.toArray(new String[configurationClassesToEnable.size()]);
     }

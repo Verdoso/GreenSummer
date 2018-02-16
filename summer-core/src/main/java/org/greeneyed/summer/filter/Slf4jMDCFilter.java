@@ -39,16 +39,16 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Component(value = "Log4UUIDFilter")
-public class Log4jMDCFilter extends OncePerRequestFilter {
+@Component
+public class Slf4jMDCFilter extends OncePerRequestFilter {
 
     public static final String RESPONSE_TOKEN_HEADER = "Response_Token";
-    public static final String MDC_UUID_TOKEN_KEY = "Log4UUIDFilter.UUID";
+    public static final String MDC_UUID_TOKEN_KEY = "Slf4jMDCFilter.UUID";
 
     /**
      * Instantiates a new log 4 j MDC filter.
      */
-    public Log4jMDCFilter() {
+    public Slf4jMDCFilter() {
         // Default constructor as per spec.
     }
 
