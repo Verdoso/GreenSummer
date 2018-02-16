@@ -13,3 +13,7 @@ endpoints:
     sensitive: false
   mappings:
     enabled: true
+summer:
+    health:
+        status: KO
+        use_http_status: false
