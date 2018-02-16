@@ -59,8 +59,8 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * Path can be configured through the properties. For example:
  * summer:
- *  log4j:
- *   path: /secret/log4j
+ * log4j:
+ * path: /secret/log4j
  */
 @Data
 @Controller

@@ -67,8 +67,7 @@ import lombok.Data;
  */
 @Data
 @Controller
-@RequestMapping({
-    "${summer.health.path:/health}"})
+@RequestMapping({"${summer.health.path:/health}"})
 @ConfigurationProperties(prefix = "summer.health")
 public class HealthController {
 
