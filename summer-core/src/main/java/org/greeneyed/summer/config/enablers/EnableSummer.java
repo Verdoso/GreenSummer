@@ -39,6 +39,8 @@ public @interface EnableSummer {
 
     boolean log4j() default true;
 
+    boolean logback() default false;
+
     boolean slf4j_filter() default true;
 
     boolean health() default true;

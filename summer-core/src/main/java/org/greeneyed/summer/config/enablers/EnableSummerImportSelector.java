@@ -29,12 +29,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.greeneyed.summer.config.JoltViewConfiguration;
-import org.greeneyed.summer.config.Slf4jMDCFilterConfiguration;
 import org.greeneyed.summer.config.MessageSourceConfiguration;
+import org.greeneyed.summer.config.Slf4jMDCFilterConfiguration;
 import org.greeneyed.summer.config.SummerWebConfig;
 import org.greeneyed.summer.config.XsltConfiguration;
 import org.greeneyed.summer.controller.HealthController;
 import org.greeneyed.summer.controller.Log4JController;
+import org.greeneyed.summer.controller.LogbackController;
 import org.greeneyed.summer.util.ActuatorCustomizer;
 import org.greeneyed.summer.util.ApplicationContextProvider;
 import org.springframework.context.annotation.ImportSelector;
@@ -49,6 +50,7 @@ public class EnableSummerImportSelector implements ImportSelector {
     private static enum ENABLE_OPTION {
         MESSAGE_SOURCE("message_source", MessageSourceConfiguration.class),
         LOG4J_CONTROLLER("log4j", new Class[] {Log4JController.class}, new String[] {"org.apache.logging.log4j.core.LoggerContext"}),
+        LOGBACK_CONTROLLER("logback", new Class[] {LogbackController.class}, new String[] {"ch.qos.logback.classic.LoggerContext"}),
         SLF4J_FILTER("slf4j_filter", new Class[] {Slf4jMDCFilterConfiguration.class}, new String[] {"org.slf4j.MDC"}),
         HEALTH_CONTROLLER("health", HealthController.class),
         ACTUATOR_CUSTOMIZER("actuator_customizer", ActuatorCustomizer.class),
