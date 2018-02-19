@@ -35,6 +35,7 @@ public class SpringTestAPI {
 	@RequestMapping(value = "/test")
 	public ModelAndView testInterface() {
 		App app = new App(Arrays.asList(new MyPojo("anId", "aName"), new MyPojo("anotherId", "anotherName")));
+		log.debug("Testing");
 		return new XsltModelAndView("pojo_process", app, HttpStatus.OK);
 	}
 }

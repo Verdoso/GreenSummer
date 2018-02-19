@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				%-5p|%date{ISO8601}|%X{Slf4jMDCFilter.UUID}|%logger{0}|%m%ex%n
+			</Pattern>
+		</layout>
+	</appender>
+
+	<logger name="org.greeneyed" level="info" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<root level="warn">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
