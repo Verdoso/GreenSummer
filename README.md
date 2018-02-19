@@ -4,7 +4,8 @@ Green Summer is a set of different utilities that can be added on top of Spring 
 It started as a set of controllers and configuration that I felt tempted to copy/paste into each of my projects. So I decided to create a shared library instead. Some of the functionality might be developed in the future in Spring (Boot) itself, and then I'll be more than happy to deprecate it and move along.
 In the mean time, this is a brief summary of the utilities that one can find in Green Summer
 
- - **Log4JController**: A controller to list/modify the Log4j log levels configuration at runtime.
+ - **Log4JController**: A controller to list/modify the Log4j2 log levels configuration at runtime.
+ - **LogbackController**: A controller to list/modify the Logback log levels configuration at runtime.
  - **HealthController**: A simple controller with an actionable toggle that can be used from balancers or health checks to control whether the application should be used or not.
  - **Slf4jMDCFilter**:  A servlet filter that adds a unique ID to all the log messages that belong to each request. This way you can track all the log messages for a given request, even if the intermix with messages from other requests.
  - **ProfilingAspect**: An aspect that can be easily used to profile method calls. With the appropriate AOP configuration, it can be used to profile also private methods and/or methods belonging to classes outside Spring.
