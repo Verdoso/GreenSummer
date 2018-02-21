@@ -37,7 +37,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.greeneyed.summer.filter.Slf4jMDCFilter;
+import org.greeneyed.summer.config.Slf4jMDCFilterConfiguration;
 import org.greeneyed.summer.monitoring.ProfiledMeasure.ProfiledMeasureBuilder;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -102,7 +102,9 @@ public abstract class ProfilingAspect {
         HttpServletRequest request = (HttpServletRequest) proceedingJoinPoint.getArgs()[2];
         final HttpServletResponse response = (HttpServletResponse) proceedingJoinPoint.getArgs()[3];
         if (requestFilter.test(request)) {
-            return measure(proceedingJoinPoint, buildNameForRequest(request), () -> response.getHeader(Slf4jMDCFilter.RESPONSE_TOKEN_HEADER));
+            return measure(proceedingJoinPoint, buildNameForRequest(request),
+                //TODO: Careful, if the name of the header is changed through properties, this won't get it!
+                () -> response.getHeader(Slf4jMDCFilterConfiguration.DEFAULT_RESPONSE_TOKEN_HEADER));
         } else {
             return proceedingJoinPoint.proceed();
         }

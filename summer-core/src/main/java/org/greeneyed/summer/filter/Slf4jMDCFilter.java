@@ -30,38 +30,57 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.greeneyed.summer.config.Slf4jMDCFilterConfiguration;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * A servlet that adds a key to the Mapped Diagnostic Context (MDC) to each request so you can print a unique id in the logg messages of each request.
+ * It also add the key as a header in the response so the caller of the request can provide you the id to browse the logs.
+ * 
+ * @see org.greeneyed.summer.config.Slf4jMDCFilterConfiguration
+ **/
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Component
 public class Slf4jMDCFilter extends OncePerRequestFilter {
 
-    public static final String RESPONSE_TOKEN_HEADER = "Response_Token";
-    public static final String MDC_UUID_TOKEN_KEY = "Slf4jMDCFilter.UUID";
+    private final String responseHeader;
+    private final String mdcTokenKey;
+    private final String requestHeader;
 
-    /**
-     * Instantiates a new log 4 j MDC filter.
-     */
     public Slf4jMDCFilter() {
-        // Default constructor as per spec.
+        responseHeader = Slf4jMDCFilterConfiguration.DEFAULT_RESPONSE_TOKEN_HEADER;
+        mdcTokenKey = Slf4jMDCFilterConfiguration.DEFAULT_MDC_UUID_TOKEN_KEY;
+        requestHeader = null;
+    }
+
+    public Slf4jMDCFilter(final String responseHeader, final String mdcTokenKey, final String requestHeader) {
+        this.responseHeader = responseHeader;
+        this.mdcTokenKey = mdcTokenKey;
+        this.requestHeader = requestHeader;
     }
 
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
         throws java.io.IOException, ServletException {
         try {
-            String token = UUID.randomUUID().toString().toUpperCase().replace("-", "");
-            MDC.put(MDC_UUID_TOKEN_KEY, token);
-            response.addHeader(RESPONSE_TOKEN_HEADER, token);
+            final String token;
+            if (!StringUtils.isEmpty(requestHeader) && !StringUtils.isEmpty(request.getHeader(requestHeader))) {
+                token = request.getHeader(requestHeader);
+            } else {
+                token = UUID.randomUUID().toString().toUpperCase().replace("-", "");
+            }
+            MDC.put(mdcTokenKey, token);
+            response.addHeader(responseHeader, token);
             chain.doFilter(request, response);
         } finally {
-            MDC.remove(MDC_UUID_TOKEN_KEY);
+            MDC.remove(mdcTokenKey);
         }
     }
 
