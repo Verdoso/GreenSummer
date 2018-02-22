@@ -2,7 +2,7 @@
 <Configuration status="WARN" monitorInterval="30" shutdownHook="disable">
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%-5p|%d{ISO8601}{GMT}|%X{Log4UUIDFilter.UUID}|%c{1}|%m%ex%n" />
+      <PatternLayout pattern="%-5p|%d{ISO8601}{GMT}|%X{Slf4jMDCFilter.UUID}|%c{1}|%m%ex%n" />
     </Console>
   </Appenders>
   <Loggers>
