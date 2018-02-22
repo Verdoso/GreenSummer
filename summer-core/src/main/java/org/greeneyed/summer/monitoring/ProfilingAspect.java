@@ -103,7 +103,7 @@ public abstract class ProfilingAspect {
         final HttpServletResponse response = (HttpServletResponse) proceedingJoinPoint.getArgs()[3];
         if (requestFilter.test(request)) {
             return measure(proceedingJoinPoint, buildNameForRequest(request),
-                //TODO: Careful, if the name of the header is changed through properties, this won't get it!
+            //TODO: Careful, if the name of the header is changed through properties, this won't get it!
                 () -> response.getHeader(Slf4jMDCFilterConfiguration.DEFAULT_RESPONSE_TOKEN_HEADER));
         } else {
             return proceedingJoinPoint.proceed();

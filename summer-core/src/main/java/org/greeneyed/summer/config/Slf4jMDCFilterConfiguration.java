@@ -34,12 +34,14 @@ import lombok.Data;
 /**
  * The class that configures a servlet that adds a key to the Mapped Diagnostic Context (MDC) to each request so you can print a unique id in the logg
  * messages of each request. It also add the key as a header in the response so the caller of the request can provide you the id to browse the logs.
+ * Set the response header name to null/blank if you want the response to NOT include such header.
  * 
  * If you provide a request header name, the filter will check first if the request contains a header with that name and will use the ID it provides.
  * This is useful if your application chain has already assigned an id to the "transaction". (Microservices, apps behind a proxy/gateway service...)
  * 
  * The MDC key and the header names are configurable.
  * 
+ * Here's a configuration sample with the default values:
  * <pre>
  * summer:
  *   slf4jfilter:

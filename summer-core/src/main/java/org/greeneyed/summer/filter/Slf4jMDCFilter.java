@@ -77,7 +77,9 @@ public class Slf4jMDCFilter extends OncePerRequestFilter {
                 token = UUID.randomUUID().toString().toUpperCase().replace("-", "");
             }
             MDC.put(mdcTokenKey, token);
-            response.addHeader(responseHeader, token);
+            if (!StringUtils.isEmpty(responseHeader)) {
+                response.addHeader(responseHeader, token);
+            }
             chain.doFilter(request, response);
         } finally {
             MDC.remove(mdcTokenKey);
