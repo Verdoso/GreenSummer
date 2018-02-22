@@ -42,6 +42,7 @@ import lombok.Data;
  * The MDC key and the header names are configurable.
  * 
  * Here's a configuration sample with the default values:
+ * 
  * <pre>
  * summer:
  *   slf4jfilter:
