@@ -124,6 +124,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
                 clazz = ClassUtils.getUserClass(source);
                 marshaller = marshallerPool.borrowObject(clazz);
                 updateMarshallerCharset(marshaller);
+                log.debug("Marshalling object of class {} into XML before applying transformation", clazz.getName());
                 return super.convertSource(new PooledMarshallerJAXBSource(marshaller, source, clazz));
             } catch (MarshalException ex) {
                 throw new HttpMessageNotWritableException("Could not marshal [" + source + "]: " + ex.getMessage(), ex);
@@ -191,23 +192,18 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
      * location.
      */
     private Templates loadTemplates(boolean useCached) throws ApplicationContextException {
-        if (cachedTemplates != null && useCached) {
-            return cachedTemplates;
-        } else {
+        if (cachedTemplates == null || !useCached) {
             Source stylesheetSource = getStylesheetSource();
             try {
-                Templates templates = getTransformerFactory().newTemplates(stylesheetSource);
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Loading templates '" + templates + "'");
-                }
-                cachedTemplates = templates;
-                return templates;
+                log.debug("Loading templates from source {}", stylesheetSource.getSystemId());
+                cachedTemplates = getTransformerFactory().newTemplates(stylesheetSource);
             } catch (TransformerConfigurationException ex) {
                 throw new ApplicationContextException("Can't load stylesheet from '" + getUrl() + "'", ex);
             } finally {
                 customCloseSourceIfNecessary(stylesheetSource);
             }
         }
+        return cachedTemplates;
     }
 
     /**
