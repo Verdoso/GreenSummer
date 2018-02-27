@@ -107,7 +107,7 @@ public class HealthController {
         if (customStatus != null) {
             resultMap.putAll(customStatus);
         }
-        final HttpStatus httpStatus = currentStatus == STATUS.KO && useHttpStatus ? HttpStatus.OK : HttpStatus.SERVICE_UNAVAILABLE;
+        final HttpStatus httpStatus = currentStatus == STATUS.KO && useHttpStatus ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
         return new ResponseEntity<>(resultMap, httpStatus);
     }
 
