@@ -57,12 +57,12 @@ import lombok.Data;
  *     status: KO
  * </pre>
  * 
- * You can also tell the controller to return a HTTP - 503 code instead of a 200 to when it is KO (default is false)
+ * You can also tell the controller to return a HTTP - 200 code instead of a 503 to when it is KO (default is true)
  * 
  * <pre>
  * summer:
  *   health:
- *     use_http_status: true
+ *     use_http_status: false
  * </pre>
  */
 @Data
@@ -77,7 +77,7 @@ public class HealthController {
     }
 
     private STATUS status = STATUS.OK;
-    private boolean useHttpStatus = false;
+    private boolean useHttpStatus = true;
 
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -107,7 +107,7 @@ public class HealthController {
         if (customStatus != null) {
             resultMap.putAll(customStatus);
         }
-        final HttpStatus httpStatus = (currentStatus == STATUS.KO && useHttpStatus) ? HttpStatus.OK : HttpStatus.SERVICE_UNAVAILABLE;
+        final HttpStatus httpStatus = currentStatus == STATUS.KO && useHttpStatus ? HttpStatus.OK : HttpStatus.SERVICE_UNAVAILABLE;
         return new ResponseEntity<>(resultMap, httpStatus);
     }
 
