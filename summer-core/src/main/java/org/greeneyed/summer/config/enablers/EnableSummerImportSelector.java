@@ -86,15 +86,15 @@ public class EnableSummerImportSelector implements ImportSelector {
                 "org.springframework.cache.caffeine.CaffeineCache",
                 "com.github.benmanes.caffeine.cache.Caffeine"});
 
+        private final String flag;
+        private final Class<?>[] configurationClasses;
+        private final String[] requirementClasses;
+
         private ENABLE_OPTION(final String flag, final Class<?>[] configurationClasses, final String[] requirementClasses) {
             this.flag = flag;
             this.configurationClasses = configurationClasses;
             this.requirementClasses = requirementClasses;
         }
-
-        private final String flag;
-        private final Class<?>[] configurationClasses;
-        private final String[] requirementClasses;
 
         private ENABLE_OPTION(final String flag, final Class<?> configurationClass) {
             this(flag, new Class[] {
