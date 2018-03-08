@@ -47,13 +47,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CacheConfiguration {
 
+    private Map<String, CacheSpec> specs;
+
     @Data
     public static class CacheSpec {
         private Integer timeout;
         private Integer max = 200;
     }
 
-    private Map<String, CacheSpec> specs;
 
     @Bean
     public CacheManager cacheManager(Ticker ticker) {
