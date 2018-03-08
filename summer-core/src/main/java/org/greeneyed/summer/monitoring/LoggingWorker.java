@@ -31,7 +31,7 @@ import org.slf4j.MDC;
 
 public class LoggingWorker implements Runnable {
 
-    private final BlockingQueue<ProfiledMeasure> measuresQueue = new LinkedBlockingQueue<ProfiledMeasure>();
+    private final BlockingQueue<ProfiledMeasure> measuresQueue = new LinkedBlockingQueue<>();
     private boolean keepRunning = true;
     private final Logger log;
 
@@ -74,18 +74,22 @@ public class LoggingWorker implements Runnable {
         keepRunning = false;
     }
 
-    public void enqueue(final String message, String token, final long timeSpent, String... tags) {
+    private void _enqueue(final String message, String token, final long timeSpent, boolean ShowValue, String... tags) {
+        final String passedToken;
         if (token == null) {
-            token = MDC.get(ProfiledMeasure.MDC_UUID_TOKEN_KEY);
+            passedToken = MDC.get(ProfiledMeasure.MDC_UUID_TOKEN_KEY);
+        } else {
+            passedToken = token;
         }
-        measuresQueue.add(new ProfiledMeasure(message, timeSpent, true, tags, token));
+        measuresQueue.add(new ProfiledMeasure(message, timeSpent, ShowValue, tags, passedToken));
+    }
+
+    public void enqueue(final String message, String token, final long timeSpent, String... tags) {
+        _enqueue(message, token, timeSpent, true, tags);
     }
 
     public void enqueue(final String message, String token, String... tags) {
-        if (token == null) {
-            token = MDC.get(ProfiledMeasure.MDC_UUID_TOKEN_KEY);
-        }
-        measuresQueue.add(new ProfiledMeasure(message, 0, false, tags, token));
+        _enqueue(message, token, 0, false, tags);
     }
 
     public void enqueue(final ProfiledMeasure profiledMeasure) {
