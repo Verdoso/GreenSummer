@@ -49,17 +49,42 @@ public class EnableSummerImportSelector implements ImportSelector {
 
     private static enum ENABLE_OPTION {
         MESSAGE_SOURCE("message_source", MessageSourceConfiguration.class),
-        LOG4J_CONTROLLER("log4j", new Class[] {Log4JController.class}, new String[] {"org.apache.logging.log4j.core.LoggerContext"}),
-        LOGBACK_CONTROLLER("logback", new Class[] {LogbackController.class}, new String[] {"ch.qos.logback.classic.LoggerContext"}),
-        SLF4J_FILTER("slf4j_filter", new Class[] {Slf4jMDCFilterConfiguration.class}, new String[] {"org.slf4j.MDC"}),
+        LOG4J_CONTROLLER(
+            "log4j",
+            new Class[] {
+                Log4JController.class},
+            new String[] {
+                "org.apache.logging.log4j.core.LoggerContext"}),
+        LOGBACK_CONTROLLER(
+            "logback",
+            new Class[] {
+                LogbackController.class},
+            new String[] {
+                "ch.qos.logback.classic.LoggerContext"}),
+        SLF4J_FILTER(
+            "slf4j_filter",
+            new Class[] {
+                Slf4jMDCFilterConfiguration.class},
+            new String[] {
+                "org.slf4j.MDC"}),
         HEALTH_CONTROLLER("health", HealthController.class),
         ACTUATOR_CUSTOMIZER("actuator_customizer", ActuatorCustomizer.class),
         XSLT_VIEW("xslt_view", XsltConfiguration.class),
-        JOLT_VIEW("jolt_view", new Class[] {
-            ApplicationContextProvider.class, JoltViewConfiguration.class}, new String[] {"com.bazaarvoice.jolt.Chainr"}),
+        JOLT_VIEW(
+            "jolt_view",
+            new Class[] {
+                ApplicationContextProvider.class,
+                JoltViewConfiguration.class},
+            new String[] {
+                "com.bazaarvoice.jolt.Chainr"}),
         XML_VIEW_POOLING("xml_view_pooling", SummerWebConfig.class),
-        CAFFEINE_CACHE("caffeine_cache", new Class[] {SummerWebConfig.class}, new String[] {
-            "org.springframework.cache.caffeine.CaffeineCache", "com.github.benmanes.caffeine.cache.Caffeine"});
+        CAFFEINE_CACHE(
+            "caffeine_cache",
+            new Class[] {
+                SummerWebConfig.class},
+            new String[] {
+                "org.springframework.cache.caffeine.CaffeineCache",
+                "com.github.benmanes.caffeine.cache.Caffeine"});
 
         private ENABLE_OPTION(final String flag, final Class<?>[] configurationClasses, final String[] requirementClasses) {
             this.flag = flag;
@@ -67,13 +92,14 @@ public class EnableSummerImportSelector implements ImportSelector {
             this.requirementClasses = requirementClasses;
         }
 
-        private ENABLE_OPTION(final String flag, final Class<?> configurationClass) {
-            this(flag, new Class[] {configurationClass}, null);
-        }
-
         private final String flag;
         private final Class<?>[] configurationClasses;
         private final String[] requirementClasses;
+
+        private ENABLE_OPTION(final String flag, final Class<?> configurationClass) {
+            this(flag, new Class[] {
+                configurationClass}, null);
+        }
     }
 
 
