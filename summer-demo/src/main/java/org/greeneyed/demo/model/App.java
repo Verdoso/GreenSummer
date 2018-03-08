@@ -20,5 +20,5 @@ import lombok.NoArgsConstructor;
 public class App {
 	@XmlElementWrapper(name = "pojos")
 	@XmlElement(name = "pojo")
-	List<MyPojo> pojos;
+	private List<MyPojo> pojos;
 }

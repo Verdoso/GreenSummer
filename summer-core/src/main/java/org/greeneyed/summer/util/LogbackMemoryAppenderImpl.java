@@ -48,7 +48,7 @@ public final class LogbackMemoryAppenderImpl extends AppenderBase<ILoggingEvent>
     private final int size;
     private final String pattern;
     // Set up the pattern
-    PatternLayout patternLayout = new PatternLayout();
+    private PatternLayout patternLayout = new PatternLayout();
 
     @Override
     protected void append(ILoggingEvent eventObject) {

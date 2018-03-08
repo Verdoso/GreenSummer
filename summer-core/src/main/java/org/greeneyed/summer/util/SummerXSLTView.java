@@ -101,9 +101,9 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
     @Data
     @EqualsAndHashCode(callSuper = true)
     private static class PooledMarshallerJAXBSource extends JAXBSource {
-        final Marshaller marshaller;
-        final Object source;
-        final Class<?> sourceClazz;
+        private final Marshaller marshaller;
+        private final Object source;
+        private final Class<?> sourceClazz;
 
         public PooledMarshallerJAXBSource(Marshaller marshaller, Object source, Class<?> sourceClazz) throws JAXBException {
             super(marshaller, source);
@@ -237,7 +237,8 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
         }
     }
 
-    protected void superRenderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected void superRenderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
+        throws Exception {
 
         Templates templates = loadTemplates(true);
 
