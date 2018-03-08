@@ -74,7 +74,7 @@ public class LoggingWorker implements Runnable {
         keepRunning = false;
     }
 
-    private void _enqueue(final String message, String token, final long timeSpent, boolean ShowValue, String... tags) {
+    private void enqueueImplementation(final String message, String token, final long timeSpent, boolean ShowValue, String... tags) {
         final String passedToken;
         if (token == null) {
             passedToken = MDC.get(ProfiledMeasure.MDC_UUID_TOKEN_KEY);
@@ -85,11 +85,11 @@ public class LoggingWorker implements Runnable {
     }
 
     public void enqueue(final String message, String token, final long timeSpent, String... tags) {
-        _enqueue(message, token, timeSpent, true, tags);
+        enqueueImplementation(message, token, timeSpent, true, tags);
     }
 
     public void enqueue(final String message, String token, String... tags) {
-        _enqueue(message, token, 0, false, tags);
+        enqueueImplementation(message, token, 0, false, tags);
     }
 
     public void enqueue(final ProfiledMeasure profiledMeasure) {
