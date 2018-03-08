@@ -79,7 +79,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Data
 @Controller
-@RequestMapping({"${summer.logback.path:/logback}"})
+@RequestMapping({
+    "${summer.logback.path:/logback}"})
 @Slf4j
 @ConfigurationProperties(prefix = "summer.logback")
 public class LogbackController {
@@ -99,13 +100,9 @@ public class LogbackController {
     private void initInMemoryAppender() {
         final LoggerContext ctx = (LoggerContext) LoggerFactory.getILoggerFactory();
         synchronized (ctx) {
-            Logger root = ctx.getLogger(Logger.ROOT_LOGGER_NAME);
             logbackMemoryAppenderImpl = new LogbackMemoryAppenderImpl(200, inMemoryPattern);
             logbackMemoryAppenderImpl.setName("LogbackMemoryAppender");
             logbackMemoryAppenderImpl.setContext(ctx);
-            Appender<ILoggingEvent> firstAppender = root.iteratorForAppenders().next();
-            if (firstAppender != null) {
-            }
             logbackMemoryAppenderImpl.start();
         }
     }
