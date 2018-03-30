@@ -1,5 +1,7 @@
 package org.greeneyed.summer.controller;
 
+import java.nio.file.Paths;
+
 /*
  * #%L
  * Summer
@@ -21,7 +23,6 @@ package org.greeneyed.summer.controller;
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
  * #L%
  */
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -167,6 +169,12 @@ public class Log4JController {
     public ResponseEntity<LogResponse> reset() {
         final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         synchronized (ctx) {
+            // If the config location is null, it means we are using a non-standard path for 
+            // the config file (for example log4j2-spring.xml. In this case the name of the configuration
+            // is usually the path to the configuration file. so we "fix" the path before reconfiguring
+            if (ctx.getConfigLocation() == null) {
+                ctx.setConfigLocation(Paths.get(ctx.getConfiguration().getName()).toUri());
+            }
             ctx.reconfigure();
             initInMemoryAppender();
         }
@@ -180,8 +188,8 @@ public class Log4JController {
         synchronized (ctx) {
             final Configuration config = ctx.getConfiguration();
             config.getLoggers().forEach(
-                (name, configuration) -> result.add(new LogSpecification(name, configuration.getLevel().name(), configuration.getAppenderRefs()
-                    .stream().map(AppenderRef::getRef).collect(Collectors.toList()))));
+                (name, configuration) -> result.add(new LogSpecification(StringUtils.hasText(name) ? name : "Root", configuration.getLevel().name(),
+                    configuration.getAppenderRefs().stream().map(AppenderRef::getRef).collect(Collectors.toList()))));
         }
         return logResponse;
 
