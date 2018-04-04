@@ -37,6 +37,8 @@ public @interface EnableSummer {
 
     boolean message_source() default true;
 
+    boolean config_inspector() default true;
+
     boolean log4j() default true;
 
     boolean logback() default false;

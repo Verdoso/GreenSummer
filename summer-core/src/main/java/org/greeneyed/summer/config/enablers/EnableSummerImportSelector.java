@@ -33,6 +33,7 @@ import org.greeneyed.summer.config.MessageSourceConfiguration;
 import org.greeneyed.summer.config.Slf4jMDCFilterConfiguration;
 import org.greeneyed.summer.config.SummerWebConfig;
 import org.greeneyed.summer.config.XsltConfiguration;
+import org.greeneyed.summer.controller.ConfigInspectorController;
 import org.greeneyed.summer.controller.HealthController;
 import org.greeneyed.summer.controller.Log4JController;
 import org.greeneyed.summer.controller.LogbackController;
@@ -49,17 +50,22 @@ public class EnableSummerImportSelector implements ImportSelector {
 
     private static enum ENABLE_OPTION {
         MESSAGE_SOURCE("message_source", MessageSourceConfiguration.class),
+        CONFIG_INSPECTOR_CONTROLLER("config_inspector", ConfigInspectorController.class),
         LOG4J_CONTROLLER("log4j", new Class[] {Log4JController.class}, new String[] {"org.apache.logging.log4j.core.LoggerContext"}),
         LOGBACK_CONTROLLER("logback", new Class[] {LogbackController.class}, new String[] {"ch.qos.logback.classic.LoggerContext"}),
         SLF4J_FILTER("slf4j_filter", new Class[] {Slf4jMDCFilterConfiguration.class}, new String[] {"org.slf4j.MDC"}),
         HEALTH_CONTROLLER("health", HealthController.class),
         ACTUATOR_CUSTOMIZER("actuator_customizer", ActuatorCustomizer.class),
         XSLT_VIEW("xslt_view", XsltConfiguration.class),
-        JOLT_VIEW("jolt_view", new Class[] {
-            ApplicationContextProvider.class, JoltViewConfiguration.class}, new String[] {"com.bazaarvoice.jolt.Chainr"}),
+        JOLT_VIEW(
+                "jolt_view",
+                new Class[] {ApplicationContextProvider.class, JoltViewConfiguration.class},
+                new String[] {"com.bazaarvoice.jolt.Chainr"}),
         XML_VIEW_POOLING("xml_view_pooling", SummerWebConfig.class),
-        CAFFEINE_CACHE("caffeine_cache", new Class[] {SummerWebConfig.class}, new String[] {
-            "org.springframework.cache.caffeine.CaffeineCache", "com.github.benmanes.caffeine.cache.Caffeine"});
+        CAFFEINE_CACHE(
+                "caffeine_cache",
+                new Class[] {SummerWebConfig.class},
+                new String[] {"org.springframework.cache.caffeine.CaffeineCache", "com.github.benmanes.caffeine.cache.Caffeine"});
 
         private final String flag;
         private final Class<?>[] configurationClasses;
@@ -80,7 +86,7 @@ public class EnableSummerImportSelector implements ImportSelector {
     @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
         AnnotationAttributes attributes =
-            AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableSummer.class.getName(), false));
+                AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableSummer.class.getName(), false));
         List<String> configurationClassesToEnable = new ArrayList<>();
         for (ENABLE_OPTION option : ENABLE_OPTION.values()) {
             if (attributes.getBoolean(option.flag)) {
@@ -95,7 +101,7 @@ public class EnableSummerImportSelector implements ImportSelector {
                     }
                 } catch (Exception e) {
                     log.error("Error enabling module: {}. It requires classes {} in the classpath. {}:{}", option.flag,
-                        Arrays.stream(option.requirementClasses).collect(Collectors.joining(", ")), e.getClass().getSimpleName(), e.getMessage());
+                            Arrays.stream(option.requirementClasses).collect(Collectors.joining(", ")), e.getClass().getSimpleName(), e.getMessage());
                 }
             }
         }
