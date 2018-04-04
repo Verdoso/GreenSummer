@@ -79,8 +79,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Data
 @Controller
-@RequestMapping({
-    "${summer.logback.path:/logback}"})
+@RequestMapping({"${summer.logback.path:/logback}"})
 @Slf4j
 @ConfigurationProperties(prefix = "summer.logback")
 public class LogbackController {
