@@ -52,7 +52,6 @@
 	<modules>
 		<module>build-tools</module>
 		<module>summer-core</module>
-		<module>summer-kotlin</module>
 		<!-- <module>summer-demo</module> -->
 	</modules>
 
