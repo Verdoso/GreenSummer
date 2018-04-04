@@ -237,8 +237,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
         }
     }
 
-    protected void superRenderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
-        throws Exception {
+    protected void superRenderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         Templates templates = loadTemplates(true);
 
