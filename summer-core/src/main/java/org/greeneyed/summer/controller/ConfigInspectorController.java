@@ -55,7 +55,8 @@ public class ConfigInspectorController {
 
     private static List<String> EXCLUDED_MAPS = Arrays.asList("systemProperties", "systemEnvironment", "server.ports", "servletContextInitParams");
 
-    @Autowired private EnvironmentEndpoint envEndpoint;
+    @Autowired
+    private EnvironmentEndpoint envEndpoint;
 
     @Data
     @AllArgsConstructor
@@ -191,7 +192,8 @@ public class ConfigInspectorController {
                 }
             }
             finalValues.putIfAbsent(origin, new ArrayList<>());
-            finalValues.get(origin).add(new String[] {key, finalValue});
+            finalValues.get(origin).add(new String[] {
+                key, finalValue});
         });
         return finalValues;
     }
