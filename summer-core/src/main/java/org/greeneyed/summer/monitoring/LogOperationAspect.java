@@ -22,8 +22,8 @@ package org.greeneyed.summer.monitoring;
  * #L%
  */
 
-
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.security.Principal;
 import java.util.List;
 
@@ -31,8 +31,10 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.greeneyed.summer.util.ObjectJoiner;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -58,7 +60,8 @@ public class LogOperationAspect {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getStaticPart().getSignature();
         Method method = methodSignature.getMethod();
         final String packageName = method.getDeclaringClass().getPackage().getName();
-        final Object result;
+        Throwable errorProduced = null;
+        Object result = null;
         if (packages == null || packages.stream().anyMatch(packageName::startsWith)) {
             Object[] args = joinPoint.getArgs();
             String userID = null;
@@ -73,22 +76,61 @@ public class LogOperationAspect {
                 if (userID != null) {
                     MDC.put(PRINCIPAL_LABEL, userID);
                 }
+                result = joinPoint.proceed();
+            } catch (Throwable t) {
+                errorProduced = t;
+                throw t;
+            } finally {
                 if (logOperations) {
                     final String operationName = extractOperationName(method);
                     if (operationName != null) {
                         try {
                             MDC.put(OPERATION_LABEL, operationName);
-                            log.info("Requested: {}", operationName);
+                            Parameter[] parameters = method.getParameters();
+                            StringBuilder theSB = new StringBuilder();
+                            boolean added = false;
+                            if (parameters != null && parameters.length > 0) {
+                                theSB.append(": ");
+                                for (int i = 0; i < parameters.length; i++) {
+                                    Parameter parameter = parameters[i];
+                                    if (parameter.getType().isPrimitive() || CharSequence.class.isAssignableFrom(parameter.getType())) {
+                                        if (added) {
+                                            theSB.append(";");
+                                        }
+                                        theSB.append(parameter.getName());
+                                        theSB.append("=");
+                                        theSB.append(args[i].toString());
+                                        added = true;
+                                    } else if (parameter.getType().isArray() && parameter.getType().getComponentType().isPrimitive()
+                                            || CharSequence.class.isAssignableFrom(parameter.getType().getComponentType())) {
+
+                                        if (added) {
+                                            theSB.append(";");
+                                        }
+                                        theSB.append(parameter.getName());
+                                        theSB.append("=");
+                                        theSB.append(ObjectJoiner.join(",", (Object[]) args[i]));
+                                        added = true;
+                                    }
+                                }
+                            }
+                            if (errorProduced != null) {
+                                log.error("Performed: {}{}|{}", operationName, theSB.toString(), errorProduced.getClass().getSimpleName());
+                            } else if (result != null && result instanceof ResponseEntity) {
+                                log.info("Performed: {}{}|{}", operationName, theSB.toString(), ((ResponseEntity<?>) result).getStatusCodeValue());
+                            } else {
+                                log.info("Performed: {}{}", operationName, theSB.toString());
+                            }
                         } finally {
                             MDC.remove(OPERATION_LABEL);
                         }
                     }
                 }
-                result = joinPoint.proceed();
-            } finally {
                 MDC.remove(PRINCIPAL_LABEL);
             }
-        } else {
+        } else
+
+        {
             result = joinPoint.proceed();
         }
         return result;
@@ -107,7 +149,6 @@ public class LogOperationAspect {
         } else if (classrequestMapping != null && classrequestMapping.value() != null && classrequestMapping.value().length > 0) {
             operationName = classrequestMapping.value()[0];
         } else {
-            // operationName = joinPoint.getSignature().getName();
             operationName = null;
         }
         return operationName;
