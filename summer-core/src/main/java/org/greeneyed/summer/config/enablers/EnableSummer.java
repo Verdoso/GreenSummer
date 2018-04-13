@@ -57,4 +57,6 @@ public @interface EnableSummer {
 
     boolean caffeine_cache() default false;
 
+    boolean log_operations() default false;
+
 }

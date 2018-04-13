@@ -37,6 +37,7 @@ import org.greeneyed.summer.controller.ConfigInspectorController;
 import org.greeneyed.summer.controller.HealthController;
 import org.greeneyed.summer.controller.Log4JController;
 import org.greeneyed.summer.controller.LogbackController;
+import org.greeneyed.summer.monitoring.LogOperationAspect;
 import org.greeneyed.summer.util.ActuatorCustomizer;
 import org.greeneyed.summer.util.ApplicationContextProvider;
 import org.springframework.context.annotation.ImportSelector;
@@ -57,15 +58,12 @@ public class EnableSummerImportSelector implements ImportSelector {
         HEALTH_CONTROLLER("health", HealthController.class),
         ACTUATOR_CUSTOMIZER("actuator_customizer", ActuatorCustomizer.class),
         XSLT_VIEW("xslt_view", XsltConfiguration.class),
-        JOLT_VIEW(
-                "jolt_view",
-                new Class[] {ApplicationContextProvider.class, JoltViewConfiguration.class},
-                new String[] {"com.bazaarvoice.jolt.Chainr"}),
+        JOLT_VIEW("jolt_view", new Class[] {
+            ApplicationContextProvider.class, JoltViewConfiguration.class}, new String[] {"com.bazaarvoice.jolt.Chainr"}),
         XML_VIEW_POOLING("xml_view_pooling", SummerWebConfig.class),
-        CAFFEINE_CACHE(
-                "caffeine_cache",
-                new Class[] {SummerWebConfig.class},
-                new String[] {"org.springframework.cache.caffeine.CaffeineCache", "com.github.benmanes.caffeine.cache.Caffeine"});
+        CAFFEINE_CACHE("caffeine_cache", new Class[] {SummerWebConfig.class}, new String[] {
+            "org.springframework.cache.caffeine.CaffeineCache", "com.github.benmanes.caffeine.cache.Caffeine"}),
+        LOG_OPERATIONS("log_operations", LogOperationAspect.class);
 
         private final String flag;
         private final Class<?>[] configurationClasses;
@@ -86,7 +84,7 @@ public class EnableSummerImportSelector implements ImportSelector {
     @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
         AnnotationAttributes attributes =
-                AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableSummer.class.getName(), false));
+            AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableSummer.class.getName(), false));
         List<String> configurationClassesToEnable = new ArrayList<>();
         for (ENABLE_OPTION option : ENABLE_OPTION.values()) {
             if (attributes.getBoolean(option.flag)) {
@@ -101,7 +99,7 @@ public class EnableSummerImportSelector implements ImportSelector {
                     }
                 } catch (Exception e) {
                     log.error("Error enabling module: {}. It requires classes {} in the classpath. {}:{}", option.flag,
-                            Arrays.stream(option.requirementClasses).collect(Collectors.joining(", ")), e.getClass().getSimpleName(), e.getMessage());
+                        Arrays.stream(option.requirementClasses).collect(Collectors.joining(", ")), e.getClass().getSimpleName(), e.getMessage());
                 }
             }
         }
