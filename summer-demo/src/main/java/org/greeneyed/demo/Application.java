@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan({ "org.greeneyed.demo" })
-@EnableSummer(xslt_view = true, xml_view_pooling = true, log4j = false, logback = false, slf4j_filter = false)
+@ComponentScan({"org.greeneyed.demo"})
+@EnableSummer(xslt_view = true, xml_view_pooling = true, log_operations = true)
 public class Application {
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 }

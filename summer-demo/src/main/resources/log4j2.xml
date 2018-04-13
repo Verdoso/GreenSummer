@@ -11,6 +11,7 @@
     </Root>
     <Logger name="org.springframework" level="WARN" />
     <Logger name="org.greeneyed.demo" level="INFO" />
+    <Logger name="org.greeneyed.summer.monitoring.LogOperationAspect" level="INFO" />
 
     <!-- <Logger name="org.greeneyed.summer" level="DEBUG" /> -->
     <!-- Config Server Issues -->

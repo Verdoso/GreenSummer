@@ -17,3 +17,6 @@ summer:
     health:
         status: KO
         use_http_status: false
+    operation_logging:
+        log_requests: true
+        included_packages: org.greeneyed.demo        
