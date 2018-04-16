@@ -52,20 +52,20 @@ public class Slf4jMDCFilter extends OncePerRequestFilter {
 
     private final String responseHeader;
     private final String mdcTokenKey;
-    private final String mdcClientIPKey;
+    private final String mdcClientIpKey;
     private final String requestHeader;
 
     public Slf4jMDCFilter() {
         responseHeader = Slf4jMDCFilterConfiguration.DEFAULT_RESPONSE_TOKEN_HEADER;
         mdcTokenKey = Slf4jMDCFilterConfiguration.DEFAULT_MDC_UUID_TOKEN_KEY;
-        mdcClientIPKey = Slf4jMDCFilterConfiguration.DEFAULT_MDC_CLIENT_IP_KEY;
+        mdcClientIpKey = Slf4jMDCFilterConfiguration.DEFAULT_MDC_CLIENT_IP_KEY;
         requestHeader = null;
     }
 
     public Slf4jMDCFilter(final String responseHeader, final String mdcTokenKey, final String mdcClientIPKey, final String requestHeader) {
         this.responseHeader = responseHeader;
         this.mdcTokenKey = mdcTokenKey;
-        this.mdcClientIPKey = mdcClientIPKey;
+        this.mdcClientIpKey = mdcClientIPKey;
         this.requestHeader = requestHeader;
     }
 
@@ -75,7 +75,7 @@ public class Slf4jMDCFilter extends OncePerRequestFilter {
         try {            
             final String token = extractToken(request);
             final String clientIP = extractClientIP(request);
-            MDC.put(mdcClientIPKey, clientIP);
+            MDC.put(mdcClientIpKey, clientIP);
             MDC.put(mdcTokenKey, token);
             if (!StringUtils.isEmpty(responseHeader)) {
                 response.addHeader(responseHeader, token);
@@ -83,7 +83,7 @@ public class Slf4jMDCFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
         } finally {
             MDC.remove(mdcTokenKey);
-            MDC.remove(mdcClientIPKey);
+            MDC.remove(mdcClientIpKey);
         }
     }
 

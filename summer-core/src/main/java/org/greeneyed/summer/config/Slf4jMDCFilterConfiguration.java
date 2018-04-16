@@ -63,13 +63,13 @@ public class Slf4jMDCFilterConfiguration {
 
     private String responseHeader = DEFAULT_RESPONSE_TOKEN_HEADER;
     private String mdcTokenKey = DEFAULT_MDC_UUID_TOKEN_KEY;
-    private String mdcClientIPKey = DEFAULT_MDC_CLIENT_IP_KEY;
+    private String mdcClientIpKey = DEFAULT_MDC_CLIENT_IP_KEY;
     private String requestHeader = null;
 
     @Bean
     public FilterRegistrationBean servletRegistrationBean() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        final Slf4jMDCFilter log4jMDCFilterFilter = new Slf4jMDCFilter(responseHeader, mdcTokenKey, mdcClientIPKey, requestHeader);
+        final Slf4jMDCFilter log4jMDCFilterFilter = new Slf4jMDCFilter(responseHeader, mdcTokenKey, mdcClientIpKey, requestHeader);
         registrationBean.setFilter(log4jMDCFilterFilter);
         registrationBean.setOrder(2);
         return registrationBean;
