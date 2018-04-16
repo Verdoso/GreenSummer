@@ -48,6 +48,7 @@ import lombok.Data;
  *   slf4jfilter:
  *     response_header: Response_Token
  *     mdc_token_key: Slf4jMDCFilter.UUID
+ *     mdc_client_ip_key: Slf4jMDCFilter.ClientIP
  *     request_header:
  * </pre>
  **/
