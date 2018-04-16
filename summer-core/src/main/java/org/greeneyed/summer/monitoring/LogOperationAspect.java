@@ -101,8 +101,8 @@ public class LogOperationAspect {
                                         theSB.append("=");
                                         theSB.append(args[i].toString());
                                         added = true;
-                                    } else if (parameter.getType().isArray() && parameter.getType().getComponentType().isPrimitive()
-                                            || CharSequence.class.isAssignableFrom(parameter.getType().getComponentType())) {
+                                    } else if (parameter.getType().isArray() && (parameter.getType().getComponentType().isPrimitive()
+                                            || CharSequence.class.isAssignableFrom(parameter.getType().getComponentType()))) {
 
                                         if (added) {
                                             theSB.append(";");
