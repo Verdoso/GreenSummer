@@ -56,7 +56,7 @@ public class LogOperationAspect {
     private List<String> packages;
 
     @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
-    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object logMethodCall(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getStaticPart().getSignature();
         Method method = methodSignature.getMethod();
         final String packageName = method.getDeclaringClass().getPackage().getName();
@@ -99,7 +99,10 @@ public class LogOperationAspect {
                                         }
                                         theSB.append(parameter.getName());
                                         theSB.append("=");
-                                        theSB.append(args[i].toString());
+                                        if(args[i]!=null)
+                                        {
+                                            theSB.append(args[i].toString());
+                                        }
                                         added = true;
                                     } else if (parameter.getType().isArray() && (parameter.getType().getComponentType().isPrimitive()
                                             || CharSequence.class.isAssignableFrom(parameter.getType().getComponentType()))) {
@@ -109,7 +112,9 @@ public class LogOperationAspect {
                                         }
                                         theSB.append(parameter.getName());
                                         theSB.append("=");
-                                        theSB.append(ObjectJoiner.join(",", (Object[]) args[i]));
+                                        if(args[i]!=null) {
+                                            theSB.append(ObjectJoiner.join(",", (Object[]) args[i]));
+                                        }
                                         added = true;
                                     }
                                 }
