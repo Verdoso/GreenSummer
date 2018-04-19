@@ -86,39 +86,7 @@ public class LogOperationAspect {
                     if (operationName != null) {
                         try {
                             MDC.put(OPERATION_LABEL, operationName);
-                            Parameter[] parameters = method.getParameters();
-                            StringBuilder theSB = new StringBuilder();
-                            boolean added = false;
-                            if (parameters != null && parameters.length > 0) {
-                                theSB.append(": ");
-                                for (int i = 0; i < parameters.length; i++) {
-                                    Parameter parameter = parameters[i];
-                                    if (parameter.getType().isPrimitive() || CharSequence.class.isAssignableFrom(parameter.getType())) {
-                                        if (added) {
-                                            theSB.append(";");
-                                        }
-                                        theSB.append(parameter.getName());
-                                        theSB.append("=");
-                                        if(args[i]!=null)
-                                        {
-                                            theSB.append(args[i].toString());
-                                        }
-                                        added = true;
-                                    } else if (parameter.getType().isArray() && (parameter.getType().getComponentType().isPrimitive()
-                                            || CharSequence.class.isAssignableFrom(parameter.getType().getComponentType()))) {
-
-                                        if (added) {
-                                            theSB.append(";");
-                                        }
-                                        theSB.append(parameter.getName());
-                                        theSB.append("=");
-                                        if(args[i]!=null) {
-                                            theSB.append(ObjectJoiner.join(",", (Object[]) args[i]));
-                                        }
-                                        added = true;
-                                    }
-                                }
-                            }
+                            StringBuilder theSB = extractArguments(method, args);
                             if (errorProduced != null) {
                                 log.error("Performed: {}{}|{}", operationName, theSB.toString(), errorProduced.getClass().getSimpleName());
                             } else if (result != null && result instanceof ResponseEntity) {
@@ -141,21 +109,66 @@ public class LogOperationAspect {
         return result;
     }
 
-    private String extractOperationName(Method method) {
-        RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
-        RequestMapping classrequestMapping = method.getDeclaringClass().getAnnotation(RequestMapping.class);
-        final String operationName;
-        if (requestMapping != null && requestMapping.value() != null && requestMapping.value().length > 0) {
-            if (classrequestMapping != null && classrequestMapping.value() != null && classrequestMapping.value().length > 0) {
-                operationName = classrequestMapping.value()[0] + requestMapping.value()[0];
-            } else {
-                operationName = requestMapping.value()[0];
+    private StringBuilder extractArguments(Method method, Object[] args) {
+        StringBuilder theSB = new StringBuilder();
+        try {
+            Parameter[] parameters = method.getParameters();
+            boolean added = false;
+            if (parameters != null && parameters.length > 0) {
+                theSB.append(": ");
+                for (int i = 0; i < parameters.length; i++) {
+                    Parameter parameter = parameters[i];
+                    if (parameter.getType().isPrimitive() || CharSequence.class.isAssignableFrom(parameter.getType())) {
+                        if (added) {
+                            theSB.append(";");
+                        }
+                        theSB.append(parameter.getName());
+                        theSB.append("=");
+                        if (args[i] != null) {
+                            theSB.append(args[i].toString());
+                        }
+                        added = true;
+                    } else if (parameter.getType().isArray() && (parameter.getType().getComponentType().isPrimitive()
+                            || CharSequence.class.isAssignableFrom(parameter.getType().getComponentType()))) {
+
+                        if (added) {
+                            theSB.append(";");
+                        }
+                        theSB.append(parameter.getName());
+                        theSB.append("=");
+                        if (args[i] != null) {
+                            theSB.append(ObjectJoiner.join(",", (Object[]) args[i]));
+                        }
+                        added = true;
+                    }
+                }
             }
-        } else if (classrequestMapping != null && classrequestMapping.value() != null && classrequestMapping.value().length > 0) {
-            operationName = classrequestMapping.value()[0];
-        } else {
-            operationName = null;
+        } catch (Exception e) {
+            log.error("Error extracting arguments from method", e);
         }
-        return operationName;
+        return theSB;
+    }
+
+    private String extractOperationName(Method method) {
+        try {
+            final String operationName;
+            RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+            RequestMapping classrequestMapping = method.getDeclaringClass().getAnnotation(RequestMapping.class);
+            if (requestMapping != null && requestMapping.value() != null && requestMapping.value().length > 0) {
+                if (classrequestMapping != null && classrequestMapping.value() != null && classrequestMapping.value().length > 0) {
+                    operationName = classrequestMapping.value()[0] + requestMapping.value()[0];
+                } else {
+                    operationName = requestMapping.value()[0];
+                }
+            } else if (classrequestMapping != null && classrequestMapping.value() != null && classrequestMapping.value().length > 0) {
+                operationName = classrequestMapping.value()[0];
+            } else {
+                operationName = null;
+            }
+            return operationName;
+        } catch (Exception e) {
+            log.error("Error extracting arguments from method", e);
+            return null;
+        }
     }
 }
