@@ -53,7 +53,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConfigInspectorController {
 
+    private static final String ENCRYPTED_TOKEN = "*******************";
     private static List<String> EXCLUDED_MAPS = Arrays.asList("systemProperties", "systemEnvironment", "server.ports", "servletContextInitParams");
+    private static List<String> ENCRIPTED_MAPS = Arrays.asList("decrypted");
+    private static List<String> ENCRIPTED_KEYS = Arrays.asList("password", "secret", "key");
 
     @Autowired
     private EnvironmentEndpoint envEndpoint;
@@ -116,15 +119,16 @@ public class ConfigInspectorController {
             theBW.write("<body>");
             finalValues.forEach((origin, values) -> {
                 try {
+                    final boolean encrypted = ENCRIPTED_MAPS.contains(origin);
                     theBW.write("<table style='min-width: 80%; margin-bottom: 2em;'>");
                     theBW.write("<caption style='font-size: 1.5em; text-align: left;'>");
                     theBW.write("Derived from: ");
                     theBW.write(origin);
                     theBW.write("</caption>");
                     if (asProperties) {
-                        printPropertyHtmlValues(theBW, values);
+                        printPropertyHtmlValues(theBW, values, encrypted);
                     } else {
-                        printYamlHtmlValues(theBW, values);
+                        printYamlHtmlValues(theBW, values, encrypted);
                     }
                     theBW.write("</table>");
                 } catch (IOException e) {
@@ -156,13 +160,14 @@ public class ConfigInspectorController {
         try (StringWriter theSW = new StringWriter(); BufferedWriter theBW = new BufferedWriter(theSW)) {
             finalValues.forEach((origin, values) -> {
                 try {
+                    final boolean encrypted = ENCRIPTED_MAPS.contains(origin);
                     theBW.write("# Derived from: ");
                     theBW.write(origin);
                     theBW.newLine();
                     if (asProperties) {
-                        printPropertyValues(theBW, values);
+                        printPropertyValues(theBW, values, encrypted);
                     } else {
-                        printYamlValues(theBW, values);
+                        printYamlValues(theBW, values, encrypted);
                     }
                     theBW.newLine();
                 } catch (IOException e) {
@@ -198,29 +203,29 @@ public class ConfigInspectorController {
         return finalValues;
     }
 
-    private void printPropertyHtmlValues(BufferedWriter theBW, List<String[]> values) throws IOException {
+    private void printPropertyHtmlValues(BufferedWriter theBW, List<String[]> values, boolean encrypted) throws IOException {
         for (String[] pair : values) {
             theBW.write("<tr>");
             theBW.write("<th style='width: 50%; text-align: left;'>");
             theBW.write(pair[0]);
             theBW.write("</th>");
             theBW.write("<td>");
-            theBW.write(pair[1]);
+            writeValue(theBW, encrypted, pair);
             theBW.write("</td>");
             theBW.write("</tr>");
         }
     }
 
-    private void printPropertyValues(BufferedWriter theBW, List<String[]> values) throws IOException {
+    private void printPropertyValues(BufferedWriter theBW, List<String[]> values, boolean encrypted) throws IOException {
         for (String[] pair : values) {
             theBW.write(pair[0]);
             theBW.write("=");
-            theBW.write(pair[1]);
+            writeValue(theBW, encrypted, pair);
             theBW.newLine();
         }
     }
 
-    private void printYamlHtmlValues(BufferedWriter theBW, List<String[]> values) throws IOException {
+    private void printYamlHtmlValues(BufferedWriter theBW, List<String[]> values, boolean encrypted) throws IOException {
         String previousKey = "";
         for (String[] pair : values) {
             theBW.write("<tr>");
@@ -230,20 +235,28 @@ public class ConfigInspectorController {
             theBW.write("</pre>");
             theBW.write("</th>");
             theBW.write("<td style='margin: 0px; padding: 0px;'>");
-            theBW.write(pair[1]);
+            writeValue(theBW, encrypted, pair);
             theBW.write("</td>");
             theBW.write("</tr>");
             previousKey = pair[0];
         }
     }
 
-    private void printYamlValues(BufferedWriter theBW, List<String[]> values) throws IOException {
+    private void printYamlValues(BufferedWriter theBW, List<String[]> values, boolean encrypted) throws IOException {
         String previousKey = "";
         for (String[] pair : values) {
             printYamlKey(pair[0], previousKey, theBW);
-            theBW.write(pair[1]);
+            writeValue(theBW, encrypted, pair);
             theBW.newLine();
             previousKey = pair[0];
+        }
+    }
+
+    private void writeValue(BufferedWriter theBW, boolean encrypted, String[] pair) throws IOException {
+        if(encrypted || ENCRIPTED_KEYS.contains(pair[0])) {
+            theBW.write(ENCRYPTED_TOKEN);
+        } else {
+            theBW.write(pair[1]);
         }
     }
 
