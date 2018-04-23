@@ -32,6 +32,7 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
+// Based on an idea read at https://stackoverflow.com/questions/13778099/register-converters-and-converterfactories-with-annotations-in-spring-3
 @Component
 public class AutoregisterFormatterRegistrar implements FormatterRegistrar {
 
