@@ -1,4 +1,4 @@
-package org.greeneyed.summer.util;
+package org.greeneyed.summer.util.logging;
 
 /*
  * #%L

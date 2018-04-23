@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.greeneyed.summer.messages.LogResponse;
 import org.greeneyed.summer.messages.LogSpecification;
-import org.greeneyed.summer.util.LogbackMemoryAppenderImpl;
+import org.greeneyed.summer.util.logging.LogbackMemoryAppenderImpl;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;

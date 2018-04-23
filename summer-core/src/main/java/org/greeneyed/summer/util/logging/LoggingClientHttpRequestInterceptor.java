@@ -1,4 +1,4 @@
-package org.greeneyed.summer.util;
+package org.greeneyed.summer.util.logging;
 
 /*
  * #%L
@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.List;
 
+import org.greeneyed.summer.util.ObjectJoiner;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;

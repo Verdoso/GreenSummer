@@ -41,7 +41,7 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.greeneyed.summer.messages.LogResponse;
 import org.greeneyed.summer.messages.LogSpecification;
-import org.greeneyed.summer.util.InMemoryAppenderImpl;
+import org.greeneyed.summer.util.logging.InMemoryAppenderImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package org.greeneyed.summer.config.enablers;
+package org.greeneyed.summer.util.autoformatter;
 
 /*
  * #%L
@@ -28,37 +28,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.context.annotation.Import;
+import org.springframework.beans.factory.annotation.Qualifier;
 
+@Target({ ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Import(EnableSummerImportSelector.class)
-public @interface EnableSummer {
-
-    boolean message_source() default true;
-
-    boolean config_inspector() default true;
-
-    boolean log4j() default true;
-
-    boolean logback() default false;
-
-    boolean slf4j_filter() default true;
-
-    boolean health() default true;
-
-    boolean actuator_customizer() default true;
-
-    boolean xslt_view() default false;
-
-    boolean xml_view_pooling() default false;
-
-    boolean jolt_view() default false;
-
-    boolean caffeine_cache() default false;
-
-    boolean log_operations() default false;
-    
-    boolean fomatter_registrar() default true;
-
+@Qualifier
+public @interface AutoRegistered {
 }

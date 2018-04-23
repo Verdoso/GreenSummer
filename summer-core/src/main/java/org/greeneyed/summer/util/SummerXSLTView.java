@@ -45,6 +45,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.greeneyed.summer.config.XsltConfiguration;
 import org.greeneyed.summer.monitoring.Measured;
+import org.greeneyed.summer.util.jaxb.MarshallerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.context.MessageSource;

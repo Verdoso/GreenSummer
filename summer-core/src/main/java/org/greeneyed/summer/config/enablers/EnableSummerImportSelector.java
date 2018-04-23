@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.greeneyed.summer.config.CustomConversionServiceConfiguration;
 import org.greeneyed.summer.config.JoltViewConfiguration;
 import org.greeneyed.summer.config.MessageSourceConfiguration;
 import org.greeneyed.summer.config.Slf4jMDCFilterConfiguration;
@@ -40,6 +41,7 @@ import org.greeneyed.summer.controller.LogbackController;
 import org.greeneyed.summer.monitoring.LogOperationAspect;
 import org.greeneyed.summer.util.ActuatorCustomizer;
 import org.greeneyed.summer.util.ApplicationContextProvider;
+import org.greeneyed.summer.util.autoformatter.AutoregisterFormatterRegistrar;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
@@ -58,11 +60,18 @@ public class EnableSummerImportSelector implements ImportSelector {
         HEALTH_CONTROLLER("health", HealthController.class),
         ACTUATOR_CUSTOMIZER("actuator_customizer", ActuatorCustomizer.class),
         XSLT_VIEW("xslt_view", XsltConfiguration.class),
-        JOLT_VIEW("jolt_view", new Class[] {
-            ApplicationContextProvider.class, JoltViewConfiguration.class}, new String[] {"com.bazaarvoice.jolt.Chainr"}),
+        JOLT_VIEW(
+                "jolt_view",
+                new Class[] {ApplicationContextProvider.class, JoltViewConfiguration.class},
+                new String[] {"com.bazaarvoice.jolt.Chainr"}),
         XML_VIEW_POOLING("xml_view_pooling", SummerWebConfig.class),
-        CAFFEINE_CACHE("caffeine_cache", new Class[] {SummerWebConfig.class}, new String[] {
-            "org.springframework.cache.caffeine.CaffeineCache", "com.github.benmanes.caffeine.cache.Caffeine"}),
+        FORMATTER_REGISTRAR(
+                "fomatter_registrar",
+                new Class<?>[] {CustomConversionServiceConfiguration.class, AutoregisterFormatterRegistrar.class}),
+        CAFFEINE_CACHE(
+                "caffeine_cache",
+                new Class[] {SummerWebConfig.class},
+                new String[] {"org.springframework.cache.caffeine.CaffeineCache", "com.github.benmanes.caffeine.cache.Caffeine"}),
         LOG_OPERATIONS("log_operations", LogOperationAspect.class);
 
         private final String flag;
@@ -75,8 +84,8 @@ public class EnableSummerImportSelector implements ImportSelector {
             this.requirementClasses = requirementClasses;
         }
 
-        private ENABLE_OPTION(final String flag, final Class<?> configurationClass) {
-            this(flag, new Class[] {configurationClass}, null);
+        private ENABLE_OPTION(final String flag, final Class<?>... configurationClass) {
+            this(flag, configurationClass, null);
         }
     }
 
@@ -84,7 +93,7 @@ public class EnableSummerImportSelector implements ImportSelector {
     @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
         AnnotationAttributes attributes =
-            AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableSummer.class.getName(), false));
+                AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableSummer.class.getName(), false));
         List<String> configurationClassesToEnable = new ArrayList<>();
         for (ENABLE_OPTION option : ENABLE_OPTION.values()) {
             if (attributes.getBoolean(option.flag)) {
@@ -99,7 +108,7 @@ public class EnableSummerImportSelector implements ImportSelector {
                     }
                 } catch (Exception e) {
                     log.error("Error enabling module: {}. It requires classes {} in the classpath. {}:{}", option.flag,
-                        Arrays.stream(option.requirementClasses).collect(Collectors.joining(", ")), e.getClass().getSimpleName(), e.getMessage());
+                            Arrays.stream(option.requirementClasses).collect(Collectors.joining(", ")), e.getClass().getSimpleName(), e.getMessage());
                 }
             }
         }
