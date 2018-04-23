@@ -118,7 +118,8 @@ public class LogOperationAspect {
                 theSB.append(": ");
                 for (int i = 0; i < parameters.length; i++) {
                     Parameter parameter = parameters[i];
-                    if (parameter.getType().isPrimitive() || CharSequence.class.isAssignableFrom(parameter.getType())) {
+                    if (parameter.getType().isPrimitive() || parameter.getType().isEnum()
+                            || CharSequence.class.isAssignableFrom(parameter.getType())) {
                         if (added) {
                             theSB.append(";");
                         }
@@ -128,8 +129,9 @@ public class LogOperationAspect {
                             theSB.append(args[i].toString());
                         }
                         added = true;
-                    } else if (parameter.getType().isArray() && (parameter.getType().getComponentType().isPrimitive()
-                            || CharSequence.class.isAssignableFrom(parameter.getType().getComponentType()))) {
+                    } else if (parameter.getType().isArray()
+                            && (parameter.getType().getComponentType().isPrimitive() || parameter.getType().getComponentType().isEnum()
+                                    || CharSequence.class.isAssignableFrom(parameter.getType().getComponentType()))) {
 
                         if (added) {
                             theSB.append(";");
