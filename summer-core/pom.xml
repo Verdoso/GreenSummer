@@ -133,7 +133,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 			</plugin>
-			<!-- Requires -Dgpg.keyname=YourKey -Dgpg.passphrase=YourPassphrase at command line -->
+			<!-- Requires -Dgpg.keyname=YourKey -Dgpg.passphrase=YourPassphrase at command line or as properties in .m2/settings.xml-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
