@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
+	<parent>
+		<artifactId>oss-parent</artifactId>
+		<groupId>org.sonatype.oss</groupId>
+		<version>2</version>
+		<relativePath></relativePath>
+	</parent>
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.greeneyed</groupId>
 	<artifactId>summer-parent</artifactId>
@@ -7,6 +16,46 @@
 	<version>0.1-SNAPSHOT</version>
 	<name>summer-parent</name>
 	<url>https://github.com/Verdoso/GreenSummer</url>
+	<description>GreenSummer, an extension library to complement Spring Boot applications.</description>
+
+    <organization>
+        <name>GreenEyed</name>
+        <url>http://www.greeneyed.org/</url>
+    </organization>
+
+	<developers>
+		<developer>
+			<id>Verdoso</id>
+			<name>Daniel Lopez</name>
+			<email>d.lopez.j@gmail.com</email>
+			<organization>UIB</organization>
+			<organizationUrl>http://www.greeneyed.org/</organizationUrl>
+			<timezone>GMT+1</timezone>
+			<roles>
+			</roles>
+		</developer>
+	</developers>
+	
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License 2.1</name>
+            <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/Verdoso/GreenSummer/issues</url>
+    </issueManagement>
+
+    <scm>
+        <url>https://github.com/Verdoso/GreenSummer</url>
+        <connection>scm:git:git://github.com/Verdoso/GreenSummer.git</connection>
+        <developerConnection>scm:git:https://github.com/Verdoso/GreenSummer.git</developerConnection>
+        <tag>green-summer-${project.version}</tag>
+    </scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,32 +72,7 @@
 		<spring-boot.version>1.5.3.RELEASE</spring-boot.version>
 		<lombok.version>1.16.20</lombok.version>
 	</properties>
-
-	<licenses>
-		<license>
-			<name>GNU Lesser General Public License 2.1</name>
-			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
-			<distribution>repo</distribution>
-			<comments>A business-friendly OSS license</comments>
-		</license>
-	</licenses>
-
-	<issueManagement>
-		<system>GitHub Issues</system>
-		<url>https://github.com/Verdoso/GreenSummer/issues</url>
-	</issueManagement>
-
-	<scm>
-		<url>https://github.com/Verdoso/GreenSummer</url>
-		<connection>scm:git:git://github.com/Verdoso/GreenSummer.git</connection>
-		<developerConnection>scm:git:https://github.com/Verdoso/GreenSummer.git</developerConnection>
-		<tag>green-summer-${project.version}</tag>
-	</scm>
-
-	<organization>
-		<name>GreenEyed</name>
-		<url>http://www.greeneyed.org/</url>
-	</organization>
+	
 	<modules>
 		<module>build-tools</module>
 		<module>summer-core</module>
