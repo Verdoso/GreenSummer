@@ -205,13 +205,6 @@
                 <configuration>
                     <configFile>${project.basedir}/eclipse-formatter.xml</configFile>
                 </configuration>
-<!--                 <dependencies> -->
-<!--                     <dependency> -->
-<!--                         <groupId>org.greeneyed.summer-parent</groupId> -->
-<!--                         <artifactId>build-tools</artifactId> -->
-<!--                         <version>${project.version}</version> -->
-<!--                     </dependency> -->
-<!--                 </dependencies> -->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -220,7 +213,10 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <compilerArgument>-Xlint:deprecation</compilerArgument>
+                    <compilerArgument>-Xlint:all,-deprecation,-unchecked</compilerArgument>
+                    <testCompilerArgument>-Xlint:none</testCompilerArgument>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>false</showDeprecation>
                 </configuration>
             </plugin>
             <plugin>
@@ -310,6 +306,9 @@
                             <reportOutputDirectory>../${apidocs.project.location}/${project.artifactId}/${project.version}</reportOutputDirectory>
                             <links>
                                 <link>http://verdoso.github.io/greensummer/${project.artifactId}/${project.version}/apidocs/</link>
+                                <link>http://commons.apache.org/proper/commons-pool/api-2.4.2/</link>
+                                <link>https://docs.spring.io/spring/docs/current/javadoc-api/</link>
+                                <link>https://www.slf4j.org/apidocs/</link>
                             </links>
                             <sourcepath>target/generated-sources/delombok</sourcepath>
                         </configuration>
