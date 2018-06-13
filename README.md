@@ -1,4 +1,5 @@
-# Green Summer [![Codacy Badge](https://api.codacy.com/project/badge/Grade/86d7fca3670149a2818e30c82581359e)](https://www.codacy.com/app/Verdoso/GreenSummer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Verdoso/GreenSummer&amp;utm_campaign=Badge_Grade)
+# Green Summer [![Codacy Badge](https://api.codacy.com/project/badge/Grade/86d7fca3670149a2818e30c82581359e)](https://www.codacy.com/app/Verdoso/GreenSummer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Verdoso/GreenSummer&amp;utm_campaign=Badge_Grade)[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.greeneyed/summer/badge.svg?style=plastic)](https://maven-badges.herokuapp.com/maven-central/org.greeneyed/summer)
+
 Green Summer is a set of different utilities that can be added on top of Spring to augment the basic functionality.
 It started as a set of controllers and configuration that I felt tempted to copy/paste into each of my projects. So I decided to create a shared library instead. Some of the functionality might be developed in the future in Spring (Boot) itself, and then I'll be more than happy to deprecate it and move along.
 In the mean time, this is a brief summary of the utilities that one can find in Green Summer
