@@ -4,7 +4,7 @@
     <description>Utilies to add to every Spring project</description>
     <groupId>org.greeneyed</groupId>
     <artifactId>summer</artifactId>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
 
     <organization>
         <name>GreenEyed</name>
@@ -42,7 +42,7 @@
         <url>https://github.com/Verdoso/GreenSummer</url>
         <connection>scm:git:git://github.com/Verdoso/GreenSummer.git</connection>
         <developerConnection>scm:git:https://github.com/Verdoso/GreenSummer.git</developerConnection>
-        <tag>summer-0.2</tag>
+        <tag>summer-${project.version}</tag>
     </scm>
 
     <properties>
