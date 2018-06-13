@@ -5,10 +5,11 @@
 >
     <modelVersion>4.0.0</modelVersion>
     <name>Summer</name>
-    <description>Utilies to add to every Spring project</description>
+    <description>GreenSummer, an extension library to complement Spring Boot applications.</description>
     <groupId>org.greeneyed</groupId>
     <artifactId>summer</artifactId>
     <version>0.2-SNAPSHOT</version>
+    <url>https://github.com/Verdoso/GreenSummer</url>
 
     <organization>
         <name>GreenEyed</name>
