@@ -34,15 +34,15 @@ import org.springframework.format.support.FormattingConversionServiceFactoryBean
 
 @Configuration
 public class CustomConversionServiceConfiguration {
-	
-	@Autowired
-	private AutoregisterFormatterRegistrar autoregisterFormatterRegistrar;
 
-	@Bean
-	public FormattingConversionServiceFactoryBean applicationConversionService() {
-		final FormattingConversionServiceFactoryBean formattingConversionServiceFactoryBean = new FormattingConversionServiceFactoryBean();
-		formattingConversionServiceFactoryBean.setFormatterRegistrars(new HashSet<>(Arrays.asList(autoregisterFormatterRegistrar)));
-		return formattingConversionServiceFactoryBean;
-	}
+    @Autowired
+    private AutoregisterFormatterRegistrar autoregisterFormatterRegistrar;
+
+    @Bean
+    public FormattingConversionServiceFactoryBean applicationConversionService() {
+        final FormattingConversionServiceFactoryBean formattingConversionServiceFactoryBean = new FormattingConversionServiceFactoryBean();
+        formattingConversionServiceFactoryBean.setFormatterRegistrars(new HashSet<>(Arrays.asList(autoregisterFormatterRegistrar)));
+        return formattingConversionServiceFactoryBean;
+    }
 
 }

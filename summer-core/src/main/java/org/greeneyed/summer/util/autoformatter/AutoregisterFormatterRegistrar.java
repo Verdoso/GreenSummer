@@ -36,33 +36,33 @@ import org.springframework.stereotype.Component;
 @Component
 public class AutoregisterFormatterRegistrar implements FormatterRegistrar {
 
-	/**
-	 * All {@link Converter} Beans with {@link AutoRegistered} annotation. If
-	 * spring does not find any matching bean, then the List is {@code null}!.
-	 */
-	@Autowired(required = false)
-	@AutoRegistered
-	private List<Converter<?, ?>> autoRegisteredConverters;
+    /**
+     * All {@link Converter} Beans with {@link AutoRegistered} annotation. If
+     * spring does not find any matching bean, then the List is {@code null}!.
+     */
+    @Autowired(required = false)
+    @AutoRegistered
+    private List<Converter<?, ?>> autoRegisteredConverters;
 
-	/**
-	 * All {@link Converter} Beans with {@link AutoRegistered} annotation. If
-	 * spring does not find any matching bean, then the List is {@code null}!.
-	 */
-	@Autowired(required = false)
-	@AutoRegistered
-	private List<GenericConverter> autoRegisteredGenericConverters;
-	
-	@Override
-	public void registerFormatters(final FormatterRegistry registry) {
-		if (autoRegisteredConverters != null) {
-			for (Converter<?, ?> converter : autoRegisteredConverters) {
-				registry.addConverter(converter);
-			}
-		}
-		if (autoRegisteredGenericConverters != null) {
-			for (GenericConverter converter : autoRegisteredGenericConverters) {
-				registry.addConverter(converter);
-			}
-		}
-	}
+    /**
+     * All {@link Converter} Beans with {@link AutoRegistered} annotation. If
+     * spring does not find any matching bean, then the List is {@code null}!.
+     */
+    @Autowired(required = false)
+    @AutoRegistered
+    private List<GenericConverter> autoRegisteredGenericConverters;
+
+    @Override
+    public void registerFormatters(final FormatterRegistry registry) {
+        if (autoRegisteredConverters != null) {
+            for (Converter<?, ?> converter : autoRegisteredConverters) {
+                registry.addConverter(converter);
+            }
+        }
+        if (autoRegisteredGenericConverters != null) {
+            for (GenericConverter converter : autoRegisteredGenericConverters) {
+                registry.addConverter(converter);
+            }
+        }
+    }
 }

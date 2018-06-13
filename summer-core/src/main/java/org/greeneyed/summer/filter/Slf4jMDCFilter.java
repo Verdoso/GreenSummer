@@ -72,7 +72,7 @@ public class Slf4jMDCFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
         throws java.io.IOException, ServletException {
-        try {            
+        try {
             final String token = extractToken(request);
             final String clientIP = extractClientIP(request);
             MDC.put(mdcClientIpKey, clientIP);
@@ -99,11 +99,9 @@ public class Slf4jMDCFilter extends OncePerRequestFilter {
 
     private String extractClientIP(final HttpServletRequest request) {
         final String clientIP;
-        if(request.getHeader("X-Forwarded-For")!=null)
-        {
+        if (request.getHeader("X-Forwarded-For") != null) {
             clientIP = request.getHeader("X-Forwarded-For").split(",")[0];
-        }
-        else {
+        } else {
             clientIP = request.getRemoteAddr();
         }
         return clientIP;

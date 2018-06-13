@@ -253,7 +253,7 @@ public class ConfigInspectorController {
     }
 
     private void writeValue(BufferedWriter theBW, boolean encrypted, String[] pair) throws IOException {
-        if(encrypted || ENCRIPTED_KEYS.contains(pair[0])) {
+        if (encrypted || ENCRIPTED_KEYS.contains(pair[0])) {
             theBW.write(ENCRYPTED_TOKEN);
         } else {
             theBW.write(pair[1]);

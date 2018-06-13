@@ -23,5 +23,5 @@ package org.greeneyed.summer.monitoring;
  */
 
 public interface IdentifiedUser {
-	String getName();
+    String getName();
 }
