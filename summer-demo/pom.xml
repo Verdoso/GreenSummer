@@ -25,9 +25,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
-        <summer.version>0.3</summer.version>
+        <summer.version>0.4-SNAPSHOT</summer.version>
         <docker.artifact.name>${project.build.finalName}.${project.packaging}</docker.artifact.name>
         <docker-maven-plugin.version>0.21.0</docker-maven-plugin.version>
+        <jolt.version>0.1.0</jolt.version>
     </properties>
 
     <dependencies>
@@ -103,6 +104,19 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>com.bazaarvoice.jolt</groupId>
+            <artifactId>jolt-core</artifactId>
+            <version>${jolt.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.bazaarvoice.jolt</groupId>
+            <artifactId>json-utils</artifactId>
+            <version>${jolt.version}</version>
+        </dependency>
+        
     </dependencies>
 
     <build>
