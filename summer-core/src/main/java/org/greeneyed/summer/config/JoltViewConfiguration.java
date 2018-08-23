@@ -1,5 +1,8 @@
 package org.greeneyed.summer.config;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /*
  * #%L
  * Summer
@@ -22,7 +25,6 @@ package org.greeneyed.summer.config;
  * #L%
  */
 
-
 import org.greeneyed.summer.util.ApplicationContextProvider;
 import org.greeneyed.summer.util.SummerJoltView;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -30,11 +32,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bazaarvoice.jolt.Chainr;
+import com.bazaarvoice.jolt.JsonUtils;
+
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @ConfigurationProperties(prefix = "summer.jolt")
 @Data
+@Slf4j
 public class JoltViewConfiguration {
 
     public static final String DEFAULT_SPEC_PREFIX = "/json-spec/";
@@ -47,6 +54,8 @@ public class JoltViewConfiguration {
     private String specPrefix = DEFAULT_SPEC_PREFIX;
     private String specSuffix = DEFAULT_SPEC_SUFFIX;
 
+    private Map<String, Chainr> chainrCache = new ConcurrentHashMap<>();
+
     public static class JoltModelAndView extends ModelAndView {
         public JoltModelAndView(String viewName, Object modelObject) {
             this(viewName, modelObject, HttpStatus.OK);
@@ -54,8 +63,24 @@ public class JoltViewConfiguration {
 
         public JoltModelAndView(String viewName, Object modelObject, HttpStatus status) {
             super(new SummerJoltView(viewName, ApplicationContextProvider.getApplicationContext().getBean(JoltViewConfiguration.class)),
-                JSON_SOURCE_TAG, modelObject);
+                    JSON_SOURCE_TAG, modelObject);
             setStatus(status);
         }
     }
+
+    public synchronized Chainr getChainr(String joltSpecName, boolean refresh) {
+        if (refresh) {
+            final Chainr chainr = createChainr(joltSpecName);
+            chainrCache.put(joltSpecName, chainr);
+            return chainr;
+        } else {
+            return chainrCache.computeIfAbsent(joltSpecName, name -> createChainr(joltSpecName));
+        }
+    }
+
+    private Chainr createChainr(String joltSpecName) {
+        log.debug("Generating Jolt Chainr from spec: {}", joltSpecName);
+        return Chainr.fromSpec(JsonUtils.classpathToList(getSpecPrefix() + joltSpecName + getSpecSuffix()));
+    }
+
 }
