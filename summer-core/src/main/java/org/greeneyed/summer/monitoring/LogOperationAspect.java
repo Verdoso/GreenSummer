@@ -55,7 +55,15 @@ public class LogOperationAspect {
     @Value("#{'${summer.operation_logging.included_packages}'.split(',')}")
     private List<String> packages;
 
-    @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping) && !@annotation(org.greeneyed.summer.monitoring.DontLogOperation)")
+    @Around("("
+            + "@annotation(org.springframework.web.bind.annotation.RequestMapping)"
+            + "|| @annotation(org.springframework.web.bind.annotation.GetMapping)"
+            + "|| @annotation(org.springframework.web.bind.annotation.PostMapping)"
+            + "|| @annotation(org.springframework.web.bind.annotation.PutMapping)"
+            + "|| @annotation(org.springframework.web.bind.annotation.DeleteMapping)"
+            + "|| @annotation(org.springframework.web.bind.annotation.PatchMapping)"
+            + ")"
+            + "&& !@annotation(org.greeneyed.summer.monitoring.DontLogOperation)")
     public Object logMethodCall(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getStaticPart().getSignature();
         Method method = methodSignature.getMethod();

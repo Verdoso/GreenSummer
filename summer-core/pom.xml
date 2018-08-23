@@ -59,7 +59,7 @@
         <apidocs.project.location>summer-pages</apidocs.project.location>
         <spring-cloud-context.version>1.2.2.RELEASE</spring-cloud-context.version>
         <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
-        <lombok.version>1.16.20</lombok.version>
+        <lombok.version>1.18.2</lombok.version>
         <jolt.version>0.1.0</jolt.version>
     </properties>
 
@@ -214,7 +214,7 @@
             <plugin>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven-plugin</artifactId>
-                <version>1.16.20.0</version>
+                <version>1.18.0.0</version>
                 <executions>
                     <execution>
                         <id>delombok</id>
