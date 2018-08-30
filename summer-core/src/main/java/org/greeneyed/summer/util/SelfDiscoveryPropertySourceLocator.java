@@ -56,5 +56,4 @@ public class SelfDiscoveryPropertySourceLocator implements PropertySourceLocator
         }
         return result;
     }
-
 }
