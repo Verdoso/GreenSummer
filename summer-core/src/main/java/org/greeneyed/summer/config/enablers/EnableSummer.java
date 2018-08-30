@@ -59,6 +59,7 @@ public @interface EnableSummer {
 
     boolean log_operations() default false;
 
-    boolean fomatter_registrar() default true;
-
+    boolean fomatter_registrar() default true;    
+    
+    boolean hazelcast_consul() default false;    
 }
