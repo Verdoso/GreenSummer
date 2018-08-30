@@ -1,4 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
     <modelVersion>4.0.0</modelVersion>
     <name>GreenSummer</name>
     <description>GreenSummer, an extension library to complement Spring Boot applications.</description>
@@ -61,6 +65,9 @@
         <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
         <lombok.version>1.18.2</lombok.version>
         <jolt.version>0.1.0</jolt.version>
+        <hazelcast.version>3.10.4</hazelcast.version>
+        <hazelcast-consul-discovery-spi.version>1.0-RC8</hazelcast-consul-discovery-spi.version>
+        <resteasy.version>3.6.1.Final</resteasy.version>
     </properties>
 
     <dependencyManagement>
@@ -158,6 +165,27 @@
             <artifactId>caffeine</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- Hazelcast coordinated through Consul -->
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-all</artifactId>
+            <version>${hazelcast.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.bitsofinfo</groupId>
+            <artifactId>hazelcast-consul-discovery-spi</artifactId>
+            <version>${hazelcast-consul-discovery-spi.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- <dependency> -->
+        <!-- <groupId>org.jboss.resteasy</groupId> -->
+        <!-- <artifactId>resteasy-jaxrs</artifactId> -->
+        <!-- <version>${resteasy.version}</version> -->
+        <!-- <optional>true</optional> -->
+        <!-- </dependency> -->
 
     </dependencies>
 

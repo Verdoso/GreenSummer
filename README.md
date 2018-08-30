@@ -23,6 +23,7 @@ In the mean time, this is a brief summary of the utilities that one can find in 
  - **ActuatorCustomizer**: An EndpointHandlerMappingCustomizer that changes the order of the media types returned from the actuator so the media types with the version number included are at the end (so regular clients recognise the response a JSON). 
  - **ApplicationContextProvider**: A somehow hackish way to get a reference to the application context from almost any class (required by SummerJoltView). 
  - **SelfDiscoveryPropertySourceLocator**: A PropertySourceLocator that adds the property spring.cloud.consul.discovery.hostname with the value InetAddress.getLocalHost().getCanonicalHostName() at the very beginning so Consul can use that value.
+ - **HazelcastConsulSessionReplicationConfiguration**: A configuration class that sets up a Hazelcast cluster using Consul for other node's discovery and can also use that to configure http session replication through Hazelcast. 
 
 The Spring integrated utilites can be enabled using the annotation @EnableSummer and specifying the appropriate parameters.
 
