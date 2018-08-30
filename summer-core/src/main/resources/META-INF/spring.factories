@@ -1,1 +1,1 @@
-org.springframework.cloud.bootstrap.BootstrapConfiguration=org.greeneyed.summer.util.SelfDiscoveryPropertySourceLocator
+org.springframework.cloud.bootstrap.BootstrapConfiguration=org.greeneyed.summer.util.SelfDiscoveryPropertySourceLocator,org.greeneyed.summer.util.DockerSecretsPropertySourceLocator
