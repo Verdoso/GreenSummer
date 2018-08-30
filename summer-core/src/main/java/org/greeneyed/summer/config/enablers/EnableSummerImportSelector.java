@@ -42,6 +42,7 @@ import org.greeneyed.summer.controller.LogbackController;
 import org.greeneyed.summer.monitoring.LogOperationAspect;
 import org.greeneyed.summer.util.ActuatorCustomizer;
 import org.greeneyed.summer.util.ApplicationContextProvider;
+import org.greeneyed.summer.util.ServerPortDisplayer;
 import org.greeneyed.summer.util.autoformatter.AutoregisterFormatterRegistrar;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.annotation.AnnotationAttributes;
@@ -76,7 +77,8 @@ public class EnableSummerImportSelector implements ImportSelector {
                 "hazelcast_consul",
                 new Class[] {HazelcastConsulSessionReplicationConfiguration.class},
                 new String[] {"com.hazelcast.config.Config", "org.bitsofinfo.hazelcast.discovery.consul.ConsulDiscoveryStrategyFactory",
-                        "org.jboss.resteasy.spi.ResteasyProviderFactory"});
+                        "org.jboss.resteasy.spi.ResteasyProviderFactory"}),
+        SERVER_PORT_DISPLAYER("server_port_display", ServerPortDisplayer.class);
 
         private final String flag;
         private final Class<?>[] configurationClasses;

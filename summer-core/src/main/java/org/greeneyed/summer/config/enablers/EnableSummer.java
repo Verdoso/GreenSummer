@@ -62,4 +62,6 @@ public @interface EnableSummer {
     boolean fomatter_registrar() default true;    
     
     boolean hazelcast_consul() default false;    
+    
+    boolean server_port_display() default true;    
 }

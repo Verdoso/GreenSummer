@@ -24,6 +24,7 @@ In the mean time, this is a brief summary of the utilities that one can find in 
  - **ApplicationContextProvider**: A somehow hackish way to get a reference to the application context from almost any class (required by SummerJoltView). 
  - **SelfDiscoveryPropertySourceLocator**: A PropertySourceLocator that adds the property spring.cloud.consul.discovery.hostname with the value InetAddress.getLocalHost().getCanonicalHostName() at the very beginning so Consul can use that value.
  - **HazelcastConsulSessionReplicationConfiguration**: A configuration class that sets up a Hazelcast cluster using Consul for other node's discovery and can also use that to configure http session replication through Hazelcast. 
+ - **ServerPortDisplayer**: A simple utility class to display the server port the container is listening to, useful when the server is set to random & unused (server.port=0). 
 
 The Spring integrated utilites can be enabled using the annotation @EnableSummer and specifying the appropriate parameters.
 
