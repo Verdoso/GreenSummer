@@ -41,6 +41,7 @@ import org.greeneyed.summer.controller.LogbackController;
 import org.greeneyed.summer.monitoring.LogOperationAspect;
 import org.greeneyed.summer.util.ActuatorCustomizer;
 import org.greeneyed.summer.util.ApplicationContextProvider;
+import org.greeneyed.summer.util.SelfDiscoveryPropertySourceLocator;
 import org.greeneyed.summer.util.autoformatter.AutoregisterFormatterRegistrar;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.annotation.AnnotationAttributes;
@@ -99,6 +100,7 @@ public class EnableSummerImportSelector implements ImportSelector {
                         }
                     }
                     for (Class<?> configuredClass : option.configurationClasses) {
+                        log.debug("Enabling class {}", configuredClass.getName());
                         configurationClassesToEnable.add(configuredClass.getName());
                     }
                 } catch (Exception e) {
