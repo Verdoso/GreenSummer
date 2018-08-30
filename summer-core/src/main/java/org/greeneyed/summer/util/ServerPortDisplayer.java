@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @ConditionalOnProperty(name = "summer.server_port_display", havingValue = "true", matchIfMissing = true)
 public class ServerPortDisplayer implements ApplicationRunner, EnvironmentAware {
 	@Autowired
-	Environment environment;
+	private Environment environment;
 
 	@Override
 	public void run(ApplicationArguments arguments) throws Exception {
