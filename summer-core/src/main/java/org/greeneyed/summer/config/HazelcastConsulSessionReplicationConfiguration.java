@@ -146,6 +146,7 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
                 break;
             default:
                 log.warn("What are you doing here, my oh my!");
+                break;
         }
         
 
