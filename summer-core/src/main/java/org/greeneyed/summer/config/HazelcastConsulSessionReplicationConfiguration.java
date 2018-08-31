@@ -48,6 +48,7 @@ import com.hazelcast.config.DiscoveryStrategyConfig;
 import com.hazelcast.config.XmlConfigBuilder;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.spring.context.SpringManagedContext;
+import com.hazelcast.web.SessionListener;
 import com.hazelcast.web.WebFilter;
 
 import lombok.Data;
@@ -204,4 +205,10 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
         return assertionTLFilter;
     }
     
+    @Bean
+    @ConditionalOnBean(name="hazlecastConsulConfig")
+    @ConditionalOnProperty(name = "summer.hazelcast.consul.session_replication", havingValue = "true", matchIfMissing = true)
+    public SessionListener hazelcastSessionListener() {
+        return new SessionListener();
+    }
 }
