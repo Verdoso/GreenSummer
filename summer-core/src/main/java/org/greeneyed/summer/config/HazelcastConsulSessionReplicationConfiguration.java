@@ -61,7 +61,7 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
 
     public static final String DEFAULT_DISCOVERY_DELAY = "3000";
     
-    public static enum HEALTHCHECK_TYPE {HTTP,TCP};
+    public static enum HEALTHCHECKTYPE {HTTP,TCP};
     
     public static final String DEFAULT_HEALTHCHECK_TYPE = "TCP";//HEALTHCHECK_TYPE.TCP.name();
 
@@ -87,7 +87,7 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
     private String serviceTags;
 
     @Value("${summer.hazelcast.consul.healthcheck.type:" + DEFAULT_HEALTHCHECK_TYPE + "}")
-    private HEALTHCHECK_TYPE healthCheckType;
+    private HEALTHCHECKTYPE healthCheckType;
     
     @Value("${summer.hazelcast.consul.healthcheck.interval:10}")
     private int healthCheckInterval;
@@ -108,7 +108,7 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
         // https://github.com/bitsofinfo/hazelcast-consul-discovery-spi
         //
         config.setProperty("hazelcast.discovery.enabled", Boolean.TRUE.toString());
-        if(healthCheckType==HEALTHCHECK_TYPE.HTTP)
+        if(healthCheckType==HEALTHCHECKTYPE.HTTP)
         {
             config.setProperty("hazelcast.http.healthcheck.enabled", Boolean.TRUE.toString());            
         }
@@ -144,6 +144,8 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
                 jsonRegistratorConfig.put(TcpHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_TCP_INTERVAL_SECONDS, healthCheckInterval);
                 log.debug("Hazelcast TCP health check set up (run every {} secs)", healthCheckInterval);
                 break;
+            default:
+                log.warn("What are you doing here, my oh my!");
         }
         
 
