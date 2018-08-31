@@ -28,6 +28,7 @@ import java.util.Properties;
 import org.bitsofinfo.hazelcast.discovery.consul.BaseRegistrator;
 import org.bitsofinfo.hazelcast.discovery.consul.ConsulDiscoveryConfiguration;
 import org.bitsofinfo.hazelcast.discovery.consul.ConsulDiscoveryStrategyFactory;
+import org.bitsofinfo.hazelcast.discovery.consul.HttpHealthCheckBuilder;
 import org.bitsofinfo.hazelcast.discovery.consul.LocalDiscoveryNodeRegistrator;
 import org.bitsofinfo.hazelcast.discovery.consul.TcpHealthCheckBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,28 +60,38 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
     public static final String DEFAULT_SERVICE_PREFIX = "hz-";
 
     public static final String DEFAULT_DISCOVERY_DELAY = "3000";
+    
+    public static enum HEALTHCHECK_TYPE {HTTP,TCP};
+    
+    public static final String DEFAULT_HEALTHCHECK_TYPE = "TCP";//HEALTHCHECK_TYPE.TCP.name();
 
     @Value("${spring.cloud.consul.host:localhost}")
-    String consulHost;
+    private String consulHost;
 
     @Value("${spring.cloud.consul.discovery.hostname:localhost}")
-    String discoveryHostName;
+    private String discoveryHostName;
 
     @Value("${spring.cloud.consul.port:8500}")
-    String consulPort;
+    private String consulPort;
 
     @Value("${spring.application.name}")
-    String appName;
+    private String appName;
 
     @Value("${summer.hazelcast.consul.configuration.delay:" + DEFAULT_DISCOVERY_DELAY + "}")
-    String configurationDelay;
+    private String configurationDelay;
 
     @Value("${summer.hazelcast.consul.service.prefix:" + DEFAULT_SERVICE_PREFIX + "}")
-    String servicePrefix;
+    private String servicePrefix;
 
     @Value("${summer.hazelcast.consul.service.tags:}")
-    String serviceTags;
+    private String serviceTags;
 
+    @Value("${summer.hazelcast.consul.healthcheck.type:" + DEFAULT_HEALTHCHECK_TYPE + "}")
+    private HEALTHCHECK_TYPE healthCheckType;
+    
+    @Value("${summer.hazelcast.consul.healthcheck.interval:10}")
+    private int healthCheckInterval;
+    
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -97,6 +108,10 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
         // https://github.com/bitsofinfo/hazelcast-consul-discovery-spi
         //
         config.setProperty("hazelcast.discovery.enabled", Boolean.TRUE.toString());
+        if(healthCheckType==HEALTHCHECK_TYPE.HTTP)
+        {
+            config.setProperty("hazelcast.http.healthcheck.enabled", Boolean.TRUE.toString());            
+        }
         config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
         config.getNetworkConfig().setPublicAddress(InetAddress.getByName(discoveryHostName).getHostAddress());
 
@@ -116,10 +131,21 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
         ObjectNode jsonRegistratorConfig = JsonNodeFactory.instance.objectNode();
         jsonRegistratorConfig.put(LocalDiscoveryNodeRegistrator.CONFIG_PROP_PREFER_PUBLIC_ADDRESS, true);
 
-        jsonRegistratorConfig.put(BaseRegistrator.CONFIG_PROP_HEALTH_CHECK_PROVIDER,
-                TcpHealthCheckBuilder.class.getName());
-        jsonRegistratorConfig.put(TcpHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_TCP, "#MYIP:#MYPORT");
-        jsonRegistratorConfig.put(TcpHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_TCP_INTERVAL_SECONDS, 10);
+        switch(healthCheckType) {
+            case HTTP:
+                jsonRegistratorConfig.put(BaseRegistrator.CONFIG_PROP_HEALTH_CHECK_PROVIDER,HttpHealthCheckBuilder.class.getName());
+                jsonRegistratorConfig.put(HttpHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_HTTP, "http://#MYIP:#MYPORT/hazelcast/health");
+                jsonRegistratorConfig.put(HttpHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_HTTP_INTERVAL_SECONDS, healthCheckInterval);
+                log.debug("Hazelcast HTTP health check set up (run every {} secs)", healthCheckInterval);
+                break;
+            case TCP:
+                jsonRegistratorConfig.put(BaseRegistrator.CONFIG_PROP_HEALTH_CHECK_PROVIDER,TcpHealthCheckBuilder.class.getName());
+                jsonRegistratorConfig.put(TcpHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_TCP, "#MYIP:#MYPORT");
+                jsonRegistratorConfig.put(TcpHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_TCP_INTERVAL_SECONDS, healthCheckInterval);
+                log.debug("Hazelcast TCP health check set up (run every {} secs)", healthCheckInterval);
+                break;
+        }
+        
 
         // Scripts are executed on the consul server, so they are consul-host
         // dependent, meh
