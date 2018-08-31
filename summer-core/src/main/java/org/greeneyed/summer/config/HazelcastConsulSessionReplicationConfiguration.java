@@ -35,10 +35,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -91,6 +94,9 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
     
     @Value("${summer.hazelcast.consul.healthcheck.interval:10}")
     private int healthCheckInterval;
+    
+    @Value("${summer.hazelcast.consul.session_filter_priority:0}")
+    private int sessionFilterPriority;
     
     @Autowired
     private ApplicationContext applicationContext;
@@ -184,16 +190,20 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
      *
      * @param hazelcastInstance
      *            Created by Spring
-     * @return The web filter for Tomcat
-     */
+     * @return The web filter registration
+     */    
     @Bean
     @ConditionalOnBean(name="hazlecastConsulConfig")
     @ConditionalOnProperty(name = "summer.hazelcast.consul.session_replication", havingValue = "true", matchIfMissing = true)
-    public WebFilter webFilter(HazelcastInstance hazelcastInstance) {
+    public FilterRegistrationBean webFilterRegistrationBean(HazelcastInstance hazelcastInstance) {
+        final FilterRegistrationBean assertionTLFilter = new FilterRegistrationBean();
         Properties properties = new Properties();
         properties.put("instance-name", hazelcastInstance.getName());
         properties.put("sticky-session", Boolean.FALSE.toString());
-        log.info("Session replication through Hazelcast set!");
-        return new WebFilter(properties);
+        log.info("Session replication through Hazelcast registered!");
+        assertionTLFilter.setFilter(new WebFilter(properties));
+        assertionTLFilter.setOrder(sessionFilterPriority);
+        return assertionTLFilter;
     }
+    
 }
