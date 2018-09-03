@@ -1,4 +1,4 @@
-package org.greeneyed.summer.config;
+package org.greeneyed.summer.config.hazelcast;
 
 /*-
  * #%L
@@ -23,6 +23,7 @@ package org.greeneyed.summer.config;
  */
 
 import java.net.InetAddress;
+import java.util.List;
 import java.util.Properties;
 
 import org.bitsofinfo.hazelcast.discovery.consul.BaseRegistrator;
@@ -99,6 +100,13 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
     
     @Autowired
     private ApplicationContext applicationContext;
+    
+    /**
+     * All {@link HazelcastConfigurer} Beans to further customize Hazelcast configuration. If
+     * spring does not find any matching bean, then the List is {@code null}!.
+     */
+    @Autowired(required = false)
+    private List<HazelcastConfigurer> hazelcastConfigurers;
 
     @Bean
     @ConditionalOnProperty(name = "summer.hazelcast.consul.enabled", havingValue = "true", matchIfMissing = false)
@@ -170,11 +178,23 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
         config.getNetworkConfig().getJoin().getDiscoveryConfig().getDiscoveryStrategyConfigs()
                 .add(discoveryStrategyConfig);
         log.info("Hazelcast configured to use Consul for discovery");
+        
+        
+        // Apply custom configurations, if necessary
+        if(hazelcastConfigurers!=null)
+        {
+            for(HazelcastConfigurer hazelcastConfigurer: hazelcastConfigurers)
+            {
+                log.debug("Applying HazelcastConfigurer {}", hazelcastConfigurer.getClass().getName());
+                hazelcastConfigurer.configure(config);
+            }
+        }
+        
         return config;
     }
 
     /**
-     * Create a web filter. Parameterize this with two properties,
+     * Creates a Hazelcast web filter.
      *
      * <ol>
      * <li><i>instance-name</i> Direct the web filter to use the existing

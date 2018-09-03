@@ -29,12 +29,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.greeneyed.summer.config.CustomConversionServiceConfiguration;
-import org.greeneyed.summer.config.HazelcastConsulSessionReplicationConfiguration;
 import org.greeneyed.summer.config.JoltViewConfiguration;
 import org.greeneyed.summer.config.MessageSourceConfiguration;
 import org.greeneyed.summer.config.Slf4jMDCFilterConfiguration;
 import org.greeneyed.summer.config.SummerWebConfig;
 import org.greeneyed.summer.config.XsltConfiguration;
+import org.greeneyed.summer.config.hazelcast.HazelcastConsulSessionReplicationConfiguration;
 import org.greeneyed.summer.controller.ConfigInspectorController;
 import org.greeneyed.summer.controller.HealthController;
 import org.greeneyed.summer.controller.Log4JController;
