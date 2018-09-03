@@ -36,6 +36,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+/**
+ * An EndpointHandlerMappingCustomizer that changes the order of the media types returned from the actuator so the media types with the version number
+ * included are at the end (so regular clients recognize the response a JSON)
+ *
+ */
 @Component
 public class ActuatorCustomizer implements EndpointHandlerMappingCustomizer {
 
@@ -44,8 +49,7 @@ public class ActuatorCustomizer implements EndpointHandlerMappingCustomizer {
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
             Object attribute = request.getAttribute(HandlerMapping.PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE);
             if (attribute instanceof LinkedHashSet) {
-                @SuppressWarnings("unchecked")
-                LinkedHashSet<MediaType> lhs = (LinkedHashSet<MediaType>) attribute;
+                @SuppressWarnings("unchecked") LinkedHashSet<MediaType> lhs = (LinkedHashSet<MediaType>) attribute;
                 if (lhs.remove(ActuatorMediaTypes.APPLICATION_ACTUATOR_V1_JSON)) {
                     lhs.add(ActuatorMediaTypes.APPLICATION_ACTUATOR_V1_JSON);
                 }

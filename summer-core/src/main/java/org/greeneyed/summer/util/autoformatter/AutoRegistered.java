@@ -29,7 +29,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.convert.converter.Converter;
 
+
+/**
+ * The annotation to use if you want your {@link Converter} class to be auto registered. See also {@link AutoregisterFormatterRegistrar}
+ *
+ */
 @Target({
     ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

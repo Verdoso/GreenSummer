@@ -108,7 +108,7 @@ public class LogbackController {
 
     /**
      * 
-     * @return
+     * @return The list of log levels configured and their settings
      */
     @RequestMapping(value = "list", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
@@ -121,7 +121,7 @@ public class LogbackController {
      * 
      * @param name
      * @param level
-     * @return
+     * @return The list of log levels configured and their settings
      */
     @RequestMapping(value = "set/{name}/{level}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET,
         headers = "Accept=application/json")
@@ -147,7 +147,7 @@ public class LogbackController {
     /**
      * 
      * @param name
-     * @return
+     * @return The list of log levels configured and their settings
      */
     @RequestMapping(value = "unset/{name}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET,
         headers = "Accept=application/json")
@@ -164,6 +164,9 @@ public class LogbackController {
         return new ResponseEntity<>(listLoggers(ctx), HttpStatus.OK);
     }
 
+    /**
+     * @return The list of log levels configured and their settings
+     */
     @RequestMapping(value = "reset", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<LogResponse> reset() {
@@ -206,7 +209,7 @@ public class LogbackController {
      * @param name
      * @param level
      * @param append
-     * @return
+     * @return The list of log levels configured and their settings
      */
     @RequestMapping(value = "capture/{name}/{level}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET,
         headers = "Accept=application/json")
@@ -233,7 +236,7 @@ public class LogbackController {
      * this controller.
      *
      * @param name
-     * @return response
+     * @return The list of log levels configured and their settings
      */
     @RequestMapping(value = "free/{name}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET,
         headers = "Accept=application/json")
@@ -253,7 +256,9 @@ public class LogbackController {
 
     /**
      * 
-     * @param response
+     * @param response where we will write the log messages that have been captured from the specified leves.
+     * 
+     * @see LogbackController#capture(String,String,boolean)
      */
     @RequestMapping(value = "captured", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, headers = "Accept=application/json")
     public void captured(HttpServletResponse response) {
