@@ -63,7 +63,7 @@
         <jolt.version>0.1.0</jolt.version>
         <hazelcast.version>3.10.4</hazelcast.version>
         <hazelcast-consul-discovery-spi.version>1.0-RC8</hazelcast-consul-discovery-spi.version>
-        <resteasy.version>3.6.1.Final</resteasy.version>
+        <cqengine.version>2.12.4</cqengine.version>
     </properties>
 
     <dependencyManagement>
@@ -176,12 +176,13 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- <dependency> -->
-        <!-- <groupId>org.jboss.resteasy</groupId> -->
-        <!-- <artifactId>resteasy-jaxrs</artifactId> -->
-        <!-- <version>${resteasy.version}</version> -->
-        <!-- <optional>true</optional> -->
-        <!-- </dependency> -->
+        <!-- CQEngine collections coordinated through Hazelcast -->
+        <dependency>
+            <groupId>com.googlecode.cqengine</groupId>
+            <artifactId>cqengine</artifactId>
+            <version>${cqengine.version}</version>
+            <optional>true</optional>
+        </dependency>
 
     </dependencies>
 
