@@ -149,7 +149,7 @@ public abstract class ProfilingAspect {
     }
 
     protected void processMeasure(ProfiledMeasure measure) {
-        if (log.isTraceEnabled()) {
+        if (log.isTraceEnabled() && loggingWorker != null) {
             loggingWorker.enqueue(measure);
         }
     }
