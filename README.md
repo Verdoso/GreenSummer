@@ -26,6 +26,7 @@ In the mean time, this is a brief summary of the utilities that one can find in 
  - **HazelcastConsulSessionReplicationConfiguration**: A configuration class that sets up a Hazelcast cluster using Consul for other node's discovery and can also use that to configure http session replication through Hazelcast. 
  - **ServerPortDisplayer**: A simple utility class to display the server port the container is listening to, useful when the server is set to random & unused (server.port=0). 
  - **DockerSecretsPropertySourceLocator**: A class that can use property files defined as Docker secrets to define sensitive Spring Boot data as Spring Config Server URL & authentication, encryption keys... 
+ - **ClusteredConcurrentIndexedCollection**: A CQEngine collection where the changes in one node are replicated to the other nodes in the cluster. 
 
 The Spring integrated utilites can be enabled using the annotation @EnableSummer and specifying the appropriate parameters.
 

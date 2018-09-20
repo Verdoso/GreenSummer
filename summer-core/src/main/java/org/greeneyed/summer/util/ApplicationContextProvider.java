@@ -30,12 +30,19 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
+/**
+ * A somehow hackish way to get a reference to the application context from almost any class (required by SummerJoltView)
+ *
+ */
 @Data
 @Component
 public class ApplicationContextProvider implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
+    /**
+     * @return the Spring ApplicationContext
+     */
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
     }
