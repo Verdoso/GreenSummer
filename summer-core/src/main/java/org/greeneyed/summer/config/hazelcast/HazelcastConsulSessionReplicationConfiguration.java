@@ -101,7 +101,7 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
     @Autowired
     private ApplicationContext applicationContext;
     
-    /**
+    /*
      * All {@link HazelcastConfigurer} Beans to further customize Hazelcast configuration. If
      * spring does not find any matching bean, then the List is {@code null}!.
      */

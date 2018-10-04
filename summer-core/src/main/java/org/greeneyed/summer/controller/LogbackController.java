@@ -119,8 +119,8 @@ public class LogbackController {
 
     /**
      * 
-     * @param name
-     * @param level
+     * @param name The name of the logger we want to manipulate the level of
+     * @param level The new log level
      * @return The list of log levels configured and their settings
      */
     @RequestMapping(value = "set/{name}/{level}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET,
@@ -146,7 +146,7 @@ public class LogbackController {
 
     /**
      * 
-     * @param name
+     * @param name The name of the logger we want to unset
      * @return The list of log levels configured and their settings
      */
     @RequestMapping(value = "unset/{name}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET,
@@ -206,9 +206,9 @@ public class LogbackController {
      * Captures the given logger at the given level so it can be displayed directly
      * by this controller.
      * 
-     * @param name
-     * @param level
-     * @param append
+     * @param name The name of the logger we want to capture
+     * @param level The level of logging we want to capture
+     * @param append Where we want to also send the logs to the regular pipes (true) or just capture it (false, default)
      * @return The list of log levels configured and their settings
      */
     @RequestMapping(value = "capture/{name}/{level}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET,
@@ -235,7 +235,7 @@ public class LogbackController {
      * Frees the given logger from the appender used to be displayed directly by
      * this controller.
      *
-     * @param name
+     * @param name The name of the logger we want to free from being captured
      * @return The list of log levels configured and their settings
      */
     @RequestMapping(value = "free/{name}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET,
