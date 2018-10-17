@@ -294,8 +294,8 @@ public class ClusteredConcurrentIndexedCollection<K extends Comparable<K>, O ext
 		public void entryRemoved(EntryEvent<K, O> event) {
 			if (isRemoteEvent(event)) {
 				log.trace("Entry Removed: {}", event);
-				ClusteredConcurrentIndexedCollection.this.notifyRemoval(event.getValue());
-				ClusteredConcurrentIndexedCollection.super.remove(event.getValue());
+				ClusteredConcurrentIndexedCollection.this.notifyRemoval(event.getOldValue());
+				ClusteredConcurrentIndexedCollection.super.remove(event.getOldValue());
 			}
 		}
 
@@ -303,8 +303,8 @@ public class ClusteredConcurrentIndexedCollection<K extends Comparable<K>, O ext
 		public void entryUpdated(EntryEvent<K, O> event) {
 			if (isRemoteEvent(event)) {
 				log.trace("Entry Updated: {}", event);
-				ClusteredConcurrentIndexedCollection.this.notifyRemoval(event.getValue());
-				ClusteredConcurrentIndexedCollection.super.remove(event.getValue());
+				ClusteredConcurrentIndexedCollection.this.notifyRemoval(event.getOldValue());
+				ClusteredConcurrentIndexedCollection.super.remove(event.getOldValue());
 				ClusteredConcurrentIndexedCollection.this.notifyAddition(event.getValue());
 				ClusteredConcurrentIndexedCollection.super.add(event.getValue());
 			}
