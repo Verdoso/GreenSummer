@@ -134,15 +134,26 @@ public class ClusteredConcurrentIndexedCollection<K extends Comparable<K>, O ext
 		return this.primaryKeyAttribute.getValue(object, queryOptions);
 	}
 
-	private void addToHazelcastMap(QueryOptions queryOptions, O objectToAdd) {
+	private void clearHazelcastMap() {
 		if (this.hasRemoteStorage) {
 			this.lock.lock();
 			try {
-				this.map.put(getKey(objectToAdd, queryOptions), objectToAdd);
+				this.map.clear();
 			} finally {
 				this.lock.unlock();
 			}
 		}
+	}
+	
+	private void addToHazelcastMap(QueryOptions queryOptions, O objectToAdd) {
+	    if (this.hasRemoteStorage) {
+	        this.lock.lock();
+	        try {
+	            this.map.put(getKey(objectToAdd, queryOptions), objectToAdd);
+	        } finally {
+	            this.lock.unlock();
+	        }
+	    }
 	}
 
 	private void removeFromHazelcast(QueryOptions queryOptions, O objectToRemove) {
@@ -166,6 +177,12 @@ public class ClusteredConcurrentIndexedCollection<K extends Comparable<K>, O ext
 		if (this.requiresNotification) {
 			this.clusteredCollectionEntryListener.objectRemoved(objectToRemove);
 		}
+	}
+	
+	private void notifyMapCleared() {
+	    if (this.requiresNotification) {
+	        this.clusteredCollectionEntryListener.cleared();
+	    }
 	}
 
 	private void handleAddition(O objectToAdd) {
@@ -228,6 +245,15 @@ public class ClusteredConcurrentIndexedCollection<K extends Comparable<K>, O ext
 		}
 		return super.remove(objectToRemove);
 	}
+	
+	@Override
+	public void clear() {
+	    if (this.isLocallyHandled) {
+	        notifyMapCleared();
+	        clearHazelcastMap();
+	    }
+	    super.clear();
+	}
 
 	@Override
 	public boolean addAll(Collection<? extends O> objectsToAdd) {
@@ -270,6 +296,8 @@ public class ClusteredConcurrentIndexedCollection<K extends Comparable<K>, O ext
 	    public void objectAdded(O object);
 	    
 	    public void objectRemoved(O object);
+	    
+	    public void cleared();
 	    
 	}
 	
