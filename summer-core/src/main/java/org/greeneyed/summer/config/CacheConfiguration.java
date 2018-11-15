@@ -41,6 +41,10 @@ import com.github.benmanes.caffeine.cache.Ticker;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Class used to auto-configure Caffeine caches based on the name of the caches
+ *
+ */
 @Configuration
 @ConfigurationProperties(prefix = "summer.caching")
 @Data
@@ -49,13 +53,22 @@ public class CacheConfiguration {
 
     private Map<String, CacheSpec> specs;
 
-    @Data
+    /**
+     * Cache specification class that defines the parameters to see for the named cache
+     *
+     */
+    @Data    
     public static class CacheSpec {
         private Integer timeout;
         private Integer max = 200;
     }
 
 
+    /**
+     * The cache manager Bean, that defines caching parameters
+     * @param ticker The Ticker handle that Spring passes, unused so far
+     * @return the cache manager
+     */
     @Bean
     public CacheManager cacheManager(Ticker ticker) {
         SimpleCacheManager manager = new SimpleCacheManager();
@@ -84,6 +97,10 @@ public class CacheConfiguration {
     }
 
     @Bean
+    /**
+     * The ticker bean, in case you have to do something time based in the cache manager
+     * @return the ticker bean
+     */
     public Ticker ticker() {
         return Ticker.systemTicker();
     }
