@@ -69,7 +69,7 @@ public class LoggingClientHttpRequestInterceptor implements ClientHttpRequestInt
     }
 
     protected void logRequest(HttpRequest request, byte[] body) {
-        log.info("Request: {}", ObjectJoiner.join(" ", request.getURI().getScheme().toUpperCase(), request.getMethod(), request.getURI()));
+        log.info("Request: {}", ObjectJoiner.join(" ", request.getURI().getScheme(), request.getMethod(), request.getURI()));
         final boolean hasRequestBody = body != null && body.length > 0;
         if (log.isDebugEnabled()) {
             // If the request has a body, sometimes these headers are not
