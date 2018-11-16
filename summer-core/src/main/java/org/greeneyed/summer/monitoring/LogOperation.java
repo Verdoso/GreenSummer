@@ -29,11 +29,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A marker annotation to specify that you don't want this method to be logged, even if it matches the packages specified by the
- * summer.operation_logging.included_packages.
+ * A marker annotation to specify that you DO want this method to be logged by LogOperationAspect, even if it is not a controller method.
  */
-@Target({ElementType.METHOD})
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DontLogOperation {
-
+public @interface LogOperation {
+    String value();
 }
