@@ -36,6 +36,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.transform.ErrorListener;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -205,6 +206,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware, Erro
         }
         if (showXML) {
             transformer = getTransformerFactory().newTransformer();
+            transformer.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/xml");
         } else {
             transformer = createTransformer(loadTemplates(!refreshXSLT));
         }
