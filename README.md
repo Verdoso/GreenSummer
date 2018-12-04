@@ -15,18 +15,18 @@ In the mean time, this is a brief summary of the utilities that one can find in 
  - **ProfilingAspect**: An aspect that can be easily used to profile method calls. With the appropriate AOP configuration, it can be used to profile also private methods and/or methods belonging to classes outside Spring.
  - **CustomXMLHttpMessageConverter**: A message converter that overrides Jaxb2RootElementHttpMessageConverter and uses a pool of Marshallers to convert your objects to XML, instead of the "a new marshaller per request" approach that the regular Jaxb2RootElementHttpMessageConverter uses. The performance difference in applications with heavy traffic is quite noticeable.
  - **LoggingClientHttpRequestInterceptor**: An interceptor to log the traffic back & forth when using a RestTemplate. INFO shows basic info, DEBUG includes headers and TRACE includes request and response bodies. Useful for debugging RestTemplate calls at runtime with the help of Log4JController.
- - **CacheConfiguration**: A configuration class for the Caffeine cache so you can initialised multiple caches using configuration properties easily. 
- - **MessageSourceConfiguration**: A configuration utility class that helps configuring a MessageSource for your labels, so you can easily set a default locale and if changes are detected are runtime or not (very useful during development). 
+ - **CacheConfiguration**: A configuration class for the Caffeine cache so you can initialise multiple caches using configuration properties easily.
+ - **MessageSourceConfiguration**: A configuration utility class that helps configuring a MessageSource for your labels, so you can easily set a default locale and if changes are detected are runtime or not (very useful during development).
  - **SummerXSLTView**: An XSLTView that allows you to specify a result object and an XSLT. The result object is marshalled first to XML, using JAXB, and then the XSLT stylesheet is used to transform the XML to the final result. Useful to get different XML/HTML views without having to create extra Java classes.
  - **SummerJoltView**: A view that allows you to specify a result object and a Jolt specification. The result object is marshalled first to JSON, using Jackson, and then the Jolt specification is used to transform the JSON to the final JSON. Useful to get different JSON views without having to create extra Java classes.
- - **ObjectJoiner**: Just a simple convenient utility to create strings from a number of objects, specified as varargs or collection, optionally using a separator. 
- - **ActuatorCustomizer**: An EndpointHandlerMappingCustomizer that changes the order of the media types returned from the actuator so the media types with the version number included are at the end (so regular clients recognise the response a JSON). 
- - **ApplicationContextProvider**: A somehow hackish way to get a reference to the application context from almost any class (required by SummerJoltView). 
+ - **ObjectJoiner**: Just a simple convenient utility to create strings from a number of objects, specified as varargs or collection, optionally using a separator.
+ - **ActuatorCustomizer**: An EndpointHandlerMappingCustomizer that changes the order of the media types returned from the actuator so the media types with the version number included are at the end (so regular clients recognise the response a JSON).
+ - **ApplicationContextProvider**: A somehow hackish way to get a reference to the application context from almost any class (required by SummerJoltView).
  - **SelfDiscoveryPropertySourceLocator**: A PropertySourceLocator that adds the property spring.cloud.consul.discovery.hostname with the value InetAddress.getLocalHost().getCanonicalHostName() at the very beginning so Consul can use that value.
- - **HazelcastConsulSessionReplicationConfiguration**: A configuration class that sets up a Hazelcast cluster using Consul for other node's discovery and can also use that to configure http session replication through Hazelcast. 
- - **ServerPortDisplayer**: A simple utility class to display the server port the container is listening to, useful when the server is set to random & unused (server.port=0). 
- - **DockerSecretsPropertySourceLocator**: A class that can use property files defined as Docker secrets to define sensitive Spring Boot data as Spring Config Server URL & authentication, encryption keys... 
- - **ClusteredConcurrentIndexedCollection**: A CQEngine collection where the changes in one node are replicated to the other nodes in the cluster. 
+ - **HazelcastConsulSessionReplicationConfiguration**: A configuration class that sets up a Hazelcast cluster using Consul for other node's discovery and can also use that to configure http session replication through Hazelcast.
+ - **ServerPortDisplayer**: A simple utility class to display the server port the container is listening to, useful when the server is set to random & unused (server.port=0).
+ - **DockerSecretsPropertySourceLocator**: A class that can use property files defined as Docker secrets to define sensitive Spring Boot data as Spring Config Server URL & authentication, encryption keys...
+ - **ClusteredConcurrentIndexedCollection**: A CQEngine collection where the changes in one node are replicated to the other nodes in the cluster.
 
 The Spring integrated utilites can be enabled using the annotation @EnableSummer and specifying the appropriate parameters.
 
