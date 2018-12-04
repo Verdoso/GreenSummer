@@ -10,12 +10,12 @@ package org.greeneyed.summer.config;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCache;
@@ -47,6 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Configuration
 @ConfigurationProperties(prefix = "summer.caching")
+@ConditionalOnProperty(name = "spring.cache.type", havingValue = "caffeine", matchIfMissing = true)
 @Data
 @Slf4j
 public class CacheConfiguration {
@@ -57,7 +59,7 @@ public class CacheConfiguration {
      * Cache specification class that defines the parameters to see for the named cache
      *
      */
-    @Data    
+    @Data
     public static class CacheSpec {
         private Integer timeout;
         private Integer max = 200;
@@ -66,6 +68,7 @@ public class CacheConfiguration {
 
     /**
      * The cache manager Bean, that defines caching parameters
+     *
      * @param ticker The Ticker handle that Spring passes, unused so far
      * @return the cache manager
      */
@@ -99,6 +102,7 @@ public class CacheConfiguration {
     @Bean
     /**
      * The ticker bean, in case you have to do something time based in the cache manager
+     *
      * @return the ticker bean
      */
     public Ticker ticker() {
