@@ -10,12 +10,12 @@ package org.greeneyed.summer.config.enablers;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.greeneyed.summer.config.CacheConfiguration;
 import org.greeneyed.summer.config.CustomConversionServiceConfiguration;
 import org.greeneyed.summer.config.JoltViewConfiguration;
 import org.greeneyed.summer.config.MessageSourceConfiguration;
@@ -70,7 +71,7 @@ public class EnableSummerImportSelector implements ImportSelector {
         FORMATTER_REGISTRAR("fomatter_registrar", new Class<?>[] {CustomConversionServiceConfiguration.class, AutoregisterFormatterRegistrar.class}),
         CAFFEINE_CACHE(
                 "caffeine_cache",
-                new Class[] {SummerWebConfig.class},
+                new Class[] {CacheConfiguration.class},
                 new String[] {"org.springframework.cache.caffeine.CaffeineCache", "com.github.benmanes.caffeine.cache.Caffeine"}),
         LOG_OPERATIONS("log_operations", LogOperationAspect.class),
         HAZELCAST_CONSUL(
