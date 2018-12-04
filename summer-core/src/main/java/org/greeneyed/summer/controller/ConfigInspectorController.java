@@ -299,7 +299,6 @@ public class ConfigInspectorController {
         else {
             theBW.write(key);
         }
-        theBW.write(key);
         theBW.write(": ");
     }
 
