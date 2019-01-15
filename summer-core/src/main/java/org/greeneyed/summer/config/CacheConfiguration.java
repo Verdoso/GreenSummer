@@ -79,7 +79,7 @@ public class CacheConfiguration {
             //@formatter:off
 			List<CaffeineCache> caches =
 					specs.entrySet().stream()
-						.map(entry -> buildCache(entry.getKey(), entry.getValue()))
+						.map(entry -> buildCache(entry.getKey(), entry.getValue(), ticker))
 						.collect(Collectors.toList());
 			//@formatter:on
             manager.setCaches(caches);
@@ -87,14 +87,14 @@ public class CacheConfiguration {
         return manager;
     }
 
-    private CaffeineCache buildCache(String name, CacheSpec cacheSpec) {
+    private CaffeineCache buildCache(String name, CacheSpec cacheSpec, Ticker ticker) {
         log.info("Cache {} specified timeout of {} min, max of {}", name, cacheSpec.getTimeout(), cacheSpec.getMax());
         //@formatter:off
 		final Caffeine<Object, Object> caffeineBuilder
 				= Caffeine.newBuilder()
 					.expireAfterWrite(cacheSpec.getTimeout(), TimeUnit.MINUTES)
 					.maximumSize(cacheSpec.getMax())
-					.ticker(ticker());
+					.ticker(ticker);
 		//@formatter:on
         return new CaffeineCache(name, caffeineBuilder.build());
     }
