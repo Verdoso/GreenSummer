@@ -1,6 +1,7 @@
 package org.greeneyed.summer.controller;
 
-import java.nio.file.Paths;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /*
  * #%L
@@ -173,7 +174,12 @@ public class Log4JController {
             // the config file (for example log4j2-spring.xml. In this case the name of the configuration
             // is usually the path to the configuration file. so we "fix" the path before reconfiguring
             if (ctx.getConfigLocation() == null) {
-                ctx.setConfigLocation(Paths.get(ctx.getConfiguration().getName()).toUri());
+                System.err.println("ctx.getConfiguration().getName(): " + ctx.getConfiguration().getName());
+                try {
+                    ctx.setConfigLocation(new URI(ctx.getConfiguration().getName()));
+                } catch (URISyntaxException e) {
+                    log.error("Error constructing URI", e);
+                }
             }
             ctx.reconfigure();
             initInMemoryAppender();
