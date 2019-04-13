@@ -10,12 +10,12 @@ package org.greeneyed.summer.util;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
@@ -35,10 +35,13 @@ import javax.xml.bind.MarshalException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 import javax.xml.bind.util.JAXBSource;
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
@@ -68,13 +71,18 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Component
-public class SummerXSLTView extends XsltView implements MessageSourceAware {
+public class SummerXSLTView extends XsltView implements MessageSourceAware, ErrorListener {
 
     private GenericKeyedObjectPool<Class<?>, Marshaller> marshallerPool = null;
     private MediaType mediaType;
     private MessageSource messageSource;
     private boolean devMode = false;
     private Templates cachedTemplates;
+
+    public SummerXSLTView() {
+        super();
+        setErrorListener(this);
+    }
 
     @Override
     public void setMessageSource(MessageSource messageSource) {
@@ -118,7 +126,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
     @Measured("generateXML")
     protected Source convertSource(Object source) throws Exception {
         if (!(source instanceof Source || source instanceof Document || source instanceof Node || source instanceof Reader
-            || source instanceof InputStream || source instanceof Resource)) {
+                || source instanceof InputStream || source instanceof Resource)) {
             Marshaller marshaller = null;
             Class<?> clazz = null;
             try {
@@ -140,12 +148,29 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
     }
 
     @Override
+    public void error(TransformerException transformerException) throws TransformerException {
+        log.error("Error happened during XSLT processing: {}", transformerException.getMessageAndLocation());
+    }
+
+    @Override
+    public void fatalError(TransformerException transformerException) throws TransformerException {
+        log.error("Fatal error happened during XSLT processing: {}", transformerException.getMessageAndLocation());
+        throw transformerException;
+    }
+
+    @Override
+    public void warning(TransformerException transformerException) throws TransformerException {
+        log.warn("Warning: non fatal error happened during XSLT processing: {}", transformerException.getMessageAndLocation());
+    }
+
+    @Override
     @Measured("xsltTransform")
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Transformer transformer = getTransformer(model, request);
         if (transformer != null) {
             configureTransformer(model, response, transformer);
             configureResponse(model, response, transformer);
+            transformer.setErrorListener(this);
             Source source = null;
             try {
                 source = locateSource(model);
@@ -181,6 +206,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
         }
         if (showXML) {
             transformer = getTransformerFactory().newTransformer();
+            transformer.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/xml");
         } else {
             transformer = createTransformer(loadTemplates(!refreshXSLT));
         }
@@ -213,7 +239,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
      * applicable.
      * <p>
      * Only works for {@link StreamSource StreamSources}.
-     * 
+     *
      * @param source
      *        the XSLT Source to close (may be {@code null})
      */
@@ -238,7 +264,8 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware {
         }
     }
 
-    protected void superRenderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected void superRenderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
 
         Templates templates = loadTemplates(true);
 

@@ -10,12 +10,12 @@ package org.greeneyed.summer.monitoring;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
@@ -36,6 +36,11 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.Data;
@@ -55,7 +60,16 @@ public class LogOperationAspect {
     @Value("#{'${summer.operation_logging.included_packages}'.split(',')}")
     private List<String> packages;
 
-    @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping) && !@annotation(org.greeneyed.summer.monitoring.DontLogOperation)")
+    //@formatter:off
+    @Around("(" + "@annotation(org.springframework.web.bind.annotation.RequestMapping)"
+            + "|| @annotation(org.springframework.web.bind.annotation.GetMapping)"
+            + "|| @annotation(org.springframework.web.bind.annotation.PostMapping)"
+            + "|| @annotation(org.springframework.web.bind.annotation.PutMapping)"
+            + "|| @annotation(org.springframework.web.bind.annotation.DeleteMapping)"
+            + "|| @annotation(org.springframework.web.bind.annotation.PatchMapping)"
+            + "|| @annotation(org.greeneyed.summer.monitoring.LogOperation)"
+            + ")" + "&& !@annotation(org.greeneyed.summer.monitoring.DontLogOperation)")
+    //@formatter:n
     public Object logMethodCall(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getStaticPart().getSignature();
         Method method = methodSignature.getMethod();
@@ -118,29 +132,28 @@ public class LogOperationAspect {
                 theSB.append(": ");
                 for (int i = 0; i < parameters.length; i++) {
                     Parameter parameter = parameters[i];
-                    if (parameter.getType().isPrimitive() || parameter.getType().isEnum() || CharSequence.class.isAssignableFrom(parameter.getType())) {
-                        if (added) {
-                            theSB.append(";");
-                        }
-                        theSB.append(parameter.getName());
-                        theSB.append("=");
-                        if (args[i] != null) {
+                    if (parameter.getAnnotation(DontLog.class) == null && args[i] != null) {
+                        if (parameter.getType().isPrimitive() || parameter.getType().isEnum()
+                                || CharSequence.class.isAssignableFrom(parameter.getType())) {
+                            if (added) {
+                                theSB.append(";");
+                            }
+                            theSB.append(parameter.getName());
+                            theSB.append("=");
                             theSB.append(args[i].toString());
-                        }
-                        added = true;
-                    } else if (parameter.getType().isArray()
-                        && (parameter.getType().getComponentType().isPrimitive() || parameter.getType().getComponentType().isEnum() || CharSequence.class
-                            .isAssignableFrom(parameter.getType().getComponentType()))) {
+                            added = true;
+                        } else if (parameter.getType().isArray()
+                                && (parameter.getType().getComponentType().isPrimitive() || parameter.getType().getComponentType().isEnum()
+                                        || CharSequence.class.isAssignableFrom(parameter.getType().getComponentType()))) {
 
-                        if (added) {
-                            theSB.append(";");
-                        }
-                        theSB.append(parameter.getName());
-                        theSB.append("=");
-                        if (args[i] != null) {
+                            if (added) {
+                                theSB.append(";");
+                            }
+                            theSB.append(parameter.getName());
+                            theSB.append("=");
                             theSB.append(ObjectJoiner.join(",", (Object[]) args[i]));
+                            added = true;
                         }
-                        added = true;
                     }
                 }
             }
@@ -154,15 +167,41 @@ public class LogOperationAspect {
         try {
             final String operationName;
             RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+            GetMapping getMapping = method.getAnnotation(GetMapping.class);
+            PostMapping postMapping = method.getAnnotation(PostMapping.class);
+            PutMapping putMapping = method.getAnnotation(PutMapping.class);
+            DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
+            PatchMapping patchMapping = method.getAnnotation(PatchMapping.class);
+            LogOperation logOperation = method.getAnnotation(LogOperation.class);
             RequestMapping classrequestMapping = method.getDeclaringClass().getAnnotation(RequestMapping.class);
-            if (requestMapping != null && requestMapping.value() != null && requestMapping.value().length > 0) {
+            String basicName = null;
+            if(requestMapping!=null && requestMapping.value() != null && requestMapping.value().length > 0)
+            {
+                basicName = requestMapping.value()[0];
+            }else if(getMapping!=null && getMapping.value() != null && getMapping.value().length > 0)
+            {
+                basicName = getMapping.value()[0];
+            }else if(postMapping!=null && postMapping.value() != null && postMapping.value().length > 0)
+            {
+                basicName = postMapping.value()[0];
+            }else if(putMapping!=null && putMapping.value() != null && putMapping.value().length > 0)
+            {
+                basicName = putMapping.value()[0];
+            }else if(deleteMapping!=null && deleteMapping.value() != null && deleteMapping.value().length > 0)
+            {
+                basicName = deleteMapping.value()[0];
+            }else if(patchMapping!=null && patchMapping.value() != null && patchMapping.value().length > 0)
+            {
+                basicName = patchMapping.value()[0];
+            }else if (logOperation != null) {
+                basicName = logOperation.value();
+            }
+            if (basicName!=null) {
                 if (classrequestMapping != null && classrequestMapping.value() != null && classrequestMapping.value().length > 0) {
-                    operationName = classrequestMapping.value()[0] + requestMapping.value()[0];
+                    operationName = classrequestMapping.value()[0] + basicName;
                 } else {
-                    operationName = requestMapping.value()[0];
+                    operationName = basicName;
                 }
-            } else if (classrequestMapping != null && classrequestMapping.value() != null && classrequestMapping.value().length > 0) {
-                operationName = classrequestMapping.value()[0];
             } else {
                 operationName = null;
             }

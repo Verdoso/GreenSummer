@@ -46,7 +46,8 @@ public class SummerJoltView extends MappingJackson2JsonView {
     private final String joltSpecName;
     private final JoltViewConfiguration joltViewConfiguration;
     private boolean transform = true;
-
+    private boolean refresh = false;
+    
     public SummerJoltView(final String joltSpecName, final JoltViewConfiguration joltViewConfiguration) {
         this.joltSpecName = joltSpecName;
         this.joltViewConfiguration = joltViewConfiguration;
@@ -56,7 +57,11 @@ public class SummerJoltView extends MappingJackson2JsonView {
 
     @Override
     public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        transform = !(joltViewConfiguration.isDevMode() && Boolean.parseBoolean(request.getParameter(JoltViewConfiguration.SHOW_JSON_SOURCE_FLAG)));
+        final boolean devMode = joltViewConfiguration.isDevMode();
+        final String showSourceFlag = request.getParameter(JoltViewConfiguration.SHOW_JSON_SOURCE_FLAG);
+        final String refreshFlag = request.getParameter(JoltViewConfiguration.REFRESH_SPEC_FLAG);
+        transform = !(devMode && Boolean.parseBoolean(showSourceFlag));
+        refresh = devMode && (refreshFlag==null || Boolean.parseBoolean(refreshFlag));
         super.render(model, request, response);
     }
 
@@ -72,9 +77,8 @@ public class SummerJoltView extends MappingJackson2JsonView {
      */
     @Override
     protected void writeContent(OutputStream stream, Object object) throws IOException {
-        Chainr chainr =
-            Chainr.fromSpec(JsonUtils.classpathToList(joltViewConfiguration.getSpecPrefix() + joltSpecName + joltViewConfiguration.getSpecSuffix()));
         if (transform) {
+            Chainr chainr = joltViewConfiguration.getChainr(joltSpecName, refresh);
             try (ByteArrayOutputStream theBAOS = new ByteArrayOutputStream()) {
                 super.writeContent(theBAOS, object);
                 theBAOS.flush();
@@ -83,9 +87,5 @@ public class SummerJoltView extends MappingJackson2JsonView {
         } else {
             super.writeContent(stream, object);
         }
-
     }
-
-
-
 }

@@ -1,8 +1,8 @@
 package org.greeneyed.summer.util;
 
-/*
+/*-
  * #%L
- * Summer
+ * GreenSummer
  * %%
  * Copyright (C) 2018 GreenEyed (Daniel Lopez)
  * %%
@@ -22,33 +22,27 @@ package org.greeneyed.summer.util;
  * #L%
  */
 
-
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
-/**
- * A somehow hackish way to get a reference to the application context from almost any class (required by SummerJoltView)
- *
- */
 @Data
 @Component
-public class ApplicationContextProvider implements ApplicationContextAware {
+@Slf4j
+@ConditionalOnProperty(name = "summer.server_port_display", havingValue = "true", matchIfMissing = true)
+public class ServerPortDisplayer implements ApplicationRunner, EnvironmentAware {
+	@Autowired
+	private Environment environment;
 
-    private static ApplicationContext applicationContext;
-
-    /**
-     * @return the Spring ApplicationContext
-     */
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext ac) throws BeansException {
-        applicationContext = ac;
-    }
+	@Override
+	public void run(ApplicationArguments arguments) throws Exception {
+		log.warn("Server port: {}", environment.getProperty("local.server.port"));
+	}
 }

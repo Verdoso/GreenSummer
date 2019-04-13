@@ -6,7 +6,7 @@
 	<description>GreenSummer, an extension library to complement Spring Boot applications.</description>
 	<groupId>org.greeneyed</groupId>
 	<artifactId>summer</artifactId>
-	<version>1.0-SNAPSHOT</version>
+    <version>0.10.5-SNAPSHOT</version>
 	<url>https://github.com/Verdoso/GreenSummer</url>
 
 	<organization>
@@ -61,12 +61,15 @@
 		<apidocs.project.location>summer-pages</apidocs.project.location>
 		<spring-cloud-context.version>1.2.2.RELEASE</spring-cloud-context.version>
 		<spring-boot.version>1.5.3.RELEASE</spring-boot.version>
-		<logback.version>1.3.0-alpha4</logback.version>
 		<lombok.version>1.18.2</lombok.version>
+		<logback.version>1.3.0-alpha4</logback.version>
 		<jaxb.version>2.3.0</jaxb.version>
 		<jaxb-impl.version>2.3.0.1</jaxb-impl.version>
 		<jolt.version>0.1.0</jolt.version>
 		<log4j.version>2.10.0</log4j.version>
+        <hazelcast.version>3.10.4</hazelcast.version>
+        <hazelcast-consul-discovery-spi.version>1.0-RC8</hazelcast-consul-discovery-spi.version>
+        <cqengine.version>2.12.4</cqengine.version>
 	</properties>
 
 	<dependencyManagement>
@@ -178,6 +181,28 @@
 			<artifactId>caffeine</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+        <!-- Hazelcast coordinated through Consul -->
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-all</artifactId>
+            <version>${hazelcast.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.bitsofinfo</groupId>
+            <artifactId>hazelcast-consul-discovery-spi</artifactId>
+            <version>${hazelcast-consul-discovery-spi.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- CQEngine collections coordinated through Hazelcast -->
+        <dependency>
+            <groupId>com.googlecode.cqengine</groupId>
+            <artifactId>cqengine</artifactId>
+            <version>${cqengine.version}</version>
+            <optional>true</optional>
+        </dependency>
 
 		<!-- java.xml.bind -->
 		<dependency>

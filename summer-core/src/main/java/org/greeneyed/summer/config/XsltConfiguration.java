@@ -46,13 +46,15 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class XsltConfiguration {
 
-    private static final String XSLT_SUFFIX = ".xslt";
+    public static final String DEFAULT_PREFFIX = "classpath:/xslt/";
+    public static final String XSLT_SUFFIX = ".xslt";
     public static final String XML_SOURCE_TAG = "xmlSource";
     public static final String REFRESH_XSLT_FLAG = "refreshXSLT";
     public static final String SHOW_XML_SOURCE_FLAG = "showXMLSource";
     public static final int TOTAL_FACTOR = 5;
     public static final double MIN_IDLE_FACTOR = 0.5;
     public static final double MAX_IDLE_FACTOR = 0.75;
+    private String preffix = DEFAULT_PREFFIX;
     private boolean devMode = false;
     private int poolsMaxPerKey = 5;
     private MediaType mediaType;
@@ -88,7 +90,7 @@ public class XsltConfiguration {
         xsltResolver.setSourceKey(XML_SOURCE_TAG);
         xsltResolver.setViewClass(SummerXSLTView.class);
         xsltResolver.setViewNames(new String[] {"*" + XSLT_SUFFIX});
-        xsltResolver.setPrefix("classpath:/xslt/");
+        xsltResolver.setPrefix(preffix);
         return xsltResolver;
     }
 }

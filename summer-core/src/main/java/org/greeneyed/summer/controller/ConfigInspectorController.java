@@ -10,12 +10,12 @@ package org.greeneyed.summer.controller;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
@@ -264,7 +264,6 @@ public class ConfigInspectorController {
         int lastDot = key.lastIndexOf(".");
         if (lastDot > -1) {
             String prefix = key.substring(0, lastDot);
-            key = key.substring(lastDot + 1);
             // If the prefix of the previous key was different up to this point, print it,
             // else ignore it
             if (previousKey.length() <= lastDot || !previousKey.substring(0, lastDot).equals(prefix)) {
@@ -274,8 +273,11 @@ public class ConfigInspectorController {
             for (int i = 0; i < StringUtils.countOccurrencesOf(prefix, ".") + 1; i++) {
                 theBW.write("  ");
             }
+            theBW.write(key.substring(lastDot + 1));
         }
-        theBW.write(key);
+        else {
+            theBW.write(key);
+        }
         theBW.write(": ");
     }
 
@@ -283,7 +285,6 @@ public class ConfigInspectorController {
         int lastDot = key.lastIndexOf(".");
         if (lastDot > -1) {
             String prefix = key.substring(0, lastDot);
-            key = key.substring(lastDot + 1);
             // If the prefix of the previous key was different up to this point, print it,
             // else ignore it
             if (previousKey.length() <= lastDot || !previousKey.substring(0, lastDot).equals(prefix)) {
@@ -293,8 +294,11 @@ public class ConfigInspectorController {
             for (int i = 0; i < StringUtils.countOccurrencesOf(prefix, ".") + 1; i++) {
                 theBW.write("  ");
             }
+            theBW.write(key.substring(lastDot + 1));
         }
-        theBW.write(key);
+        else {
+            theBW.write(key);
+        }
         theBW.write(": ");
     }
 

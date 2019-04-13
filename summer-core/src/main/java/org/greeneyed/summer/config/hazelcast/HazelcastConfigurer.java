@@ -1,8 +1,8 @@
-package org.greeneyed.summer.util.autoformatter;
+package org.greeneyed.summer.config.hazelcast;
 
-/*
+/*-
  * #%L
- * Summer
+ * GreenSummer
  * %%
  * Copyright (C) 2018 GreenEyed (Daniel Lopez)
  * %%
@@ -22,23 +22,17 @@ package org.greeneyed.summer.util.autoformatter;
  * #L%
  */
 
+import com.hazelcast.config.Config;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public interface HazelcastConfigurer {
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.converter.Converter;
+	/**
+	 * Customize Hazelcast configuration.
+	 *
+	 * @param config
+	 *            The {@link Config} object that will be used to create the
+	 *            Hazelcast instance
+	 */
+	void configure(Config config);
 
-
-/**
- * The annotation to use if you want your {@link Converter} class to be auto registered. See also {@link AutoregisterFormatterRegistrar}
- *
- */
-@Target({
-    ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Qualifier
-public @interface AutoRegistered {
 }

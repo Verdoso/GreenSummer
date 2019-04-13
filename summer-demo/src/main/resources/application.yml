@@ -14,9 +14,13 @@ endpoints:
   mappings:
     enabled: true
 summer:
-    health:
-        status: KO
-        use_http_status: false
-    operation_logging:
-        log_requests: true
-        included_packages: org.greeneyed.demo        
+  jolt:
+    devMode: true
+  xslt:
+    devMode: true
+  health:
+    status: KO
+    use_http_status: false
+  operation_logging:
+    log_requests: true
+    included_packages: org.greeneyed.demo        
