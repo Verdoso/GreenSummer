@@ -3,6 +3,8 @@ package org.greeneyed.summer.config;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.logging.log4j.core.util.JsonUtils;
+
 /*
  * #%L
  * Summer
@@ -33,7 +35,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bazaarvoice.jolt.Chainr;
-import com.bazaarvoice.jolt.JsonUtils;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

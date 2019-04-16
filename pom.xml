@@ -1,60 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
 >
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.greeneyed</groupId>
-    <artifactId>summer-parent</artifactId>
-    <packaging>pom</packaging>
-    <version>0.2-SNAPSHOT</version>
-    <name>summer-parent</name>
-    <url>https://github.com/Verdoso/GreenSummer</url>
-    <description>GreenSummer, an extension library to complement Spring Boot applications.</description>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.greeneyed</groupId>
+	<artifactId>summer-parent</artifactId>
+	<packaging>pom</packaging>
+	<version>0.2-SNAPSHOT</version>
+	<name>summer-parent</name>
+	<url>https://github.com/Verdoso/GreenSummer</url>
+	<description>GreenSummer, an extension library to complement Spring Boot applications.</description>
 
-    <organization>
-        <name>GreenEyed</name>
-        <url>http://www.greeneyed.org/</url>
-    </organization>
+	<organization>
+		<name>GreenEyed</name>
+		<url>http://www.greeneyed.org/</url>
+	</organization>
 
-    <developers>
-        <developer>
-            <id>Verdoso</id>
-            <name>Daniel Lopez</name>
-            <email>d.lopez.j@gmail.com</email>
-            <organization>UIB</organization>
-            <organizationUrl>http://www.greeneyed.org/</organizationUrl>
-            <timezone>GMT+1</timezone>
-            <roles>
-            </roles>
-        </developer>
-    </developers>
+	<developers>
+		<developer>
+			<id>Verdoso</id>
+			<name>Daniel Lopez</name>
+			<email>d.lopez.j@gmail.com</email>
+			<organization>UIB</organization>
+			<organizationUrl>http://www.greeneyed.org/</organizationUrl>
+			<timezone>GMT+1</timezone>
+			<roles>
+			</roles>
+		</developer>
+	</developers>
 
-    <licenses>
-        <license>
-            <name>GNU Lesser General Public License 2.1</name>
-            <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
-            <distribution>repo</distribution>
-            <comments>A business-friendly OSS license</comments>
-        </license>
-    </licenses>
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License 2.1</name>
+			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
 
-    <issueManagement>
-        <system>GitHub Issues</system>
-        <url>https://github.com/Verdoso/GreenSummer/issues</url>
-    </issueManagement>
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/Verdoso/GreenSummer/issues</url>
+	</issueManagement>
 
-    <scm>
-        <url>https://github.com/Verdoso/GreenSummer</url>
-        <connection>scm:git:git://github.com/Verdoso/GreenSummer.git</connection>
-        <developerConnection>scm:git:https://github.com/Verdoso/GreenSummer.git</developerConnection>
-        <tag>green-summer-${project.version}</tag>
-    </scm>
+	<scm>
+		<url>https://github.com/Verdoso/GreenSummer</url>
+		<connection>scm:git:git://github.com/Verdoso/GreenSummer.git</connection>
+		<developerConnection>scm:git:https://github.com/Verdoso/GreenSummer.git</developerConnection>
+		<tag>green-summer-${project.version}</tag>
+	</scm>
 
-    <modules>
-        <module>summer-core</module>
-        <!-- <module>summer-demo</module> -->
-    </modules>
+	<modules>
+		<module>summer-core</module>
+		<!-- <module>summer-demo</module> -->
+	</modules>
+
+<!-- 	<build> -->
+<!-- 		<plugins> -->
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.codehaus.mojo</groupId> -->
+<!-- 				<artifactId>versions-maven-plugin</artifactId> -->
+<!-- 				<version>2.5</version> -->
+<!-- 				<configuration> -->
+<!-- 					<generateBackupPoms>false</generateBackupPoms> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
+<!-- 		</plugins> -->
+<!-- 	</build> -->
 
 </project>

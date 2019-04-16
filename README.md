@@ -30,4 +30,9 @@ In the mean time, this is a brief summary of the utilities that one can find in 
 
 The Spring integrated utilites can be enabled using the annotation @EnableSummer and specifying the appropriate parameters.
 
+### Checking project plugin versions
+- Use 'mvn org.codehaus.mojo:versions-maven-plugin:2.5:display-plugin-updates' to verify you are using the latest available plugin versions
+- Use 'mvn org.codehaus.mojo:versions-maven-plugin:2.5:display-dependency-updates' to verify you are using the latest available plugin versions
+
 I'll be adding documentation as time permits.
+

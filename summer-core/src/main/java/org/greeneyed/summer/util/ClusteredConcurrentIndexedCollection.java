@@ -79,7 +79,7 @@ public class ClusteredConcurrentIndexedCollection<K extends Comparable<K>, O ext
 			this.map = this.hazelcastInstance.getMap(name);
 			this.map.addEntryListener(new HazelcastEntryListener(), true);
 			this.member = hazelcastInstance.getCluster().getLocalMember();
-			this.lock = this.hazelcastInstance.getLock(name + "_LOCK");
+			this.lock = this.hazelcastInstance.getCPSubsystem().getLock(name + "_LOCK");
 		} else {
 			log.debug("No hazelcast instance defined, acting just locally");
 			this.map = null;
