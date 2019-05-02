@@ -36,10 +36,11 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.EnvironmentEndpoint;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.actuate.env.EnvironmentEndpoint;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,8 +49,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
-@RequestMapping(value = "/manage/config_inspector")
+@Component
+@Endpoint(id = "config_inspector")
 @Slf4j
 public class ConfigInspectorController {
 
@@ -78,17 +79,30 @@ public class ConfigInspectorController {
             theBW.newLine();
             theBW.write("# Sources included, in order of preference ");
             theBW.newLine();
-            Map<String, Object> propertyMap = envEndpoint.invoke();
-            propertyMap.forEach((key, value) -> {
-                try {
-                    if (value instanceof Map && !EXCLUDED_MAPS.contains(key)) {
-                        theBW.write(key);
-                        theBW.newLine();
+            envEndpoint.environment(null).getPropertySources().forEach(propertySourceDescriptor -> {
+                propertySourceDescriptor.getProperties().forEach((key, value) -> {
+                    try {
+                        //if (value instanceof Map && !EXCLUDED_MAPS.contains(key)) {
+                        if (!EXCLUDED_MAPS.contains(key)) {
+                            theBW.write(key);
+                            theBW.newLine();
+                        }
+                    } catch (IOException e) {
+                        log.error("Error printing map name, doh!", e);
                     }
-                } catch (IOException e) {
-                    log.error("Error printing map name, doh!", e);
-                }
+                });
             });
+//            Map<String, Object> propertyMap = envEndpoint.invoke();
+//            propertyMap.forEach((key, value) -> {
+//                try {
+//                    if (value instanceof Map && !EXCLUDED_MAPS.contains(key)) {
+//                        theBW.write(key);
+//                        theBW.newLine();
+//                    }
+//                } catch (IOException e) {
+//                    log.error("Error printing map name, doh!", e);
+//                }
+//            });
             theBW.flush();
             return theSW.toString();
         }
@@ -197,8 +211,7 @@ public class ConfigInspectorController {
                 }
             }
             finalValues.putIfAbsent(origin, new ArrayList<>());
-            finalValues.get(origin).add(new String[] {
-                key, finalValue});
+            finalValues.get(origin).add(new String[] {key, finalValue});
         });
         return finalValues;
     }
@@ -274,8 +287,7 @@ public class ConfigInspectorController {
                 theBW.write("  ");
             }
             theBW.write(key.substring(lastDot + 1));
-        }
-        else {
+        } else {
             theBW.write(key);
         }
         theBW.write(": ");
@@ -295,8 +307,7 @@ public class ConfigInspectorController {
                 theBW.write("  ");
             }
             theBW.write(key.substring(lastDot + 1));
-        }
-        else {
+        } else {
             theBW.write(key);
         }
         theBW.write(": ");

@@ -33,6 +33,8 @@ open module org.greeneyed.summer {
     
     requires transitive java.activation;
     requires transitive java.annotation;
+    requires transitive com.fasterxml.jackson.core;
+    requires transitive com.fasterxml.jackson.databind;
     requires transitive org.slf4j;
     requires transitive jaxb.core;
     requires transitive javax.servlet.api;
@@ -46,27 +48,21 @@ open module org.greeneyed.summer {
     requires transitive spring.context.support;
     requires transitive spring.beans;
     requires transitive spring.cloud.context;
-    requires transitive jackson.annotations;
-    requires transitive jackson.core;
-    requires transitive jackson.databind;
-    requires transitive aspectjweaver;
     requires transitive org.apache.logging.log4j.core;
     requires transitive org.apache.logging.log4j;
     //requires json.utils;
+    //requires static jolt.core;
     
     requires transitive java.xml.bind;
     requires transitive spring.webmvc;
     
-    requires static commons.logging;
-    //requires org.apache.log4j;
-    //requires static log4j.api;
-    //requires static log4j.core;
-    requires static transitive caffeine;
-    //requires static jolt.core;
+    requires commons.logging;
     requires static transitive ch.qos.logback.classic;
     requires static transitive ch.qos.logback.core;
     requires static lombok;
     requires transitive hazelcast.all;
     requires transitive cqengine;
     requires hazelcast.consul.discovery.spi;
+    requires transitive com.github.benmanes.caffeine;
+    requires transitive org.aspectj.weaver;
 }

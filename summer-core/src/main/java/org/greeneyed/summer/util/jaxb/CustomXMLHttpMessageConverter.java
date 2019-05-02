@@ -43,7 +43,6 @@ import org.greeneyed.summer.monitoring.Measured;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConversionException;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.util.ClassUtils;
@@ -60,31 +59,33 @@ public class CustomXMLHttpMessageConverter extends Jaxb2RootElementHttpMessageCo
     private final GenericKeyedObjectPool<Class<?>, Marshaller> marshallerPool;
 
     public CustomXMLHttpMessageConverter(final int poolsMaxPerKey) {
-        final GenericKeyedObjectPoolConfig gop = new GenericKeyedObjectPoolConfig();
+        log.info("Pools of (un)marshallers initialised with concurrency {}", poolsMaxPerKey);
+        unmarshallerPool = new GenericKeyedObjectPool<>(new UnmarshallerFactory(), getPoolConfig(poolsMaxPerKey));
+        marshallerPool = new GenericKeyedObjectPool<>(new MarshallerFactory(), getPoolConfig(poolsMaxPerKey));
+    }
+
+    private <T> GenericKeyedObjectPoolConfig<T> getPoolConfig(final int poolsMaxPerKey) {
+        final GenericKeyedObjectPoolConfig<T> gop = new GenericKeyedObjectPoolConfig<>();
         gop.setMaxTotal(poolsMaxPerKey * XsltConfiguration.TOTAL_FACTOR);
         gop.setMinIdlePerKey((int) (poolsMaxPerKey / XsltConfiguration.MIN_IDLE_FACTOR));
         gop.setMaxIdlePerKey((int) (poolsMaxPerKey / XsltConfiguration.MAX_IDLE_FACTOR));
         gop.setMaxTotalPerKey(poolsMaxPerKey);
         gop.setTestOnBorrow(false);
         gop.setMaxWaitMillis(10_000);
-        log.info("Pool of unmarshallers initialised with concurrency {}", gop.getMaxTotalPerKey());
-        unmarshallerPool = new GenericKeyedObjectPool<>(new UnmarshallerFactory(), gop);
-        marshallerPool = new GenericKeyedObjectPool<>(new MarshallerFactory(), gop);
+        return gop;
     }
 
     @Override
     @Measured("parseXML")
-    protected Object readFromSource(Class<?> clazz, HttpHeaders headers, Source source) throws IOException {
+    protected Object readFromSource(Class<?> clazz, HttpHeaders headers, Source source) throws Exception {
         final Object result;
         Unmarshaller unmarshaller = null;
         try {
             final Source processedSource = processSource(source);
             unmarshaller = unmarshallerPool.borrowObject(clazz);
             result = processXMLRequest(clazz, unmarshaller, processedSource);
-        } catch (NullPointerException ex) {
-            throw handleNPE(ex);
         } catch (UnmarshalException ex) {
-            throw new HttpMessageNotReadableException("Could not unmarshal to [" + clazz + "]: " + ex.getMessage(), ex);
+            throw ex;
         } catch (JAXBException ex) {
             throw new HttpMessageConversionException("Could not instantiate JAXBContext: " + ex.getMessage(), ex);
         } catch (Exception ex) {
@@ -95,15 +96,6 @@ public class CustomXMLHttpMessageConverter extends Jaxb2RootElementHttpMessageCo
             }
         }
         return result;
-    }
-
-    private HttpMessageNotReadableException handleNPE(NullPointerException ex) {
-        if (!isSupportDtd()) {
-            return new HttpMessageNotReadableException("NPE while unmarshalling. " + "This can happen on JDK 1.6 due to the presence of DTD "
-                + "declarations, which are disabled.", ex);
-        } else {
-            throw ex;
-        }
     }
 
     @Override

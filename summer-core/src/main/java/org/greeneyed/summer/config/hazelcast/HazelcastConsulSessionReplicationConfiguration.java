@@ -214,8 +214,8 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
     @Bean
     @ConditionalOnBean(name="hazlecastConsulConfig")
     @ConditionalOnProperty(name = "summer.hazelcast.consul.session_replication", havingValue = "true", matchIfMissing = true)
-    public FilterRegistrationBean webFilterRegistrationBean(HazelcastInstance hazelcastInstance) {
-        final FilterRegistrationBean assertionTLFilter = new FilterRegistrationBean();
+    public FilterRegistrationBean<WebFilter> webFilterRegistrationBean(HazelcastInstance hazelcastInstance) {
+        final FilterRegistrationBean<WebFilter> assertionTLFilter = new FilterRegistrationBean<>();
         Properties properties = new Properties();
         properties.put("instance-name", hazelcastInstance.getName());
         properties.put("sticky-session", Boolean.FALSE.toString());

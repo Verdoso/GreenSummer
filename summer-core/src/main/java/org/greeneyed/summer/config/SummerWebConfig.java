@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode(callSuper = false)
 @ConfigurationProperties(prefix = "summer")
 @Slf4j
-public class SummerWebConfig extends WebMvcConfigurerAdapter {
+public class SummerWebConfig implements WebMvcConfigurer {
 
     @Value("${summer.xml_http.poolsMaxPerKey:10}")
     private int poolsMaxPerKey;
@@ -50,6 +50,6 @@ public class SummerWebConfig extends WebMvcConfigurerAdapter {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         log.debug("Configuring XMLHTTPMessageConverter with a pool of {} per key", poolsMaxPerKey);
         converters.add(new CustomXMLHttpMessageConverter(poolsMaxPerKey));
-        super.configureMessageConverters(converters);
+        WebMvcConfigurer.super.configureMessageConverters(converters);
     }
 }
