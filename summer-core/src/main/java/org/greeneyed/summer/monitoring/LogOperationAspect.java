@@ -1,10 +1,10 @@
 package org.greeneyed.summer.monitoring;
 
-/*
+/*-
  * #%L
- * Summer
+ * GreenSummer
  * %%
- * Copyright (C) 2018 GreenEyed (Daniel Lopez)
+ * Copyright (C) 2018 - 2019 GreenEyed (Daniel Lopez)
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -69,7 +69,7 @@ public class LogOperationAspect {
             + "|| @annotation(org.springframework.web.bind.annotation.PatchMapping)"
             + "|| @annotation(org.greeneyed.summer.monitoring.LogOperation)"
             + ")" + "&& !@annotation(org.greeneyed.summer.monitoring.DontLogOperation)")
-    //@formatter:n
+    //@formatter:on
     public Object logMethodCall(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getStaticPart().getSignature();
         Method method = methodSignature.getMethod();
@@ -175,35 +175,31 @@ public class LogOperationAspect {
             LogOperation logOperation = method.getAnnotation(LogOperation.class);
             RequestMapping classrequestMapping = method.getDeclaringClass().getAnnotation(RequestMapping.class);
             String basicName = null;
-            if(requestMapping!=null && requestMapping.value() != null && requestMapping.value().length > 0)
-            {
-                basicName = requestMapping.value()[0];
-            }else if(getMapping!=null && getMapping.value() != null && getMapping.value().length > 0)
-            {
-                basicName = getMapping.value()[0];
-            }else if(postMapping!=null && postMapping.value() != null && postMapping.value().length > 0)
-            {
-                basicName = postMapping.value()[0];
-            }else if(putMapping!=null && putMapping.value() != null && putMapping.value().length > 0)
-            {
-                basicName = putMapping.value()[0];
-            }else if(deleteMapping!=null && deleteMapping.value() != null && deleteMapping.value().length > 0)
-            {
-                basicName = deleteMapping.value()[0];
-            }else if(patchMapping!=null && patchMapping.value() != null && patchMapping.value().length > 0)
-            {
-                basicName = patchMapping.value()[0];
-            }else if (logOperation != null) {
-                basicName = logOperation.value();
-            }
-            if (basicName!=null) {
-                if (classrequestMapping != null && classrequestMapping.value() != null && classrequestMapping.value().length > 0) {
-                    operationName = classrequestMapping.value()[0] + basicName;
-                } else {
-                    operationName = basicName;
-                }
+            if (logOperation != null && logOperation.value() != null && logOperation.value().trim().length() > 0) {
+                operationName = logOperation.value();
             } else {
-                operationName = null;
+                if (requestMapping != null && requestMapping.value() != null && requestMapping.value().length > 0) {
+                    basicName = requestMapping.value()[0];
+                } else if (getMapping != null && getMapping.value() != null && getMapping.value().length > 0) {
+                    basicName = getMapping.value()[0];
+                } else if (postMapping != null && postMapping.value() != null && postMapping.value().length > 0) {
+                    basicName = postMapping.value()[0];
+                } else if (putMapping != null && putMapping.value() != null && putMapping.value().length > 0) {
+                    basicName = putMapping.value()[0];
+                } else if (deleteMapping != null && deleteMapping.value() != null && deleteMapping.value().length > 0) {
+                    basicName = deleteMapping.value()[0];
+                } else if (patchMapping != null && patchMapping.value() != null && patchMapping.value().length > 0) {
+                    basicName = patchMapping.value()[0];
+                }
+                if (basicName != null) {
+                    if (classrequestMapping != null && classrequestMapping.value() != null && classrequestMapping.value().length > 0) {
+                        operationName = classrequestMapping.value()[0] + basicName;
+                    } else {
+                        operationName = basicName;
+                    }
+                } else {
+                    operationName = null;
+                }
             }
             return operationName;
         } catch (Exception e) {
