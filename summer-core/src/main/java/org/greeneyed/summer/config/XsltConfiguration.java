@@ -55,6 +55,7 @@ public class XsltConfiguration {
     public static final double MIN_IDLE_FACTOR = 0.5;
     public static final double MAX_IDLE_FACTOR = 0.75;
     private String preffix = DEFAULT_PREFFIX;
+    private String parameterPreffix = null;
     private boolean devMode = false;
     private int poolsMaxPerKey = 5;
     private MediaType mediaType;
