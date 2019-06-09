@@ -59,6 +59,7 @@ import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.view.xslt.XsltView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -78,6 +79,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware, Erro
     private MessageSource messageSource;
     private boolean devMode = false;
     private Templates cachedTemplates;
+    private String parameterPreffix;
 
     public SummerXSLTView() {
         super();
@@ -92,6 +94,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware, Erro
             if (xsltConfiguration != null) {
                 mediaType = xsltConfiguration.getMediaType();
                 devMode = xsltConfiguration.isDevMode();
+                parameterPreffix = xsltConfiguration.getParameterPreffix();
                 GenericKeyedObjectPoolConfig gop = new GenericKeyedObjectPoolConfig();
                 gop.setMaxTotal(xsltConfiguration.getPoolsMaxPerKey() * XsltConfiguration.TOTAL_FACTOR);
                 gop.setMinIdlePerKey((int) (xsltConfiguration.getPoolsMaxPerKey() / XsltConfiguration.MIN_IDLE_FACTOR));
@@ -177,12 +180,27 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware, Erro
                 if (source == null) {
                     throw new IllegalArgumentException("Unable to locate Source object in model: " + model);
                 }
+                addXSLTParameters(request, transformer);
                 transformer.transform(source, createResult(response));
             } finally {
                 customCloseSourceIfNecessary(source);
             }
         } else {
             superRenderMergedOutputModel(model, request, response);
+        }
+    }
+
+    private void addXSLTParameters(HttpServletRequest request, Transformer transformer) {
+        if(StringUtils.hasText(parameterPreffix)) {
+            int preffixLenght = parameterPreffix.length();
+            for(String key : request.getParameterMap().keySet()) {
+                if(key.startsWith(parameterPreffix)) {
+                    final String paramName = key.substring(preffixLenght);
+                    final String paraValue = request.getParameter(key);
+                    log.trace("Adding XSLT parameter {} - {}", paramName, paraValue);
+                    transformer.setParameter(paramName, paraValue);
+                }
+            }
         }
     }
 
