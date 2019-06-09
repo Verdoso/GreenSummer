@@ -6,7 +6,7 @@
     media-type="text/html"
     encoding="iso-8859-1" />
   <xsl:param
-    name="Context" />
+    name="myparam" />
   <xsl:variable name="labels" select="document('../xml/Labels.xml')" />
   <xsl:template match="/">
     <html>
@@ -25,9 +25,10 @@
         </title>
       </head>
       <body>
-        TEST
+        <h1>TEST</h1>
+        Test label: <xsl:value-of select="$labels/LABELS/@Test"/>
         <br/>
-        ErrorNoProceso: <xsl:value-of select="$labels/LABELS/@Test"/>
+        Parameter: <xsl:value-of select="$myparam"/>
       </body>
     </html>
   </xsl:template>

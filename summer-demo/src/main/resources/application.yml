@@ -18,6 +18,7 @@ summer:
     devMode: true
   xslt:
     devMode: true
+    parameterPreffix: x_
   health:
     status: KO
     use_http_status: false
