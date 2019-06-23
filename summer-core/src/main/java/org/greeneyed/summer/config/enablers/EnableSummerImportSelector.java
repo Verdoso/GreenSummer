@@ -35,6 +35,7 @@ import org.greeneyed.summer.config.Slf4jMDCFilterConfiguration;
 import org.greeneyed.summer.config.SummerWebConfig;
 import org.greeneyed.summer.config.XsltConfiguration;
 import org.greeneyed.summer.config.hazelcast.HazelcastConsulSessionReplicationConfiguration;
+import org.greeneyed.summer.controller.ConfigInspectorEndpoint;
 import org.greeneyed.summer.controller.HealthController;
 import org.greeneyed.summer.controller.Log4JController;
 import org.greeneyed.summer.controller.LogbackController;
@@ -52,12 +53,13 @@ public class EnableSummerImportSelector implements ImportSelector {
 
     private static enum ENABLE_OPTION {
         MESSAGE_SOURCE("message_source", MessageSourceConfiguration.class),
-//        CONFIG_INSPECTOR_CONTROLLER("config_inspector", ConfigInspectorController.class),
+        CONFIG_INSPECTOR_CONTROLLER("config_inspector", ConfigInspectorEndpoint.class),
         LOG4J_CONTROLLER("log4j", new Class<?>[] {Log4JController.class}, new String[] {"org.apache.logging.log4j.core.LoggerContext"}),
         LOGBACK_CONTROLLER("logback", new Class<?>[] {LogbackController.class}, new String[] {"ch.qos.logback.classic.LoggerContext"}),
         SLF4J_FILTER("slf4j_filter", new Class<?>[] {Slf4jMDCFilterConfiguration.class}, new String[] {"org.slf4j.MDC"}),
         HEALTH_CONTROLLER("health", HealthController.class),
         XSLT_VIEW("xslt_view", XsltConfiguration.class),
+//      TODO: Jolt unable to work with Java >8        
 //        JOLT_VIEW(
 //                "jolt_view",
 //                new Class<?>[] {ApplicationContextProvider.class, JoltViewConfiguration.class},
@@ -89,6 +91,18 @@ public class EnableSummerImportSelector implements ImportSelector {
         private ENABLE_OPTION(final String flag, final Class<?>... configurationClass) {
             this(flag, configurationClass, null);
         }
+        
+        public String getFlag() {
+            return flag;
+        }
+        
+        public Class<?>[] getConfigurationClasses() {
+            return configurationClasses;
+        }
+        
+        public String[] getRequirementClasses() {
+            return requirementClasses;
+        }
     }
 
 
@@ -98,20 +112,20 @@ public class EnableSummerImportSelector implements ImportSelector {
                 AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableSummer.class.getName(), false));
         List<String> configurationClassesToEnable = new ArrayList<>();
         for (ENABLE_OPTION option : ENABLE_OPTION.values()) {
-            if (attributes.getBoolean(option.flag)) {
+            if (attributes.getBoolean(option.getFlag())) {
                 try {
-                    if (option.requirementClasses != null) {
-                        for (String requiredClass : option.requirementClasses) {
+                    if (option.getRequirementClasses() != null) {
+                        for (String requiredClass : option.getRequirementClasses()) {
                             Class.forName(requiredClass);
                         }
                     }
-                    for (Class<?> configuredClass : option.configurationClasses) {
+                    for (Class<?> configuredClass : option.getConfigurationClasses()) {
                         log.debug("Enabling class {}", configuredClass.getName());
                         configurationClassesToEnable.add(configuredClass.getName());
                     }
                 } catch (Exception e) {
-                    log.error("Error enabling module: {}. It requires classes {} in the classpath. {}:{}", option.flag,
-                            Arrays.stream(option.requirementClasses).collect(Collectors.joining(", ")), e.getClass().getSimpleName(), e.getMessage());
+                    log.error("Error enabling module: {}. It requires classes {} in the classpath. {}:{}", option.getFlag(),
+                            Arrays.stream(option.getRequirementClasses()).collect(Collectors.joining(", ")), e.getClass().getSimpleName(), e.getMessage());
                 }
             }
         }
