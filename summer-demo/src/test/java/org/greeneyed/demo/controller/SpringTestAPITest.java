@@ -117,10 +117,14 @@ public class SpringTestAPITest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_XML))
 				//
-				// .andReturn()
-				//
 				;
 		// Check the XML
 		resultActions.andExpect(xpath("/app/pojos/pojo").exists());
+		//
+		MvcResult response = resultActions.andReturn();
+		// Check the model is still there
+		final Object model = response.getModelAndView().getModel().get(XsltConfiguration.XML_SOURCE_TAG);
+		assertNotNull("Model object returned is not null", model);
+		assertThat("Model object is of the appropriate class", model, instanceOf(App.class));
 	}
 }
