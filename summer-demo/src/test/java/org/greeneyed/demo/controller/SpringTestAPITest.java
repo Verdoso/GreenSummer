@@ -56,7 +56,7 @@ public class SpringTestAPITest {
 	private MockMvc mvc;
 
 	@Before
-	public void setup() {
+	public void before() {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
