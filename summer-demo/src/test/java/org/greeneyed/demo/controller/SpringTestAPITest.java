@@ -37,8 +37,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import lombok.Data;
-import uk.co.jemos.podam.api.PodamFactory;
-import uk.co.jemos.podam.api.PodamFactoryImpl;
+//import uk.co.jemos.podam.api.PodamFactory;
+//import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -48,7 +48,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 @Data
 public class SpringTestAPITest {
 
-	private static final PodamFactory PODAM = new PodamFactoryImpl();
+//	private static final PodamFactory PODAM = new PodamFactoryImpl();
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -93,7 +93,7 @@ public class SpringTestAPITest {
 		final Object model = response.getModelAndView().getModel().get(XsltConfiguration.XML_SOURCE_TAG);
 		assertNotNull("Model object returned is not null", model);
 		assertThat("Model object is of the appropriate class", model, instanceOf(App.class));
-		App app = (App) model;
+		// App app = (App) model;
 		// Further App checking...
 
 		// Check the response
