@@ -1,10 +1,10 @@
 [
-	{
-		"operation": "shift",
-		"spec": {
-			"pojos": {
-			   "*" : "different-x-pojos"
-			}
-		}
-	}
+  {
+    "operation": "shift",
+    "spec": {
+      "pojos": {
+        "*" : "different-x-pojos"
+      }
+    }
+  }
 ]
