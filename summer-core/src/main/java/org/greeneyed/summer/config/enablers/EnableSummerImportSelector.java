@@ -54,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EnableSummerImportSelector implements ImportSelector {
 
-    private static enum ENABLE_OPTION {
+    private static enum EnableOption {
         MESSAGE_SOURCE("message_source", MessageSourceConfiguration.class),
         CONFIG_INSPECTOR_CONTROLLER("config_inspector", ConfigInspectorController.class),
         LOG4J_CONTROLLER("log4j", new Class[] {Log4JController.class}, new String[] {"org.apache.logging.log4j.core.LoggerContext"}),
@@ -85,13 +85,13 @@ public class EnableSummerImportSelector implements ImportSelector {
         private final Class<?>[] configurationClasses;
         private final String[] requirementClasses;
 
-        private ENABLE_OPTION(final String flag, final Class<?>[] configurationClasses, final String[] requirementClasses) {
+        private EnableOption(final String flag, final Class<?>[] configurationClasses, final String[] requirementClasses) {
             this.flag = flag;
             this.configurationClasses = configurationClasses;
             this.requirementClasses = requirementClasses;
         }
 
-        private ENABLE_OPTION(final String flag, final Class<?>... configurationClass) {
+        private EnableOption(final String flag, final Class<?>... configurationClass) {
             this(flag, configurationClass, null);
         }
     }
@@ -102,7 +102,7 @@ public class EnableSummerImportSelector implements ImportSelector {
         AnnotationAttributes attributes =
                 AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableSummer.class.getName(), false));
         List<String> configurationClassesToEnable = new ArrayList<>();
-        for (ENABLE_OPTION option : ENABLE_OPTION.values()) {
+        for (EnableOption option : EnableOption.values()) {
             if (attributes.getBoolean(option.flag)) {
                 try {
                     if (option.requirementClasses != null) {
