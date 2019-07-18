@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30" shutdownHook="disable">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%-5p|%d{ISO8601}{GMT}|%c{1}|%m%ex%n" />
+      <RegexFilter regex=".*@ConfigurationProperties.*" onMatch="DENY" onMismatch="ACCEPT"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Root level="WARN">
+      <AppenderRef ref="Console" />
+    </Root>
+    <Logger name="org.springframework" level="WARN" />
+    <Logger name="es.uib" level="INFO" />
+  </Loggers>
+</Configuration>
