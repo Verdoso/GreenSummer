@@ -1,5 +1,7 @@
 package org.greeneyed.summer.config;
 
+import java.io.IOException;
+
 /*
  * #%L
  * Summer
@@ -10,12 +12,12 @@ package org.greeneyed.summer.config;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
@@ -27,6 +29,7 @@ import java.util.Locale;
 
 import org.greeneyed.summer.util.SummerXSLTView;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -75,11 +78,15 @@ public class XsltConfiguration {
     public static class CustomXsltViewResolver extends XsltViewResolver {
         @Override
         protected View loadView(String viewName, Locale locale) throws Exception {
-            View view = super.loadView(viewName, locale);
-            if (view instanceof MessageSourceAware) {
-                ((MessageSourceAware) view).setMessageSource(getApplicationContext());
+            try {
+                View view = super.loadView(viewName, locale);
+                if (view instanceof MessageSourceAware) {
+                    ((MessageSourceAware) view).setMessageSource(getApplicationContext());
+                }
+                return view;
+            } catch (ApplicationContextException e) {
+                throw new IOException("Error loading stylesheet: " + e.getMessage());
             }
-            return view;
         }
     }
 
