@@ -10,12 +10,12 @@ package org.greeneyed.summer.util.jaxb;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
@@ -30,7 +30,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.MarshalException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
-import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.transform.Result;
@@ -64,8 +63,8 @@ public class CustomXMLHttpMessageConverter extends Jaxb2RootElementHttpMessageCo
         marshallerPool = new GenericKeyedObjectPool<>(new MarshallerFactory(), getPoolConfig(poolsMaxPerKey));
     }
 
-    private <T> GenericKeyedObjectPoolConfig<T> getPoolConfig(final int poolsMaxPerKey) {
-        final GenericKeyedObjectPoolConfig<T> gop = new GenericKeyedObjectPoolConfig<>();
+    private GenericKeyedObjectPoolConfig getPoolConfig(final int poolsMaxPerKey) {
+        final GenericKeyedObjectPoolConfig gop = new GenericKeyedObjectPoolConfig();
         gop.setMaxTotal(poolsMaxPerKey * XsltConfiguration.TOTAL_FACTOR);
         gop.setMinIdlePerKey((int) (poolsMaxPerKey / XsltConfiguration.MIN_IDLE_FACTOR));
         gop.setMaxIdlePerKey((int) (poolsMaxPerKey / XsltConfiguration.MAX_IDLE_FACTOR));
@@ -77,15 +76,13 @@ public class CustomXMLHttpMessageConverter extends Jaxb2RootElementHttpMessageCo
 
     @Override
     @Measured("parseXML")
-    protected Object readFromSource(Class<?> clazz, HttpHeaders headers, Source source) throws Exception {
+    protected Object readFromSource(Class<?> clazz, HttpHeaders headers, Source source) {
         final Object result;
         Unmarshaller unmarshaller = null;
         try {
             final Source processedSource = processSource(source);
             unmarshaller = unmarshallerPool.borrowObject(clazz);
             result = processXMLRequest(clazz, unmarshaller, processedSource);
-        } catch (UnmarshalException ex) {
-            throw ex;
         } catch (JAXBException ex) {
             throw new HttpMessageConversionException("Could not instantiate JAXBContext: " + ex.getMessage(), ex);
         } catch (Exception ex) {

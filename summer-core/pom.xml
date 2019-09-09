@@ -61,8 +61,8 @@
         <license.inceptionYear>2018</license.inceptionYear>
         <!-- Default property where one can find the GitHub pages version of the repository (gh-pages branch) -->
         <apidocs.project.location>summer-pages</apidocs.project.location>
-        <spring-cloud-context.version>2.1.1.RELEASE</spring-cloud-context.version>
-        <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
+        <spring-cloud-context.version>2.0.4.RELEASE</spring-cloud-context.version>
+        <spring-boot.version>2.0.9.RELEASE</spring-boot.version>
         <lombok.version>1.18.6</lombok.version>
         <logback.version>1.3.0-alpha4</logback.version>
         <jaxb.version>2.3.0</jaxb.version>
