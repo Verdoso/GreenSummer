@@ -1,5 +1,7 @@
 package org.greeneyed.demo;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +13,7 @@ public class ApplicationIT {
 
 	@Test
 	public void contextLoads() {
+		assertTrue("Context is loaded", true);
 	}
 
 }
