@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import org.greeneyed.summer.config.CacheConfiguration;
 import org.greeneyed.summer.config.CustomConversionServiceConfiguration;
+import org.greeneyed.summer.config.JoltViewConfiguration;
 import org.greeneyed.summer.config.MessageSourceConfiguration;
 import org.greeneyed.summer.config.Slf4jMDCFilterConfiguration;
 import org.greeneyed.summer.config.SummerWebConfig;
@@ -40,6 +41,7 @@ import org.greeneyed.summer.controller.HealthController;
 import org.greeneyed.summer.controller.Log4JController;
 import org.greeneyed.summer.controller.LogbackController;
 import org.greeneyed.summer.monitoring.LogOperationAspect;
+import org.greeneyed.summer.util.ApplicationContextProvider;
 import org.greeneyed.summer.util.ServerPortDisplayer;
 import org.greeneyed.summer.util.autoformatter.AutoregisterFormatterRegistrar;
 import org.springframework.context.annotation.ImportSelector;
@@ -59,11 +61,10 @@ public class EnableSummerImportSelector implements ImportSelector {
         SLF4J_FILTER("slf4j_filter", new Class<?>[] {Slf4jMDCFilterConfiguration.class}, new String[] {"org.slf4j.MDC"}),
         HEALTH_CONTROLLER("health", HealthController.class),
         XSLT_VIEW("xslt_view", XsltConfiguration.class),
-//      TODO: Jolt unable to work with Java >8        
-//        JOLT_VIEW(
-//                "jolt_view",
-//                new Class<?>[] {ApplicationContextProvider.class, JoltViewConfiguration.class},
-//                new String[] {"com.bazaarvoice.jolt.Chainr"}),
+        JOLT_VIEW(
+                "jolt_view",
+                new Class<?>[] {ApplicationContextProvider.class, JoltViewConfiguration.class},
+                new String[] {"com.bazaarvoice.jolt.Chainr"}),
         XML_VIEW_POOLING("xml_view_pooling", SummerWebConfig.class),
         FORMATTER_REGISTRAR("fomatter_registrar", new Class<?>[] {CustomConversionServiceConfiguration.class, AutoregisterFormatterRegistrar.class}),
         CAFFEINE_CACHE(
@@ -91,15 +92,15 @@ public class EnableSummerImportSelector implements ImportSelector {
         private ENABLE_OPTION(final String flag, final Class<?>... configurationClass) {
             this(flag, configurationClass, null);
         }
-        
+
         public String getFlag() {
             return flag;
         }
-        
+
         public Class<?>[] getConfigurationClasses() {
             return configurationClasses;
         }
-        
+
         public String[] getRequirementClasses() {
             return requirementClasses;
         }
