@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.security.Principal;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -82,6 +83,8 @@ public class LogOperationAspect {
             if (args.length > 0 && args[0] != null) {
                 if (args[0] instanceof IdentifiedUser) {
                     userID = ((IdentifiedUser) args[0]).getName();
+                } else if (args[0] instanceof Supplier) {
+                    userID = ((Supplier<?>) args[0]).get().toString();
                 } else if (args[0] instanceof Principal) {
                     userID = ((Principal) args[0]).getName();
                 }
