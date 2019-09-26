@@ -4,7 +4,7 @@
     <description>GreenSummer, an extension library to complement Spring Boot applications.</description>
     <groupId>org.greeneyed</groupId>
     <artifactId>summer</artifactId>
-    <version>0.10.8</version>
+    <version>0.10.9-SNAPSHOT</version>
     <url>https://github.com/Verdoso/GreenSummer</url>
 
     <organization>
@@ -43,7 +43,7 @@
         <url>https://github.com/Verdoso/GreenSummer</url>
         <connection>scm:git:git://github.com/Verdoso/GreenSummer.git</connection>
         <developerConnection>scm:git:https://github.com/Verdoso/GreenSummer.git</developerConnection>
-        <tag>summer-0.10.8</tag>
+        <tag>summer-${project.version}</tag>
     </scm>
 
     <properties>
