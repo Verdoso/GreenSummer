@@ -104,6 +104,22 @@ public class ClusteredConcurrentIndexedCollection<K extends Comparable<K>, O ext
         this(name, hazelcastInstance, attribute, null);
     }
 
+    public void upsync() {
+        if (this.hasRemoteStorage) {
+            this.lock.lock();
+            try {
+                for (O object : this.map.values()) {
+                    if (!this.contains(object)) {
+                        this.handleRemoval(object);
+                    }
+                }
+                this.stream().forEach(this::handleAddition);
+            } finally {
+                this.lock.unlock();
+            }
+        }
+    }
+
     public void resync() {
         if (this.hasRemoteStorage) {
             this.lock.lock();
@@ -142,7 +158,7 @@ public class ClusteredConcurrentIndexedCollection<K extends Comparable<K>, O ext
         theSB.append(this.requiresNotification);
         theSB.append("; hazelcasted=");
         theSB.append(this.hasRemoteStorage);
-        if(this.hasRemoteStorage) {
+        if (this.hasRemoteStorage) {
             theSB.append("; hazelcastSize=");
             theSB.append(this.getMap().size());
         }
