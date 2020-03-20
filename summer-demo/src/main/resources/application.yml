@@ -4,15 +4,12 @@ management:
   context-path: /manage
   security:
     enabled: false
-endpoints:
-  enabled: true
-  env:
-    enabled: true
-  health:
-    enabled: true
-    sensitive: false
-  mappings:
-    enabled: true
+management:
+  endpoints:
+    web:
+      base-path: /manage
+      exposure:
+        include: health,info,env,mappings,loggers,configInspector,configprops,actuatorsmanagement
 summer:
   jolt:
     devMode: true

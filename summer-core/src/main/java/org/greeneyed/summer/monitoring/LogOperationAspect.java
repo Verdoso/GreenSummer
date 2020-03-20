@@ -52,15 +52,15 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class LogOperationAspect {
 
-    private static final String OPERATION_LABEL = "Operation";
-    private static final String PRINCIPAL_LABEL = "Principal";
+	private static final String OPERATION_LABEL = "Operation";
+	private static final String PRINCIPAL_LABEL = "Principal";
 
-    @Value("${summer.operation_logging.log_requests:false}")
-    private boolean logOperations;
-    @Value("#{'${summer.operation_logging.included_packages}'.split(',')}")
-    private List<String> packages;
+	@Value("${summer.operation_logging.log_requests:false}")
+	private boolean logOperations;
+	@Value("#{'${summer.operation_logging.included_packages}'.split(',')}")
+	private List<String> packages;
 
-    //@formatter:off
+	//@formatter:off
     @Around("(" + "@annotation(org.springframework.web.bind.annotation.RequestMapping)"
             + "|| @annotation(org.springframework.web.bind.annotation.GetMapping)"
             + "|| @annotation(org.springframework.web.bind.annotation.PostMapping)"
@@ -175,7 +175,7 @@ public class LogOperationAspect {
             LogOperation logOperation = method.getAnnotation(LogOperation.class);
             RequestMapping classrequestMapping = method.getDeclaringClass().getAnnotation(RequestMapping.class);
             String basicName = null;
-            if(requestMapping!=null && requestMapping.value() != null && requestMapping.value().length > 0)
+        	if(requestMapping!=null && requestMapping.value() != null && requestMapping.value().length > 0)
             {
                 basicName = requestMapping.value()[0];
             }else if(getMapping!=null && getMapping.value() != null && getMapping.value().length > 0)
@@ -193,10 +193,11 @@ public class LogOperationAspect {
             }else if(patchMapping!=null && patchMapping.value() != null && patchMapping.value().length > 0)
             {
                 basicName = patchMapping.value()[0];
-            }else if (logOperation != null) {
-                basicName = logOperation.value();
             }
-            if (basicName!=null) {
+            if (logOperation != null) {
+            	operationName = logOperation.value();
+        	}
+        	else if (basicName!=null) {
                 if (classrequestMapping != null && classrequestMapping.value() != null && classrequestMapping.value().length > 0) {
                     operationName = classrequestMapping.value()[0] + basicName;
                 } else {
