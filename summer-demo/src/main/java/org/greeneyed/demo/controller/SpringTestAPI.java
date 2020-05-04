@@ -24,10 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public class SpringTestAPI {
+  public static final String TEST_XSLT_SOURCE = "pojo_process";
 
   public static enum TEST_ENUM {
     TEST_ENUM_A, TEST_ENUM_B
   }
+
+  @Autowired
+  private ConfigurableEnvironment env;
 
   @Data
   public static class TestClass implements Logable {
@@ -40,10 +44,6 @@ public class SpringTestAPI {
       return toString.substring(toString.indexOf("("));
     }
   }
-
-  public static final String TEST_XSLT_SOURCE = "pojo_process";
-  @Autowired
-  private ConfigurableEnvironment env;
 
   @RequestMapping(value = "/test")
   public ModelAndView testInterface() {
