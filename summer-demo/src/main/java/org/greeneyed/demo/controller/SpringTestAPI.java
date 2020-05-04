@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SpringTestAPI {
   public static final String TEST_XSLT_SOURCE = "pojo_process";
 
-  public static enum TEST_ENUM {
+  public static enum TestEnum {
     TEST_ENUM_A, TEST_ENUM_B
   }
 
@@ -57,7 +57,7 @@ public class SpringTestAPI {
       @RequestParam(name = "name_int") int nameInteger,
       @RequestParam(name = "name_array") String[] theValues,
       @RequestParam(name = "int_array") int[] intValues,
-      @RequestParam(name = "enum_array") TEST_ENUM[] enumValues
+      @RequestParam(name = "enum_array") TestEnum[] enumValues
 
   ) {
     return new ResponseEntity<>(TEST_XSLT_SOURCE, HttpStatus.BAD_REQUEST);
