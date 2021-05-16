@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ import com.hazelcast.map.listener.EntryUpdatedListener;
 import com.hazelcast.map.listener.MapClearedListener;
 import com.hazelcast.map.listener.MapEvictedListener;
 import com.hazelcast.map.listener.MapListener;
-import java.util.concurrent.locks.Lock;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -104,22 +105,6 @@ public class ClusteredConcurrentIndexedCollection<K extends Comparable<K>, O ext
         this(name, hazelcastInstance, attribute, null);
     }
 
-    public void upsync() {
-        if (this.hasRemoteStorage) {
-            this.lock.lock();
-            try {
-                for (O object : this.map.values()) {
-                    if (!this.contains(object)) {
-                        this.handleRemoval(object);
-                    }
-                }
-                this.stream().forEach(this::handleAddition);
-            } finally {
-                this.lock.unlock();
-            }
-        }
-    }
-
     public void resync() {
         if (this.hasRemoteStorage) {
             this.lock.lock();
@@ -138,31 +123,6 @@ public class ClusteredConcurrentIndexedCollection<K extends Comparable<K>, O ext
                 this.lock.unlock();
             }
         }
-    }
-
-    public int getInternalSize() {
-        if (this.hasRemoteStorage) {
-            return this.getMap().size();
-        } else {
-            return 0;
-        }
-    }
-
-    public String getStatus() {
-        StringBuilder theSB = new StringBuilder();
-        theSB.append("size=");
-        theSB.append(this.size());
-        theSB.append("; isLocallyHandled=");
-        theSB.append(this.isLocallyHandled);
-        theSB.append("; requiresNotification=");
-        theSB.append(this.requiresNotification);
-        theSB.append("; hazelcasted=");
-        theSB.append(this.hasRemoteStorage);
-        if (this.hasRemoteStorage) {
-            theSB.append("; hazelcastSize=");
-            theSB.append(this.getMap().size());
-        }
-        return theSB.toString();
     }
 
     private K getKey(O object) {
