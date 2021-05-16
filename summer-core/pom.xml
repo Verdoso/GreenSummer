@@ -1,55 +1,57 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <name>GreenSummer</name>
-    <description>GreenSummer, an extension library to complement Spring Boot applications.</description>
-    <groupId>org.greeneyed</groupId>
-    <artifactId>summer</artifactId>
-    <version>0.10.11-SNAPSHOT</version>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+  <modelVersion>4.0.0</modelVersion>
+  <name>GreenSummer</name>
+  <description>GreenSummer, an extension library to complement Spring Boot applications.</description>
+  <groupId>org.greeneyed</groupId>
+  <artifactId>summer</artifactId>
+  <version>0.11.0-SNAPSHOT</version>
+  <url>https://github.com/Verdoso/GreenSummer</url>
+
+  <organization>
+    <name>GreenEyed</name>
+    <url>http://www.greeneyed.org/</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>Verdoso</id>
+      <name>Daniel Lopez</name>
+      <email>d.lopez.j@gmail.com</email>
+      <organization>UIB</organization>
+      <organizationUrl>http://www.greeneyed.org/</organizationUrl>
+      <timezone>GMT+1</timezone>
+      <roles>
+      </roles>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License 2.1</name>
+      <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
+
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/Verdoso/GreenSummer/issues</url>
+  </issueManagement>
+
+  <scm>
     <url>https://github.com/Verdoso/GreenSummer</url>
-
-    <organization>
-        <name>GreenEyed</name>
-        <url>http://www.greeneyed.org/</url>
-    </organization>
-
-    <developers>
-        <developer>
-            <id>Verdoso</id>
-            <name>Daniel Lopez</name>
-            <email>d.lopez.j@gmail.com</email>
-            <organization>UIB</organization>
-            <organizationUrl>http://www.greeneyed.org/</organizationUrl>
-            <timezone>GMT+1</timezone>
-            <roles>
-            </roles>
-        </developer>
-    </developers>
-
-    <licenses>
-        <license>
-            <name>GNU Lesser General Public License 2.1</name>
-            <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
-            <distribution>repo</distribution>
-            <comments>A business-friendly OSS license</comments>
-        </license>
-    </licenses>
-
-    <issueManagement>
-        <system>GitHub Issues</system>
-        <url>https://github.com/Verdoso/GreenSummer/issues</url>
-    </issueManagement>
-
-    <scm>
-        <url>https://github.com/Verdoso/GreenSummer</url>
-        <connection>scm:git:git://github.com/Verdoso/GreenSummer.git</connection>
-        <developerConnection>scm:git:https://github.com/Verdoso/GreenSummer.git</developerConnection>
-        <tag>summer-${project.version}</tag>
-    </scm>
+    <connection>scm:git:git://github.com/Verdoso/GreenSummer.git</connection>
+    <developerConnection>scm:git:https://github.com/Verdoso/GreenSummer.git</developerConnection>
+    <tag>summer-${project.version}</tag>
+  </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java-version>1.8</java-version>
+        <java-version>11</java-version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
@@ -57,13 +59,17 @@
         <license.inceptionYear>2018</license.inceptionYear>
         <!-- Default property where one can find the GitHub pages version of the repository (gh-pages branch) -->
         <apidocs.project.location>summer-pages</apidocs.project.location>
-        <spring-cloud-context.version>1.2.2.RELEASE</spring-cloud-context.version>
-        <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
-        <lombok.version>1.18.2</lombok.version>
-        <jolt.version>0.1.0</jolt.version>
-        <hazelcast.version>3.10.4</hazelcast.version>
-        <hazelcast-consul-discovery-spi.version>1.0-RC8</hazelcast-consul-discovery-spi.version>
-        <cqengine.version>2.12.4</cqengine.version>
+        <spring-cloud-context.version>3.0.2</spring-cloud-context.version>
+        <spring-boot.version>2.4.4</spring-boot.version>
+        <lombok.version>1.18.20</lombok.version>
+        <logback.version>1.3.0-alpha5</logback.version>
+        <jaxb.version>2.3.0</jaxb.version>
+        <jaxb-core.version>2.3.0.1</jaxb-core.version>
+        <jaxb-impl.version>2.3.2</jaxb-impl.version>
+        <log4j.version>2.14.1</log4j.version>
+        <hazelcast.version>3.11.7</hazelcast.version>
+        <hazelcast-consul-discovery-spi.version>1.0-RC9</hazelcast-consul-discovery-spi.version>
+        <cqengine.version>3.6.0</cqengine.version>
     </properties>
 
     <dependencyManagement>
@@ -99,12 +105,31 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version><!--$NO-MVN-MAN-VER$ -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version><!--$NO-MVN-MAN-VER$ -->
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version><!--$NO-MVN-MAN-VER$ -->
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version><!--$NO-MVN-MAN-VER$ -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -123,10 +148,7 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
-        <dependency>
-            <artifactId>slf4j-api</artifactId>
-            <groupId>org.slf4j</groupId>
-        </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
@@ -134,20 +156,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.bazaarvoice.jolt</groupId>
-            <artifactId>jolt-core</artifactId>
-            <version>${jolt.version}</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>com.bazaarvoice.jolt</groupId>
-            <artifactId>json-utils</artifactId>
-            <version>${jolt.version}</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -174,6 +182,12 @@
             <artifactId>hazelcast-consul-discovery-spi</artifactId>
             <version>${hazelcast-consul-discovery-spi.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.hazelcast</groupId>
+                    <artifactId>hazelcast</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- CQEngine collections coordinated through Hazelcast -->
@@ -184,188 +198,269 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- java.xml.bind -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>${jaxb-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>${jaxb-impl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>javax.activation-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>annotations</artifactId>
+            <version>3.0.1</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.8.0-beta4</version><!--$NO-MVN-MAN-VER$ -->
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.8.0-beta4</version><!--$NO-MVN-MAN-VER$ -->
+        </dependency>
+
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>1.16</version>
-                <configuration>
-                    <verbose>false</verbose>
-                    <addSvnKeyWords>false</addSvnKeyWords>
-                    <addJavaLicenseAfterPackage>true</addJavaLicenseAfterPackage>
-                    <licenseName>lgpl_v2_1</licenseName>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>first</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>net.revelc.code</groupId>
-                <artifactId>formatter-maven-plugin</artifactId>
-                <version>0.5.2</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <configFile>${project.basedir}/eclipse-formatter.xml</configFile>
-                </configuration>
-            </plugin>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>1.16</version>
+        <configuration>
+          <verbose>false</verbose>
+          <addSvnKeyWords>false</addSvnKeyWords>
+          <addJavaLicenseAfterPackage>true</addJavaLicenseAfterPackage>
+          <licenseName>lgpl_v2_1</licenseName>
+        </configuration>
+        <executions>
+          <execution>
+            <id>first</id>
+            <goals>
+              <goal>update-file-header</goal>
+            </goals>
+            <phase>process-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>net.revelc.code</groupId>
+        <artifactId>formatter-maven-plugin</artifactId>
+        <version>0.5.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>format</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <configFile>${project.basedir}/eclipse-formatter.xml</configFile>
+        </configuration>
+      </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <compilerArgument>-Xlint:all,-deprecation,-unchecked</compilerArgument>
+                    <release>${java-version}</release>
+                    <fork>true</fork>
+                    <compilerArgs>
+                        <arg>-Xlint:all,-deprecation,-unchecked,-processing,-requires-transitive-automatic</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED</arg>
+                    </compilerArgs>
                     <testCompilerArgument>-Xlint:none</testCompilerArgument>
                     <showWarnings>true</showWarnings>
-                    <showDeprecation>false</showDeprecation>
+                    <showDeprecation>true</showDeprecation>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>6.1.1</version>
+                    </dependency>
+                </dependencies>
             </plugin>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-                <version>1.18.2.0</version>
-                <executions>
-                    <execution>
-                        <id>delombok</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>delombok</goal>
-                        </goals>
-                        <configuration>
-                            <addOutputDirectory>false</addOutputDirectory>
-                            <sourceDirectory>src/main/java</sourceDirectory>
-                            <formatPreferences>
-                                <javaLangAsFQN>skip</javaLangAsFQN>
-                            </formatPreferences>
-                            <verbose>false</verbose>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven-deploy-plugin.version}</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <releaseProfiles>release</releaseProfiles>
-                    <goals>deploy</goals>
-                </configuration>
-            </plugin>
+      <plugin>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok-maven-plugin</artifactId>
+        <version>1.18.20.0</version>
+        <executions>
+          <execution>
+            <id>delombok</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>delombok</goal>
+            </goals>
+            <configuration>
+              <addOutputDirectory>false</addOutputDirectory>
+              <sourceDirectory>src/main/java</sourceDirectory>
+              <formatPreferences>
+                <javaLangAsFQN>skip</javaLangAsFQN>
+              </formatPreferences>
+              <verbose>false</verbose>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>${maven-deploy-plugin.version}</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.8</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+        <executions>
+          <execution>
+            <id>default-deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.3</version>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <useReleaseProfile>false</useReleaseProfile>
+          <releaseProfiles>release</releaseProfiles>
+          <goals>deploy</goals>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.0.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.0.1</version>
+            <configuration>
+              <locale>en</locale>
+              <show>public</show>
+              <nohelp>true</nohelp>
+              <quiet>true</quiet>
+              <notimestamp>true</notimestamp>
+              <header>${project.name}, ${project.version}</header>
+              <footer>${project.name}, ${project.version}</footer>
+              <doctitle>${project.name}, ${project.version}</doctitle>
+              <outputDirectory>../${apidocs.project.location}/${project.artifactId}/${project.version}</outputDirectory>
+              <reportOutputDirectory>../${apidocs.project.location}/${project.artifactId}/${project.version}</reportOutputDirectory>
+              <links>
+                <link>http://verdoso.github.io/greensummer/${project.artifactId}/${project.version}/apidocs/</link>
+                <link>http://commons.apache.org/proper/commons-pool/api-2.4.2/</link>
+                <link>https://docs.spring.io/spring/docs/current/javadoc-api/</link>
+                <link>https://www.slf4j.org/apidocs/</link>
+              </links>
+              <sourcepath>target/generated-sources/delombok</sourcepath>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- Requires -Dgpg.keyname=YourKey -Dgpg.passphrase=YourPassphrase at command line or as properties in .m2/settings.xml -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
-    </build>
-    <profiles>
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.0.1</version>
-                        <configuration>
-                            <locale>en</locale>
-                            <show>public</show>
-                            <nohelp>true</nohelp>
-                            <quiet>true</quiet>
-                            <notimestamp>true</notimestamp>
-                            <header>${project.name}, ${project.version}</header>
-                            <footer>${project.name}, ${project.version}</footer>
-                            <doctitle>${project.name}, ${project.version}</doctitle>
-                            <outputDirectory>../${apidocs.project.location}/${project.artifactId}/${project.version}</outputDirectory>
-                            <reportOutputDirectory>../${apidocs.project.location}/${project.artifactId}/${project.version}</reportOutputDirectory>
-                            <links>
-                                <link>http://verdoso.github.io/greensummer/${project.artifactId}/${project.version}/apidocs/</link>
-                                <link>http://commons.apache.org/proper/commons-pool/api-2.4.2/</link>
-                                <link>https://docs.spring.io/spring/docs/current/javadoc-api/</link>
-                                <link>https://www.slf4j.org/apidocs/</link>
-                            </links>
-                            <sourcepath>target/generated-sources/delombok</sourcepath>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <!-- Requires -Dgpg.keyname=YourKey -Dgpg.passphrase=YourPassphrase at command line or as properties in .m2/settings.xml -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+      </build>
+    </profile>
+  </profiles>
 </project>
