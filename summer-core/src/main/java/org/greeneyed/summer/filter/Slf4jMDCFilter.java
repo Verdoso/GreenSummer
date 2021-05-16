@@ -10,12 +10,12 @@ package org.greeneyed.summer.filter;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
@@ -42,7 +42,7 @@ import lombok.EqualsAndHashCode;
 /**
  * A servlet that adds a key to the Mapped Diagnostic Context (MDC) to each request so you can print a unique id in the logg messages of each request.
  * It also add the key as a header in the response so the caller of the request can provide you the id to browse the logs.
- * 
+ *
  * @see org.greeneyed.summer.config.Slf4jMDCFilterConfiguration
  **/
 @Data
@@ -71,13 +71,13 @@ public class Slf4jMDCFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
-        throws java.io.IOException, ServletException {
+            throws java.io.IOException, ServletException {
         try {
             final String token = extractToken(request);
             final String clientIP = extractClientIP(request);
             MDC.put(mdcClientIpKey, clientIP);
             MDC.put(mdcTokenKey, token);
-            if (!StringUtils.isEmpty(responseHeader)) {
+            if (StringUtils.hasText(responseHeader)) {
                 response.addHeader(responseHeader, token);
             }
             chain.doFilter(request, response);
@@ -89,7 +89,7 @@ public class Slf4jMDCFilter extends OncePerRequestFilter {
 
     private String extractToken(final HttpServletRequest request) {
         final String token;
-        if (!StringUtils.isEmpty(requestHeader) && !StringUtils.isEmpty(request.getHeader(requestHeader))) {
+        if (StringUtils.hasText(requestHeader) && StringUtils.hasText(request.getHeader(requestHeader))) {
             token = request.getHeader(requestHeader);
         } else {
             token = UUID.randomUUID().toString().toUpperCase().replace("-", "");

@@ -35,6 +35,7 @@ import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.appender.AppenderLoggingException;
+import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginElement;
@@ -57,8 +58,14 @@ public final class InMemoryAppenderImpl extends AbstractAppender {
 
     private final int size;
 
-    protected InMemoryAppenderImpl(String name, Filter filter, Layout<? extends Serializable> layout, final boolean ignoreExceptions, final int size) {
-        super(name, filter, layout, ignoreExceptions);
+    protected InMemoryAppenderImpl(String name, Filter filter, Layout<? extends Serializable> layout, final boolean ignoreExceptions,
+            final int size) {
+        this(name, filter, layout, ignoreExceptions, Property.EMPTY_ARRAY, size);
+    }
+
+    protected InMemoryAppenderImpl(String name, Filter filter, Layout<? extends Serializable> layout, final boolean ignoreExceptions,
+            final Property[] properties, final int size) {
+        super(name, filter, layout, ignoreExceptions, properties);
         this.size = size;
     }
 

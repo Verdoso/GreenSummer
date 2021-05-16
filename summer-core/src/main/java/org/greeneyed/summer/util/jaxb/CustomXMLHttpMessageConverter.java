@@ -60,16 +60,20 @@ public class CustomXMLHttpMessageConverter extends Jaxb2RootElementHttpMessageCo
     private final GenericKeyedObjectPool<Class<?>, Marshaller> marshallerPool;
 
     public CustomXMLHttpMessageConverter(final int poolsMaxPerKey) {
-        final GenericKeyedObjectPoolConfig gop = new GenericKeyedObjectPoolConfig();
+        log.info("Pools of (un)marshallers initialised with concurrency {}", poolsMaxPerKey);
+        unmarshallerPool = new GenericKeyedObjectPool<>(new UnmarshallerFactory(), getPoolConfig(poolsMaxPerKey));
+        marshallerPool = new GenericKeyedObjectPool<>(new MarshallerFactory(), getPoolConfig(poolsMaxPerKey));
+    }
+
+    private <T> GenericKeyedObjectPoolConfig<T> getPoolConfig(final int poolsMaxPerKey) {
+        final GenericKeyedObjectPoolConfig<T> gop = new GenericKeyedObjectPoolConfig<>();
         gop.setMaxTotal(poolsMaxPerKey * XsltConfiguration.TOTAL_FACTOR);
         gop.setMinIdlePerKey((int) (poolsMaxPerKey / XsltConfiguration.MIN_IDLE_FACTOR));
         gop.setMaxIdlePerKey((int) (poolsMaxPerKey / XsltConfiguration.MAX_IDLE_FACTOR));
         gop.setMaxTotalPerKey(poolsMaxPerKey);
         gop.setTestOnBorrow(false);
         gop.setMaxWaitMillis(10_000);
-        log.info("Pool of unmarshallers initialised with concurrency {}", gop.getMaxTotalPerKey());
-        unmarshallerPool = new GenericKeyedObjectPool<>(new UnmarshallerFactory(), gop);
-        marshallerPool = new GenericKeyedObjectPool<>(new MarshallerFactory(), gop);
+        return gop;
     }
 
     @Override

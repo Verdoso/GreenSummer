@@ -10,12 +10,12 @@ package org.greeneyed.summer.config.hazelcast;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
@@ -63,9 +63,12 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
     public static final String DEFAULT_SERVICE_PREFIX = "hz-";
 
     public static final String DEFAULT_DISCOVERY_DELAY = "3000";
-    
-    public static enum HEALTHCHECKTYPE {HTTP,TCP};
-    
+
+    public static enum HEALTHCHECKTYPE {
+        HTTP,
+        TCP
+    };
+
     public static final String DEFAULT_HEALTHCHECK_TYPE = "TCP";//HEALTHCHECK_TYPE.TCP.name();
 
     @Value("${spring.cloud.consul.host:localhost}")
@@ -83,6 +86,9 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
     @Value("${summer.hazelcast.consul.configuration.delay:" + DEFAULT_DISCOVERY_DELAY + "}")
     private String configurationDelay;
 
+    @Value("${summer.hazelcast.consul.cp:0}")
+    private int cpCount;
+
     @Value("${summer.hazelcast.consul.service.prefix:" + DEFAULT_SERVICE_PREFIX + "}")
     private String servicePrefix;
 
@@ -91,16 +97,16 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
 
     @Value("${summer.hazelcast.consul.healthcheck.type:" + DEFAULT_HEALTHCHECK_TYPE + "}")
     private HEALTHCHECKTYPE healthCheckType;
-    
+
     @Value("${summer.hazelcast.consul.healthcheck.interval:10}")
     private int healthCheckInterval;
-    
+
     @Value("${summer.hazelcast.consul.session_filter_priority:0}")
     private int sessionFilterPriority;
-    
+
     @Autowired
     private ApplicationContext applicationContext;
-    
+
     /*
      * All {@link HazelcastConfigurer} Beans to further customize Hazelcast configuration. If
      * spring does not find any matching bean, then the List is {@code null}!.
@@ -116,43 +122,42 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
         final SpringManagedContext springManagedContext = new SpringManagedContext();
         springManagedContext.setApplicationContext(applicationContext);
         config.setManagedContext(springManagedContext);
+        //        // Enable CP subsystem if necessary
+        //        if (cpCount > 0) {
+        //            config.getCPSubsystemConfig().setCPMemberCount(cpCount);
+        //        }
         //
         // Use Consul for discovery instead of multicast with the help of this:
         // https://github.com/bitsofinfo/hazelcast-consul-discovery-spi
         //
         config.setProperty("hazelcast.discovery.enabled", Boolean.TRUE.toString());
-        if(healthCheckType==HEALTHCHECKTYPE.HTTP)
-        {
-            config.setProperty("hazelcast.http.healthcheck.enabled", Boolean.TRUE.toString());            
+        if (healthCheckType == HEALTHCHECKTYPE.HTTP) {
+            config.setProperty("hazelcast.http.healthcheck.enabled", Boolean.TRUE.toString());
         }
         config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
         config.getNetworkConfig().setPublicAddress(InetAddress.getByName(discoveryHostName).getHostAddress());
 
-        DiscoveryStrategyConfig discoveryStrategyConfig = new DiscoveryStrategyConfig(
-                new ConsulDiscoveryStrategyFactory());
+        DiscoveryStrategyConfig discoveryStrategyConfig = new DiscoveryStrategyConfig(new ConsulDiscoveryStrategyFactory());
         discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_HOST.key(), this.consulHost);
         discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_PORT.key(), this.consulPort);
         discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_SERVICE_TAGS.key(), this.serviceTags);
-        discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_SERVICE_NAME.key(),
-                this.servicePrefix + this.appName);
+        discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_SERVICE_NAME.key(), this.servicePrefix + this.appName);
         discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_HEALTHY_ONLY.key(), true);
-        discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_DISCOVERY_DELAY_MS.key(),
-                this.configurationDelay);
+        discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_DISCOVERY_DELAY_MS.key(), this.configurationDelay);
 
-        discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_REGISTRATOR.key(),
-                LocalDiscoveryNodeRegistrator.class.getName());
+        discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_REGISTRATOR.key(), LocalDiscoveryNodeRegistrator.class.getName());
         ObjectNode jsonRegistratorConfig = JsonNodeFactory.instance.objectNode();
         jsonRegistratorConfig.put(LocalDiscoveryNodeRegistrator.CONFIG_PROP_PREFER_PUBLIC_ADDRESS, true);
 
-        switch(healthCheckType) {
+        switch (healthCheckType) {
             case HTTP:
-                jsonRegistratorConfig.put(BaseRegistrator.CONFIG_PROP_HEALTH_CHECK_PROVIDER,HttpHealthCheckBuilder.class.getName());
+                jsonRegistratorConfig.put(BaseRegistrator.CONFIG_PROP_HEALTH_CHECK_PROVIDER, HttpHealthCheckBuilder.class.getName());
                 jsonRegistratorConfig.put(HttpHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_HTTP, "http://#MYIP:#MYPORT/hazelcast/health");
                 jsonRegistratorConfig.put(HttpHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_HTTP_INTERVAL_SECONDS, healthCheckInterval);
                 log.debug("Hazelcast HTTP health check set up (run every {} secs)", healthCheckInterval);
                 break;
             case TCP:
-                jsonRegistratorConfig.put(BaseRegistrator.CONFIG_PROP_HEALTH_CHECK_PROVIDER,TcpHealthCheckBuilder.class.getName());
+                jsonRegistratorConfig.put(BaseRegistrator.CONFIG_PROP_HEALTH_CHECK_PROVIDER, TcpHealthCheckBuilder.class.getName());
                 jsonRegistratorConfig.put(TcpHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_TCP, "#MYIP:#MYPORT");
                 jsonRegistratorConfig.put(TcpHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_TCP_INTERVAL_SECONDS, healthCheckInterval);
                 log.debug("Hazelcast TCP health check set up (run every {} secs)", healthCheckInterval);
@@ -161,7 +166,7 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
                 log.warn("What are you doing here, my oh my!");
                 break;
         }
-        
+
 
         // Scripts are executed on the consul server, so they are consul-host
         // dependent, meh
@@ -172,24 +177,20 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
         // jsonRegistratorConfig.put(ScriptHealthCheckBuilder.CONFIG_PROP_HEALTH_CHECK_SCRIPT_INTERVAL_SECONDS,
         // 10);
 
-        discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_REGISTRATOR_CONFIG.key(),
-                jsonRegistratorConfig.toString());
+        discoveryStrategyConfig.addProperty(ConsulDiscoveryConfiguration.CONSUL_REGISTRATOR_CONFIG.key(), jsonRegistratorConfig.toString());
 
-        config.getNetworkConfig().getJoin().getDiscoveryConfig().getDiscoveryStrategyConfigs()
-                .add(discoveryStrategyConfig);
+        config.getNetworkConfig().getJoin().getDiscoveryConfig().getDiscoveryStrategyConfigs().add(discoveryStrategyConfig);
         log.info("Hazelcast configured to use Consul for discovery");
-        
-        
+
+
         // Apply custom configurations, if necessary
-        if(hazelcastConfigurers!=null)
-        {
-            for(HazelcastConfigurer hazelcastConfigurer: hazelcastConfigurers)
-            {
+        if (hazelcastConfigurers != null) {
+            for (HazelcastConfigurer hazelcastConfigurer : hazelcastConfigurers) {
                 log.debug("Applying HazelcastConfigurer {}", hazelcastConfigurer.getClass().getName());
                 hazelcastConfigurer.configure(config);
             }
         }
-        
+
         return config;
     }
 
@@ -208,14 +209,14 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
      * and {@code REQUEST}, and a context pattern of "{@code /*}".
      *
      * @param hazelcastInstance
-     *            Created by Spring
+     *        Created by Spring
      * @return The web filter registration
-     */    
+     */
     @Bean
-    @ConditionalOnBean(name="hazlecastConsulConfig")
+    @ConditionalOnBean(name = "hazlecastConsulConfig")
     @ConditionalOnProperty(name = "summer.hazelcast.consul.session_replication", havingValue = "true", matchIfMissing = true)
-    public FilterRegistrationBean webFilterRegistrationBean(HazelcastInstance hazelcastInstance) {
-        final FilterRegistrationBean assertionTLFilter = new FilterRegistrationBean();
+    public FilterRegistrationBean<WebFilter> webFilterRegistrationBean(HazelcastInstance hazelcastInstance) {
+        final FilterRegistrationBean<WebFilter> assertionTLFilter = new FilterRegistrationBean<>();
         Properties properties = new Properties();
         properties.put("instance-name", hazelcastInstance.getName());
         properties.put("sticky-session", Boolean.FALSE.toString());
@@ -224,9 +225,9 @@ public class HazelcastConsulSessionReplicationConfiguration implements Applicati
         assertionTLFilter.setOrder(sessionFilterPriority);
         return assertionTLFilter;
     }
-    
+
     @Bean
-    @ConditionalOnBean(name="hazlecastConsulConfig")
+    @ConditionalOnBean(name = "hazlecastConsulConfig")
     @ConditionalOnProperty(name = "summer.hazelcast.consul.session_replication", havingValue = "true", matchIfMissing = true)
     public SessionListener hazelcastSessionListener() {
         return new SessionListener();

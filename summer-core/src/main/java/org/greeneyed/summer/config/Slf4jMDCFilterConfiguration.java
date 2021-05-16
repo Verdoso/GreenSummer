@@ -67,8 +67,8 @@ public class Slf4jMDCFilterConfiguration {
     private String requestHeader = null;
 
     @Bean
-    public FilterRegistrationBean servletRegistrationBean() {
-        final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+    public FilterRegistrationBean<Slf4jMDCFilter> servletRegistrationBean() {
+        final FilterRegistrationBean<Slf4jMDCFilter> registrationBean = new FilterRegistrationBean<>();
         final Slf4jMDCFilter log4jMDCFilterFilter = new Slf4jMDCFilter(responseHeader, mdcTokenKey, mdcClientIpKey, requestHeader);
         registrationBean.setFilter(log4jMDCFilterFilter);
         registrationBean.setOrder(2);

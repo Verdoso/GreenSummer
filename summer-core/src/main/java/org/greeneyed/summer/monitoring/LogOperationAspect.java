@@ -1,12 +1,10 @@
 package org.greeneyed.summer.monitoring;
 
-import java.lang.reflect.Array;
-
 /*-
  * #%L
  * GreenSummer
  * %%
- * Copyright (C) 2018 - 2019 GreenEyed (Daniel Lopez)
+ * Copyright (C) 2018 - 2020 GreenEyed (Daniel Lopez)
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -24,6 +22,7 @@ import java.lang.reflect.Array;
  * #L%
  */
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.security.Principal;
@@ -63,7 +62,7 @@ public class LogOperationAspect {
     @Value("#{'${summer.operation_logging.included_packages}'.split(',')}")
     private List<String> packages;
 
-  //@formatter:off
+    //@formatter:off
     @Around("(" + "@annotation(org.springframework.web.bind.annotation.RequestMapping)"
             + "|| @annotation(org.springframework.web.bind.annotation.GetMapping)"
             + "|| @annotation(org.springframework.web.bind.annotation.PostMapping)"
