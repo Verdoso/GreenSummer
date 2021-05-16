@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.greeneyed.demo.model.App;
 import org.greeneyed.demo.model.MyPojo;
-import org.greeneyed.summer.config.JoltViewConfiguration.JoltModelAndView;
 import org.greeneyed.summer.config.XsltConfiguration.XsltModelAndView;
 import org.greeneyed.summer.monitoring.Logable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@Slf4j
 @Data
 public class SpringTestAPI {
   public static final String TEST_XSLT_SOURCE = "pojo_process";
@@ -73,12 +70,6 @@ public class SpringTestAPI {
   @RequestMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE)
   public App testJSON() {
     return generateAppObject();
-  }
-
-  @RequestMapping(value = "/jolt")
-  public ModelAndView testJOLT() {
-    log.debug("Testing");
-    return new JoltModelAndView("jolt-test", generateAppObject(), HttpStatus.OK);
   }
 
   private App generateAppObject() {

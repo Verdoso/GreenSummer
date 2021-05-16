@@ -1,18 +1,14 @@
 server:
   port: 9090
+spring:
+  config:
+    use-legacy-processing: true
 management:
-  context-path: /manage
-  security:
-    enabled: false
-endpoints:
-  enabled: true
-  env:
-    enabled: true
-  health:
-    enabled: true
-    sensitive: false
-  mappings:
-    enabled: true
+   endpoints:
+      web:
+         base-path: /manage
+         exposure:
+            include: health,info,env,mappings,refresh,loggers,configInspector,configprops,actuators
 summer:
   jolt:
     devMode: true
