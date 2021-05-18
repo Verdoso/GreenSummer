@@ -10,12 +10,12 @@ package org.greeneyed.summer.util.jaxb;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-2.1.html>.
@@ -43,7 +43,6 @@ import org.greeneyed.summer.monitoring.Measured;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConversionException;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.util.ClassUtils;
@@ -78,17 +77,15 @@ public class CustomXMLHttpMessageConverter extends Jaxb2RootElementHttpMessageCo
 
     @Override
     @Measured("parseXML")
-    protected Object readFromSource(Class<?> clazz, HttpHeaders headers, Source source) throws IOException {
+    protected Object readFromSource(Class<?> clazz, HttpHeaders headers, Source source) throws Exception {
         final Object result;
         Unmarshaller unmarshaller = null;
         try {
             final Source processedSource = processSource(source);
             unmarshaller = unmarshallerPool.borrowObject(clazz);
             result = processXMLRequest(clazz, unmarshaller, processedSource);
-        } catch (NullPointerException ex) {
-            throw handleNPE(ex);
         } catch (UnmarshalException ex) {
-            throw new HttpMessageNotReadableException("Could not unmarshal to [" + clazz + "]: " + ex.getMessage(), ex);
+            throw ex;
         } catch (JAXBException ex) {
             throw new HttpMessageConversionException("Could not instantiate JAXBContext: " + ex.getMessage(), ex);
         } catch (Exception ex) {
@@ -99,15 +96,6 @@ public class CustomXMLHttpMessageConverter extends Jaxb2RootElementHttpMessageCo
             }
         }
         return result;
-    }
-
-    private HttpMessageNotReadableException handleNPE(NullPointerException ex) {
-        if (!isSupportDtd()) {
-            return new HttpMessageNotReadableException("NPE while unmarshalling. " + "This can happen on JDK 1.6 due to the presence of DTD "
-                + "declarations, which are disabled.", ex);
-        } else {
-            throw ex;
-        }
     }
 
     @Override

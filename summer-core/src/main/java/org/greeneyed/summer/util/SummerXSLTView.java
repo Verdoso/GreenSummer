@@ -95,7 +95,7 @@ public class SummerXSLTView extends XsltView implements MessageSourceAware, Erro
                 mediaType = xsltConfiguration.getMediaType();
                 devMode = xsltConfiguration.isDevMode();
                 parameterPreffix = xsltConfiguration.getParameterPreffix();
-                GenericKeyedObjectPoolConfig gop = new GenericKeyedObjectPoolConfig();
+                GenericKeyedObjectPoolConfig<Marshaller> gop = new GenericKeyedObjectPoolConfig<>();
                 gop.setMaxTotal(xsltConfiguration.getPoolsMaxPerKey() * XsltConfiguration.TOTAL_FACTOR);
                 gop.setMinIdlePerKey((int) (xsltConfiguration.getPoolsMaxPerKey() / XsltConfiguration.MIN_IDLE_FACTOR));
                 gop.setMaxIdlePerKey((int) (xsltConfiguration.getPoolsMaxPerKey() / XsltConfiguration.MAX_IDLE_FACTOR));
