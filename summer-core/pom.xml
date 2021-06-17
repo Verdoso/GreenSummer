@@ -426,7 +426,7 @@
               <outputDirectory>../${apidocs.project.location}/${project.artifactId}/${project.version}</outputDirectory>
               <reportOutputDirectory>../${apidocs.project.location}/${project.artifactId}/${project.version}</reportOutputDirectory>
               <links>
-                <link>http://verdoso.github.io/greensummer/${project.artifactId}/${project.version}/apidocs/</link>
+<!-- <link>http://verdoso.github.io/greensummer/${project.artifactId}/${project.version}/apidocs/</link> -->
                 <link>https://commons.apache.org/proper/commons-pool/apidocs/</link>
                 <link>https://docs.spring.io/spring/docs/current/javadoc-api/</link>
                 <link>https://www.slf4j.org/apidocs/</link>
