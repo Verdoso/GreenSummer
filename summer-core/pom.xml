@@ -64,7 +64,7 @@
     <jaxb.version>2.3.0</jaxb.version>
     <jaxb-core.version>2.3.0.1</jaxb-core.version>
     <jaxb-impl.version>2.3.2</jaxb-impl.version>
-    <log4j.version>2.15.0</log4j.version>
+    <log4j.version>2.17.0</log4j.version>
     <hazelcast.version>3.11.7</hazelcast.version>
     <hazelcast-consul-discovery-spi.version>1.0-RC9</hazelcast-consul-discovery-spi.version>
     <cqengine.version>3.6.0</cqengine.version>
